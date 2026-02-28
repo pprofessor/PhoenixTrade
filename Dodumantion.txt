@@ -1,0 +1,224 @@
+# مستندات کامل پروژه PhoenixTrade برای شروع مجدد چت
+تاریخ: 27 فوریه 2026
+وضعیت: در حال توسعه (محیط لوکال VS Code)
+
+## 1. نمای کلی پروژه
+پروژه PhoenixTrade یک پلتفرم آموزشی برای بازار طلا (فورکس) با رویکرد روانشناسی و جامعه‌شناسی مخاطب ایرانی است. پروژه شامل سه بخش اصلی است: ربات تلگرام، WebApp و پنل مدیریت. پس از مشکلات متعدد با زیرساخت قبلی (Python/Django) و مشکلات پورت و Nginx، تصمیم به بازنویسی کامل با Node.js گرفته شد. در حال حاضر پروژه به صورت لوکال در VS Code در حال توسعه است و پس از تکمیل، به سرور جدید اوبونتو منتقل خواهد شد.
+
+## 2. وضعیت فعلی (محیط لوکال - کامل و تست شده)
+✅ پروژه Node.js + Express با ساختار MVC
+✅ احراز هویت با session و bcryptjs
+✅ دیتابیس SQLite (برای توسعه لوکال) - بعداً به PostgreSQL منتقل می‌شود
+✅ صفحه لاگین با طراحی اختصاصی (سبز و طلایی)
+✅ مدل‌های کامل برای تمام بخش‌ها
+✅ کنترلرهای کامل برای هر پنج بخش اصلی
+✅ قالب‌های (views) آماده برای اکثر بخش‌ها
+✅ تست شده و لاگین و logout به درستی کار می‌کند
+
+
+## 3. ساختار پروژه فعلا (لوکال)
+
+C:\Users\Hamed\Desktop\PhoenixTrade
+├── server.js # فایل اصلی سرور
+├── .env # متغیرهای محیطی
+├── package.json # وابستگی‌ها
+├── database.sqlite # دیتابیس SQLite
+├── models/
+│ └── index.js # همه مدل‌ها (Admin, Category, Lesson, Broker, Event, BotMessage, WebappPage)
+├── controllers/
+│ ├── baseController.js # توابع پایه برای کنترلرها
+│ ├── authController.js # لاگین و احراز هویت
+│ ├── lessonController.js # مدیریت درس‌ها
+│ ├── brokerController.js # مدیریت بروکرها
+│ ├── eventController.js # مدیریت رویدادها
+│ ├── botController.js # مدیریت ربات
+│ ├── webappController.js # مدیریت WebApp
+│ ├── backupController.js # مدیریت بکاپ
+│ └── apiController.js # مدیریت APIها
+├── routes/
+│ └── authRoutes.js # همه مسیرهای پنل
+├── middleware/
+│ └── auth.js # بررسی احراز هویت
+└── views/
+├── login.ejs # صفحه لاگین
+├── dashboard.ejs # داشبورد اصلی
+├── lessons.ejs # مدیریت درس‌ها
+├── lesson-form.ejs # فرم درس (ایجاد/ویرایش)
+├── brokers.ejs # مدیریت بروکرها
+├── broker-form.ejs # فرم بروکر
+├── events.ejs # مدیریت رویدادها
+├── event-form.ejs # فرم رویداد
+├── bot.ejs # مدیریت ربات
+├── bot-message-form.ejs # فرم پیام ربات
+├── bot-menus.ejs # مدیریت منوهای ربات
+├── webapp.ejs # مدیریت WebApp
+├── webapp-form.ejs # فرم صفحه WebApp
+├── backup.ejs # مدیریت بکاپ
+└── api.ejs # مدیریت APIها
+
+
+
+## 4. مدل‌های دیتابیس (SQLite)
+
+تمام مدل‌ها در `models/index.js` تعریف شده‌اند:
+- **Admin**: (id, username, password, role, lastLogin)
+- **Category**: (id, name, slug, description, order, isActive) - دسته‌بندی درس‌ها
+- **Lesson**: (id, title, content, videoUrl, order, isFree, isActive, categoryId) - درس‌ها
+- **Broker**: (id, name, logo, description, pros, cons, registerLink, minDeposit, isActive)
+- **Event**: (id, title, description, eventDate, duration, maxParticipants, isOnline, link, isActive)
+- **BotMessage**: (id, key, text, media, buttons, isActive) - پیام‌های ربات
+- **WebappPage**: (id, slug, title, content, isActive) - صفحات وب‌اپ
+
+
+## 5. APIهای تعریف شده
+
+مسیرهای API (قابل مشاهده در `apiController.js`):
+- `GET /api/health` - بررسی سلامت
+- `GET /api/categories` - لیست دسته‌بندی‌ها
+- `GET /api/lessons` - لیست درس‌ها
+- `GET /api/lessons/:id` - جزئیات درس
+- `GET /api/brokers` - لیست بروکرها
+- `GET /api/events` - لیست رویدادها
+
+
+## 6. مسیرهای پنل مدیریت
+
+همه مسیرها با پیشوند `/pprofessor`:
+- `/pprofessor/login` - صفحه لاگین
+- `/pprofessor/dashboard` - داشبورد
+- `/pprofessor/lessons` - مدیریت درس‌ها
+- `/pprofessor/lessons/new` - درس جدید
+- `/pprofessor/lessons/:id/edit` - ویرایش درس
+- `/pprofessor/lessons/:id/delete` - حذف درس
+- `/pprofessor/brokers` - مدیریت بروکرها
+- `/pprofessor/events` - مدیریت رویدادها
+- `/pprofessor/bot` - مدیریت ربات
+- `/pprofessor/webapp` - مدیریت WebApp
+- `/pprofessor/backup` - مدیریت بکاپ
+- `/pprofessor/api` - مدیریت APIها
+
+
+
+## 7. اطلاعات کاربری
+
+**ادمین پیش‌فرض:**
+- نام کاربری: `pprofessor`
+- رمز عبور: `Shh@0012108197`
+
+
+
+
+
+## 8. کتابخانه‌های نصب شده
+```json
+{
+  "dependencies": {
+    "express": "^4.18.2",
+    "ejs": "^3.1.9",
+    "express-session": "^1.17.3",
+    "bcryptjs": "^2.4.3",
+    "sequelize": "^6.35.1",
+    "sqlite3": "^5.1.6",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
+
+
+
+
+
+9. کارهای انجام شده تا اینجا
+✅ پاکسازی کامل زیرساخت قبلی (Python/Django) از سرور
+✅ تصمیم به بازنویسی با Node.js
+✅ راه‌اندازی پروژه در VS Code
+✅ ایجاد ساختار MVC کامل
+✅ تعریف تمام مدل‌های مورد نیاز
+✅ ایجاد کنترلرها برای هر پنج بخش اصلی
+✅ ایجاد قالب‌های HTML (EJS) برای اکثر بخش‌ها
+✅ تست لاگین و احراز هویت
+✅ ایجاد APIهای پایه
+
+
+
+10. کارهای باقی‌مانده (طبق اولویت)
+
+تکمیل فرم‌های ایجاد/ویرایش برای همه بخش‌ها
+
+اضافه کردن قابلیت آپلود تصویر (برای لوگوی بروکرها و ...)
+
+تکمیل بخش مدیریت ربات (منوها و کیبوردها)
+
+تکمیل بخش مدیریت وب‌اپ (ویرایشگر محتوا)
+
+راه‌اندازی سرور جدید با اوبونتو
+
+نصب PostgreSQL و Redis روی سرور
+
+انتقال پروژه به سرور
+
+تغییر دیتابیس از SQLite به PostgreSQL
+
+تنظیم Nginx و Cloudflare
+
+تست نهایی و رفع باگ‌ها
+
+
+
+
+
+11. نکات فنی مهم برای ادامه
+در محیط لوکال از SQLite استفاده شده برای سرعت توسعه
+
+برای session از express-session با حافظه داخلی استفاده شده (بعداً به Redis منتقل شود)
+
+ساختار کنترلرها با baseController.js یکپارچه شده
+
+تمام مدل‌ها در یک فایل برای سادگی در توسعه لوکال
+
+طراحی پنل با رنگ‌های سبز و طلایی (مطابق با برند)
+
+مسیرها با middleware isAuthenticated محافظت می‌شوند
+
+پس از انتقال به سرور، باید از dotenv برای متغیرهای محیطی استفاده کامل شود
+
+
+
+12. دستورات کاربردی برای ادامه
+bash
+# اجرای پروژه در محیط لوکال
+node server.js
+# یا با nodemon (اگر نصب باشد)
+npx nodemon server.js
+
+# ایجاد فایل‌های جدید
+# ساختار MVC رعایت شود
+
+# بعد از اتمام توسعه لوکال
+# انتقال کدها به سرور با git یا SCP
+
+
+
+13. معماری نهایی پیشنهادی برای سرور
+text
+[Client] → [Cloudflare] → [Nginx] → [Node.js (PM2)] → [PostgreSQL]
+                                         ↓
+                                      [Redis]
+
+
+
+14. نکات امنیتی (برای پیاده‌سازی در سرور)
+استفاده از helmet.js برای هدرهای امنیتی
+
+محدود کردن نرخ درخواست (rate limiting)
+
+رمزگذاری کوکی‌ها
+
+استفاده از محیط مجازی برای متغیرها
+
+بکاپ خودکار دیتابیس
+
+مانیتورینگ با PM2
+

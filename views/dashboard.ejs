@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - PhoenixTrade</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Vazir', 'Tahoma', sans-serif; }
+        body { background: linear-gradient(135deg, #0a2f1f 0%, #1a4a2c 100%); min-height: 100vh; display: flex; }
+        
+        /* سایدبار */
+        .sidebar { width: 280px; background: rgba(0, 20, 10, 0.95); backdrop-filter: blur(10px); border-left: 1px solid #b8860b; padding: 2rem 1rem; color: #fff; }
+        .logo { font-size: 1.8rem; font-weight: bold; color: #ffd700; text-shadow: 0 0 10px rgba(255,215,0,0.5); margin-bottom: 2rem; text-align: center; }
+        .menu-item { display: flex; align-items: center; gap: 0.8rem; padding: 1rem; margin: 0.5rem 0; border-radius: 10px; color: #fff; text-decoration: none; transition: all 0.3s; }
+        .menu-item:hover, .menu-item.active { background: linear-gradient(135deg, #2a5a3a, #1a3a2a); border-right: 3px solid #ffd700; }
+        .menu-item i { width: 24px; color: #ffd700; }
+        
+        /* محتوای اصلی */
+        .main-content { flex: 1; padding: 2rem; }
+        .header { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid rgba(255,215,0,0.3); }
+        .header h1 { color: #ffd700; font-size: 2rem; }
+        .welcome { color: #fff; margin-top: 0.5rem; }
+        
+        /* کارت‌های آمار */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .stat-card { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; border: 1px solid rgba(255,215,0,0.3); }
+        .stat-card h3 { color: #ffd700; font-size: 1rem; opacity: 0.9; }
+        .stat-number { color: #fff; font-size: 2rem; font-weight: bold; margin: 0.5rem 0; }
+        
+        /* گرید دسترسی سریع */
+        .quick-access { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+        .quick-card { background: rgba(255,255,255,0.05); border-radius: 10px; padding: 1rem; text-align: center; text-decoration: none; color: #fff; border: 1px solid transparent; transition: all 0.3s; }
+        .quick-card:hover { border-color: #ffd700; transform: translateY(-5px); }
+        .quick-card i { font-size: 2rem; color: #ffd700; margin-bottom: 0.5rem; }
+    </style>
+    <!-- Font Awesome برای آیکون‌ها -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- سایدبار -->
+    <div class="sidebar">
+        <div class="logo">PhoenixTrade</div>
+        <nav>
+            <a href="/pprofessor/dashboard" class="menu-item active">
+                <i class="fas fa-home"></i>
+                <span>داشبورد</span>
+            </a>
+            <a href="/pprofessor/backup" class="menu-item">
+                <i class="fas fa-database"></i>
+                <span>مدیریت بکاپ</span>
+            </a>
+            <a href="/pprofessor/database" class="menu-item">
+                <i class="fas fa-server"></i>
+                <span>مدیریت دیتابیس</span>
+            </a>
+            <a href="/pprofessor/bot" class="menu-item">
+                <i class="fas fa-robot"></i>
+                <span>مدیریت ربات</span>
+            </a>
+            <a href="/pprofessor/webapp" class="menu-item">
+                <i class="fas fa-globe"></i>
+                <span>مدیریت وب اپ</span>
+            </a>
+            <a href="/pprofessor/api-settings" class="menu-item">
+                <i class="fas fa-code"></i>
+                <span>تنظیمات API</span>
+            </a>
+            <a href="/pprofessor/logout" class="menu-item" style="margin-top: 2rem;">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>خروج</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- محتوای اصلی -->
+    <div class="main-content">
+        <div class="header">
+            <h1><i class="fas fa-tachometer-alt"></i> <%= title %></h1>
+            <div class="welcome">
+                <i class="fas fa-user-circle"></i> خوش آمدید، <strong><%= user %></strong>
+            </div>
+        </div>
+
+        <!-- کارت‌های آمار -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3><i class="fas fa-robot"></i> پیام‌های ربات</h3>
+                <div class="stat-number">۱۲</div>
+                <small style="color: #aaa;">۴ عدد فعال</small>
+            </div>
+            <div class="stat-card">
+                <h3><i class="fas fa-file-alt"></i> صفحات وب اپ</h3>
+                <div class="stat-number">۸</div>
+                <small style="color: #aaa;">۶ عدد فعال</small>
+            </div>
+            <div class="stat-card">
+                <h3><i class="fas fa-book"></i> درس‌ها</h3>
+                <div class="stat-number">۲۴</div>
+                <small style="color: #aaa;">۳ دسته‌بندی</small>
+            </div>
+            <div class="stat-card">
+                <h3><i class="fas fa-chart-line"></i> بروکرها</h3>
+                <div class="stat-number">۱۵</div>
+                <small style="color: #aaa;">۱۰ عدد فعال</small>
+            </div>
+        </div>
+
+        <!-- دسترسی سریع به بخش‌ها -->
+        <h2 style="color: #ffd700; margin-bottom: 1rem;">دسترسی سریع</h2>
+        <div class="quick-access">
+            <a href="/pprofessor/backup" class="quick-card">
+                <i class="fas fa-download"></i>
+                <h3>بکاپ جدید</h3>
+                <small style="color: #aaa;">گرفتن نسخه پشتیبان</small>
+            </a>
+            <a href="/pprofessor/bot/messages" class="quick-card">
+                <i class="fas fa-comment"></i>
+                <h3>مدیریت پیام‌ها</h3>
+                <small style="color: #aaa;">ویرایش متن‌های ربات</small>
+            </a>
+            <a href="/pprofessor/webapp/pages" class="quick-card">
+                <i class="fas fa-pencil-alt"></i>
+                <h3>ویرایش صفحات</h3>
+                <small style="color: #aaa;">به‌روزرسانی محتوا</small>
+            </a>
+            <a href="/pprofessor/api-settings" class="quick-card">
+                <i class="fas fa-key"></i>
+                <h3>کلیدهای API</h3>
+                <small style="color: #aaa;">مدیریت دسترسی‌ها</small>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

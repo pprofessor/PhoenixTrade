@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - PhoenixTrade</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Vazir', 'Tahoma', sans-serif; }
+        body { background: linear-gradient(135deg, #0a2f1f 0%, #1a4a2c 100%); min-height: 100vh; display: flex; }
+        
+        /* سایدبار */
+        .sidebar { width: 280px; background: rgba(0, 20, 10, 0.95); backdrop-filter: blur(10px); border-left: 1px solid #b8860b; padding: 2rem 1rem; color: #fff; }
+        .logo { font-size: 1.8rem; font-weight: bold; color: #ffd700; text-shadow: 0 0 10px rgba(255,215,0,0.5); margin-bottom: 2rem; text-align: center; }
+        .menu-item { display: flex; align-items: center; gap: 0.8rem; padding: 1rem; margin: 0.5rem 0; border-radius: 10px; color: #fff; text-decoration: none; transition: all 0.3s; }
+        .menu-item:hover, .menu-item.active { background: linear-gradient(135deg, #2a5a3a, #1a3a2a); border-right: 3px solid #ffd700; }
+        .menu-item i { width: 24px; color: #ffd700; }
+        
+        /* محتوای اصلی */
+        .main-content { flex: 1; padding: 2rem; }
+        .header { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid rgba(255,215,0,0.3); }
+        .header h1 { color: #ffd700; font-size: 2rem; }
+        
+        /* کارت‌های تنظیمات بکاپ */
+        .settings-card { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid rgba(255,215,0,0.3); }
+        .settings-card h3 { color: #ffd700; margin-bottom: 1rem; }
+        
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; color: #fff; margin-bottom: 0.5rem; }
+        .form-group select, .form-group input[type="text"] { width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid #b8860b; background: rgba(0,0,0,0.3); color: #fff; }
+        .form-group option { background: #1a4a2c; }
+        
+        .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; }
+        .checkbox-item { display: flex; align-items: center; gap: 0.5rem; color: #fff; }
+        .checkbox-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: #ffd700; }
+        
+        .radio-group { display: flex; gap: 2rem; color: #fff; }
+        .radio-group label { display: flex; align-items: center; gap: 0.5rem; }
+        
+        .btn { background: #ffd700; color: #0a2f1f; border: none; padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.3s; }
+        .btn:hover { background: #b8860b; color: #fff; }
+        .btn-sm { padding: 0.4rem 1rem; font-size: 0.9rem; }
+        .btn-danger { background: #dc3545; color: #fff; }
+        .btn-danger:hover { background: #a71d2a; }
+        .btn-success { background: #28a745; color: #fff; }
+        .btn-success:hover { background: #1e7e34; }
+        
+        /* لیست بکاپ‌ها */
+        .table { width: 100%; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; }
+        .table th { background: rgba(255,215,0,0.2); color: #ffd700; padding: 1rem; text-align: right; }
+        .table td { padding: 1rem; color: #fff; border-bottom: 1px solid rgba(255,215,0,0.1); }
+        .table tr:hover { background: rgba(255,255,255,0.1); }
+        
+        /* فایل‌های بکاپ */
+        .file-list { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 1rem; }
+        .file-item { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem; border-bottom: 1px solid rgba(255,215,0,0.1); }
+        .file-item:last-child { border-bottom: none; }
+        .file-info { color: #fff; }
+        .file-actions { display: flex; gap: 0.5rem; }
+        .file-size { color: #aaa; font-size: 0.9rem; margin-right: 1rem; }
+        
+        /* تب‌ها */
+        .tabs { display: flex; gap: 1rem; margin-bottom: 2rem; }
+        .tab { padding: 0.8rem 2rem; background: rgba(255,255,255,0.1); border-radius: 8px; color: #fff; cursor: pointer; }
+        .tab.active { background: #ffd700; color: #0a2f1f; font-weight: bold; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body>
+    <!-- سایدبار -->
+    <div class="sidebar">
+        <div class="logo">PhoenixTrade</div>
+        <nav>
+            <a href="/pprofessor/dashboard" class="menu-item">
+                <i class="fas fa-home"></i>
+                <span>داشبورد</span>
+            </a>
+            <a href="/pprofessor/backup" class="menu-item active">
+                <i class="fas fa-database"></i>
+                <span>مدیریت بکاپ</span>
+            </a>
+            <a href="/pprofessor/database" class="menu-item">
+                <i class="fas fa-server"></i>
+                <span>مدیریت دیتابیس</span>
+            </a>
+            <a href="/pprofessor/bot" class="menu-item">
+                <i class="fas fa-robot"></i>
+                <span>مدیریت ربات</span>
+            </a>
+            <a href="/pprofessor/webapp" class="menu-item">
+                <i class="fas fa-globe"></i>
+                <span>مدیریت وب اپ</span>
+            </a>
+            <a href="/pprofessor/api-settings" class="menu-item">
+                <i class="fas fa-code"></i>
+                <span>تنظیمات API</span>
+            </a>
+            <a href="/pprofessor/logout" class="menu-item" style="margin-top: 2rem;">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>خروج</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- محتوای اصلی -->
+    <div class="main-content">
+        <div class="header">
+            <h1><i class="fas fa-database"></i> <%= title %></h1>
+        </div>
+
+        <!-- تب‌ها -->
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('settings')">تنظیمات بکاپ</div>
+            <div class="tab" onclick="showTab('list')">لیست بکاپ‌ها</div>
+            <div class="tab" onclick="showTab('files')">مدیریت فایل‌ها</div>
+        </div>
+
+        <!-- تب تنظیمات بکاپ -->
+        <div id="tab-settings" class="tab-content active">
+            <div class="settings-card">
+                <h3><i class="fas fa-clock"></i> تنظیمات بکاپ‌گیری خودکار</h3>
+                <div class="form-group">
+                    <label>دوره زمانی بکاپ‌گیری خودکار:</label>
+                    <select>
+                        <option value="1">هر یک ساعت</option>
+                        <option value="2">هر 2 ساعت</option>
+                        <option value="6">هر 6 ساعت</option>
+                        <option value="12">هر 12 ساعت</option>
+                        <option value="24" selected>هر 24 ساعت</option>
+                        <option value="48">هر 2 روز</option>
+                        <option value="120">هر 5 روز</option>
+                        <option value="240">هر 10 روز</option>
+                        <option value="360">هر 15 روز</option>
+                        <option value="720">هر 30 روز</option>
+                    </select>
+                </div>
+
+                <h3 style="margin-top: 2rem;"><i class="fas fa-layer-group"></i> بخش‌های مورد نظر برای بکاپ</h3>
+                <div class="checkbox-grid">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="db" checked> <label for="db">دیتابیس (SQLite)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="botMessages" checked> <label for="botMessages">پیام‌های ربات</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="webappPages" checked> <label for="webappPages">صفحات وب‌اپ</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="lessons" checked> <label for="lessons">درس‌ها</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="brokers"> <label for="brokers">بروکرها</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="events"> <label for="events">رویدادها</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="categories"> <label for="categories">دسته‌بندی‌ها</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="admins"> <label for="admins">مدیران</label>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 2rem;"><i class="fas fa-folder"></i> محل ذخیره بکاپ</h3>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" name="storage" value="server" checked> ذخیره در پوشه Backups روی سرور
+                    </label>
+                    <label>
+                        <input type="radio" name="storage" value="download"> دانلود مستقیم روی سیستم کلاینت
+                    </label>
+                </div>
+
+                <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+                    <button class="btn btn-success" onclick="startBackup()">
+                        <i class="fas fa-play"></i> شروع بکاپ‌گیری دستی
+                    </button>
+                    <button class="btn" onclick="saveSettings()">
+                        <i class="fas fa-save"></i> ذخیره تنظیمات
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- تب لیست بکاپ‌ها -->
+        <div id="tab-list" class="tab-content">
+            <div class="settings-card">
+                <h3><i class="fas fa-history"></i> لیست بکاپ‌های گرفته شده</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>تاریخ و ساعت</th>
+                            <th>محل ذخیره</th>
+                            <th>بخش‌ها</th>
+                            <th>حجم</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>۱۴۰۴/۱۲/۰۸ - ۱۵:۳۰</td>
+                            <td>/backups/auto_14041208_1530.zip</td>
+                            <td>دیتابیس، ربات، وب‌اپ</td>
+                            <td>۲.۴ مگابایت</td>
+                            <td>
+                                <button class="btn btn-sm"><i class="fas fa-download"></i></button>
+                                <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                <button class="btn btn-sm"><i class="fas fa-info-circle"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>۱۴۰۴/۱۲/۰۷ - ۰۸:۱۵</td>
+                            <td>/backups/manual_14041207_0815.zip</td>
+                            <td>دیتابیس، درس‌ها، بروکرها</td>
+                            <td>۳.۱ مگابایت</td>
+                            <td>
+                                <button class="btn btn-sm"><i class="fas fa-download"></i></button>
+                                <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                <button class="btn btn-sm"><i class="fas fa-info-circle"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>۱۴۰۴/۱۲/۰۶ - ۲۲:۴۰</td>
+                            <td>/backups/auto_14041206_2240.zip</td>
+                            <td>دیتابیس، ربات</td>
+                            <td>۱.۸ مگابایت</td>
+                            <td>
+                                <button class="btn btn-sm"><i class="fas fa-download"></i></button>
+                                <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                <button class="btn btn-sm"><i class="fas fa-info-circle"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- تب مدیریت فایل‌ها -->
+        <div id="tab-files" class="tab-content">
+            <div class="settings-card">
+                <h3><i class="fas fa-folder-open"></i> پوشه Backups روی سرور</h3>
+                <div class="file-list">
+                    <div class="file-item">
+                        <div class="file-info">
+                            <i class="fas fa-file-archive" style="color: #ffd700;"></i>
+                            auto_14041208_1530.zip
+                            <span class="file-size">۲.۴ مگابایت</span>
+                        </div>
+                        <div class="file-actions">
+                            <button class="btn btn-sm" onclick="showDetails('auto_14041208_1530')">
+                                <i class="fas fa-info-circle"></i>
+                            </button>
+                            <button class="btn btn-sm" onclick="downloadFile('auto_14041208_1530')">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteFile('auto_14041208_1530')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="file-item">
+                        <div class="file-info">
+                            <i class="fas fa-file-archive" style="color: #ffd700;"></i>
+                            manual_14041207_0815.zip
+                            <span class="file-size">۳.۱ مگابایت</span>
+                        </div>
+                        <div class="file-actions">
+                            <button class="btn btn-sm"><i class="fas fa-info-circle"></i></button>
+                            <button class="btn btn-sm"><i class="fas fa-download"></i></button>
+                            <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                    <div class="file-item">
+                        <div class="file-info">
+                            <i class="fas fa-file-archive" style="color: #ffd700;"></i>
+                            auto_14041206_2240.zip
+                            <span class="file-size">۱.۸ مگابایت</span>
+                        </div>
+                        <div class="file-actions">
+                            <button class="btn btn-sm"><i class="fas fa-info-circle"></i></button>
+                            <button class="btn btn-sm"><i class="fas fa-download"></i></button>
+                            <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- پنل جزئیات فایل (نمونه) -->
+                <div id="file-details" style="margin-top: 2rem; display: none;">
+                    <h4 style="color: #ffd700;">جزئیات فایل: auto_14041208_1530.zip</h4>
+                    <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px;">
+                        <p><strong style="color: #ffd700;">بخش‌های بکاپ گرفته شده:</strong></p>
+                        <ul style="color: #fff; margin-right: 2rem;">
+                            <li>✅ دیتابیس (SQLite) - ۱.۵ مگابایت</li>
+                            <li>✅ پیام‌های ربات - ۰.۳ مگابایت</li>
+                            <li>✅ صفحات وب‌اپ - ۰.۲ مگابایت</li>
+                            <li>✅ درس‌ها - ۰.۴ مگابایت</li>
+                        </ul>
+                        <p><strong style="color: #ffd700;">مسیر ذخیره:</strong> <span style="color: #fff;">/backups/auto_14041208_1530.zip</span></p>
+                        <p><strong style="color: #ffd700;">تاریخ ایجاد:</strong> <span style="color: #fff;">۱۴۰۴/۱۲/۰۸ - ۱۵:۳۰</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // مخفی کردن همه تب‌ها
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // نمایش تب انتخاب شده
+            document.getElementById('tab-' + tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function startBackup() {
+            alert('شروع فرآیند بکاپ‌گیری... (در حال توسعه)');
+        }
+
+        function saveSettings() {
+            alert('تنظیمات ذخیره شد (در حال توسعه)');
+        }
+
+        function showDetails(filename) {
+            document.getElementById('file-details').style.display = 'block';
+        }
+
+        function downloadFile(filename) {
+            alert('دانلود فایل: ' + filename + ' (در حال توسعه)');
+        }
+
+        function deleteFile(filename) {
+            if(confirm('آیا از حذف این فایل اطمینان دارید؟')) {
+                alert('فایل حذف شد (در حال توسعه)');
+            }
+        }
+    </script>
+</body>
+</html>

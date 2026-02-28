@@ -1,0 +1,22 @@
+# وابستگی‌ها
+node_modules/
+
+# فایل‌های محیطی
+.env
+
+# دیتابیس SQLite
+*.sqlite
+*.sqlite3
+
+# فایل‌های سیستمی
+.vscode/
+.DS_Store
+Thumbs.db
+
+# لاگ‌ها
+*.log
+npm-debug.log*
+
+# بکاپ‌های موقت
+backups/
+temp/

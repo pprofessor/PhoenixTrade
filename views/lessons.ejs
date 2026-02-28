@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+        body { background: #f0f4f0; display: flex; min-height: 100vh; }
+        
+        /* سایدبار */
+        .sidebar { width: 280px; background: linear-gradient(180deg, #0b3b2c, #1a6d4c); color: white; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar-header { padding: 30px 24px; border-bottom: 1px solid rgba(255,215,0,0.2); }
+.sidebar-header h2 { 
+    font-size: 24px; 
+    background: linear-gradient(135deg, #fff, #d4af37); 
+    -webkit-background-clip: text; 
+    background-clip: text; 
+    -webkit-text-fill-color: transparent; 
+    color: transparent; 
+}        .nav-menu { padding: 20px 0; }
+        .nav-item { padding: 12px 24px; margin: 4px 8px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 12px; color: #e0f0e0; text-decoration: none; }
+        .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: #d4af37; }
+        
+        /* محتوای اصلی */
+        .main-content { margin-right: 280px; flex: 1; padding: 30px; width: calc(100% - 280px); }
+        .header { background: white; padding: 20px 30px; border-radius: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { color: #0b3b2c; }
+        .add-btn { background: #1a6d4c; color: white; padding: 10px 20px; border-radius: 12px; text-decoration: none; }
+        .table-container { background: white; border-radius: 20px; padding: 20px; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: right; padding: 15px; background: #f8faf8; color: #0b3b2c; }
+        td { padding: 15px; border-bottom: 1px solid #eef2f0; }
+        .actions a { margin-left: 10px; text-decoration: none; color: #1a6d4c; }
+        .actions .delete { color: #dc2626; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>PhoenixTrade</h2>
+        </div>
+        <div class="nav-menu">
+            <a href="/pprofessor/dashboard" class="nav-item">📊 داشبورد</a>
+            <a href="/pprofessor/lessons" class="nav-item active">📚 درس‌ها</a>
+            <a href="/pprofessor/brokers" class="nav-item">🏢 بروکرها</a>
+            <a href="/pprofessor/events" class="nav-item">📅 رویدادها</a>
+            <a href="/pprofessor/bot" class="nav-item">🤖 ربات</a>
+            <a href="/pprofessor/webapp" class="nav-item">🌐 WebApp</a>
+            <a href="/pprofessor/backup" class="nav-item">💾 بکاپ</a>
+            <a href="/pprofessor/api" class="nav-item">🔧 API</a>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <div class="header">
+            <h1><%= title %></h1>
+            <a href="/pprofessor/lessons/new" class="add-btn">+ درس جدید</a>
+        </div>
+        
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>عنوان</th>
+                        <th>دسته‌بندی</th>
+                        <th>وضعیت</th>
+                        <th>تاریخ</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% lessons.forEach(lesson => { %>
+                    <tr>
+                        <td><%= lesson.title %></td>
+                        <td><%= lesson.category ? lesson.category.name : '-' %></td>
+                        <td><%= lesson.isFree ? 'رایگان' : 'پولی' %></td>
+                        <td><%= new Date(lesson.createdAt).toLocaleDateString('fa-IR') %></td>
+                        <td class="actions">
+                            <a href="/pprofessor/lessons/<%= lesson.id %>/edit">✏️</a>
+                            <a href="/pprofessor/lessons/<%= lesson.id %>/delete" class="delete" onclick="return confirm('حذف شود؟')">🗑️</a>
+                        </td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
