@@ -4,9 +4,9 @@ node_modules/
 # فایل‌های محیطی
 .env
 
-# دیتابیس SQLite
-*.sqlite
-*.sqlite3
+# # دیتابیس SQLite
+# *.sqlite
+# *.sqlite3
 
 # فایل‌های سیستمی
 .vscode/
