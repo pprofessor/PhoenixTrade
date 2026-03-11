@@ -4,142 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %> - PhoenixTrade</title>
+    <!-- فونت سمیم -->
+    <link rel="stylesheet" href="/css/fonts.css">
+    <!-- استایل سراسری پنل -->
+    <link rel="stylesheet" href="/css/admin.css">
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- استایل مخصوص صفحه ربات -->
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Vazir', 'Tahoma', sans-serif;
-        }
-        
-        body {
-            background: linear-gradient(135deg, #0a2f1f 0%, #1a4a2c 100%);
-            min-height: 100vh;
-            display: flex;
-        }
-        
-        /* ===== سایدبار ===== */
-        .sidebar {
-            width: 260px;
-            background: rgba(0, 20, 10, 0.95);
-            backdrop-filter: blur(10px);
-            border-left: 1px solid rgba(255, 215, 0, 0.3);
-            padding: 1.5rem 1rem;
-            color: #fff;
-        }
-        
-        .logo {
-            font-size: 1.6rem;
-            font-weight: bold;
-            color: #ffd700;
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        
-        .menu-item {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            padding: 0.8rem 1.2rem;
-            margin: 0.3rem 0;
-            border-radius: 10px;
-            color: #fff;
-            text-decoration: none;
-            transition: all 0.2s;
-        }
-        
-        .menu-item:hover, .menu-item.active {
-            background: linear-gradient(135deg, #2a5a3a, #1a3a2a);
-            border-right: 3px solid #ffd700;
-        }
-        
-        .menu-item i {
-            width: 20px;
-            color: #ffd700;
-        }
-        
-        /* ===== محتوای اصلی ===== */
-        .main-content {
-            flex: 1;
-            padding: 1.5rem;
-            overflow-y: auto;
-        }
-        
-        .header {
-            background: rgba(255,255,255,0.05);
-            border-radius: 20px;
-            padding: 1.2rem 1.5rem;
-            margin-bottom: 1.5rem;
-            border: 1px solid rgba(255,215,0,0.2);
-        }
-        
-        .header h1 {
-            color: #ffd700;
-            font-size: 1.8rem;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
-        
-        .header h1 i {
-            font-size: 2rem;
-        }
-        
-        /* ===== وضعیت ربات با قابلیت ویرایش ===== */
-        .bot-status {
-            background: rgba(0,0,0,0.3);
-            border-radius: 30px;
-            padding: 1.2rem 1.5rem;
-            margin-bottom: 2rem;
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            flex-wrap: wrap;
-            border: 1px solid rgba(255,215,0,0.3);
-        }
-        
-        .status-indicator {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            background: rgba(0,0,0,0.3);
-            padding: 0.5rem 1.2rem;
-            border-radius: 30px;
-        }
-        
-        .status-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #0f0;
-            box-shadow: 0 0 10px #0f0;
-        }
-        
-        .token-edit {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            flex: 1;
-            min-width: 300px;
-        }
-        
-        .token-edit input {
-            flex: 1;
-            background: rgba(0,0,0,0.4);
-            border: 1px solid rgba(255,215,0,0.3);
-            border-radius: 30px;
-            padding: 0.6rem 1rem;
-            color: #ffd700;
-            font-family: monospace;
-            direction: ltr;
-        }
-        
-        .token-edit input:focus {
-            outline: none;
-            border-color: #ffd700;
-        }
-        
         /* ===== تب‌ها ===== */
         .tabs {
             display: flex;
@@ -195,10 +67,6 @@
             gap: 0.8rem;
             border-bottom: 1px solid rgba(255,215,0,0.2);
             padding-bottom: 0.8rem;
-        }
-        
-        .card h3 i {
-            font-size: 1.4rem;
         }
         
         /* ===== فرم‌ها ===== */
@@ -380,11 +248,6 @@
             margin-right: 0.5rem;
         }
         
-        .menu-actions .btn-sm {
-            padding: 0.3rem 0.8rem;
-            font-size: 0.8rem;
-        }
-        
         .menu-content-preview {
             padding: 0.5rem 1rem;
             background: rgba(0,0,0,0.1);
@@ -427,6 +290,55 @@
             color: #fff;
         }
         
+        /* ===== وضعیت ربات ===== */
+        .bot-status {
+            background: rgba(0,0,0,0.3);
+            border-radius: 30px;
+            padding: 1.2rem 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            border: 1px solid rgba(255,215,0,0.3);
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: rgba(0,0,0,0.3);
+            padding: 0.5rem 1.2rem;
+            border-radius: 30px;
+        }
+        
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #0f0;
+            box-shadow: 0 0 10px #0f0;
+        }
+        
+        .token-edit {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .token-edit input {
+            flex: 1;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,215,0,0.3);
+            border-radius: 30px;
+            padding: 0.6rem 1rem;
+            color: #ffd700;
+            font-family: monospace;
+            direction: ltr;
+        }
+        
         /* ===== جدول کاربران ===== */
         .table-container {
             overflow-x: auto;
@@ -453,46 +365,13 @@
             color: #fff;
             border-bottom: 1px solid rgba(255,215,0,0.1);
         }
-        
-        /* ===== تایست ===== */
-        .toast {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 0.8rem 1.5rem;
-            border-radius: 30px;
-            color: #fff;
-            z-index: 9999;
-            display: none;
-            font-size: 0.95rem;
-        }
-        
-        .toast.success {
-            background: #28a745;
-        }
-        
-        .toast.error {
-            background: #dc3545;
-        }
     </style>
 </head>
 <body>
     <div id="toast" class="toast"></div>
 
     <!-- سایدبار -->
-    <div class="sidebar">
-        <div class="logo">PhoenixTrade</div>
-        <nav>
-            <a href="/pprofessor/dashboard" class="menu-item"><i class="fas fa-home"></i>داشبورد</a>
-            <a href="/pprofessor/backup" class="menu-item"><i class="fas fa-database"></i>مدیریت بکاپ</a>
-            <a href="/pprofessor/database" class="menu-item"><i class="fas fa-server"></i>مدیریت دیتابیس</a>
-            <a href="/pprofessor/bot" class="menu-item active"><i class="fas fa-robot"></i>مدیریت ربات</a>
-            <a href="/pprofessor/webapp" class="menu-item"><i class="fas fa-globe"></i>مدیریت وب اپ</a>
-            <a href="/pprofessor/api-settings" class="menu-item"><i class="fas fa-code"></i>تنظیمات API</a>
-            <a href="/pprofessor/logout" class="menu-item" style="margin-top:2rem;"><i class="fas fa-sign-out-alt"></i>خروج</a>
-        </nav>
-    </div>
+    <%- include('sidebar') %>
 
     <!-- محتوای اصلی -->
     <div class="main-content">

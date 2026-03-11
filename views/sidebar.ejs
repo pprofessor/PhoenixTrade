@@ -1,0 +1,34 @@
+<!-- ===== views/sidebar.ejs ===== -->
+<div class="sidebar">
+    <div class="logo">PhoenixTrade</div>
+    <nav>
+        <a href="/pprofessor/dashboard" class="menu-item <%= activePage === 'dashboard' ? 'active' : '' %>">
+            <i class="fas fa-home"></i>
+            <span>داشبورد</span>
+        </a>
+        <a href="/pprofessor/backup" class="menu-item <%= activePage === 'backup' ? 'active' : '' %>">
+            <i class="fas fa-database"></i>
+            <span>مدیریت بکاپ</span>
+        </a>
+        <a href="/pprofessor/database" class="menu-item <%= activePage === 'database' ? 'active' : '' %>">
+            <i class="fas fa-server"></i>
+            <span>مدیریت دیتابیس</span>
+        </a>
+        <a href="/pprofessor/bot" class="menu-item <%= activePage === 'bot' ? 'active' : '' %>">
+            <i class="fas fa-robot"></i>
+            <span>مدیریت ربات</span>
+        </a>
+        <a href="/pprofessor/webapp" class="menu-item <%= activePage === 'webapp' ? 'active' : '' %>">
+            <i class="fas fa-globe"></i>
+            <span>مدیریت وب اپ</span>
+        </a>
+        <a href="/pprofessor/api-settings" class="menu-item <%= activePage === 'api' ? 'active' : '' %>">
+            <i class="fas fa-code"></i>
+            <span>تنظیمات API</span>
+        </a>
+        <a href="/pprofessor/logout" class="menu-item" style="margin-top: 2rem;">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>خروج</span>
+        </a>
+    </nav>
+</div>

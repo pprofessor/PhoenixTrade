@@ -4,127 +4,269 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %> - PhoenixTrade</title>
+    <!-- فونت سمیم -->
+    <link rel="stylesheet" href="/css/fonts.css">
+    <!-- استایل سراسری پنل -->
+    <link rel="stylesheet" href="/css/admin.css">
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Vazir', 'Tahoma', sans-serif; }
-        body { background: linear-gradient(135deg, #0a2f1f 0%, #1a4a2c 100%); min-height: 100vh; display: flex; }
-        
-        /* سایدبار */
-        .sidebar { width: 280px; background: rgba(0, 20, 10, 0.95); backdrop-filter: blur(10px); border-left: 1px solid #b8860b; padding: 2rem 1rem; color: #fff; }
-        .logo { font-size: 1.8rem; font-weight: bold; color: #ffd700; text-shadow: 0 0 10px rgba(255,215,0,0.5); margin-bottom: 2rem; text-align: center; }
-        .menu-item { display: flex; align-items: center; gap: 0.8rem; padding: 1rem; margin: 0.5rem 0; border-radius: 10px; color: #fff; text-decoration: none; transition: all 0.3s; }
-        .menu-item:hover, .menu-item.active { background: linear-gradient(135deg, #2a5a3a, #1a3a2a); border-right: 3px solid #ffd700; }
-        .menu-item i { width: 24px; color: #ffd700; }
-        
-        /* محتوای اصلی */
-        .main-content { flex: 1; padding: 2rem; }
-        .header { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid rgba(255,215,0,0.3); }
-        .header h1 { color: #ffd700; font-size: 2rem; }
+        /* ===== استایل‌های اختصاصی صفحه دیتابیس ===== */
         
         /* تب‌ها */
-        .tabs { display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
-        .tab { padding: 0.8rem 2rem; background: rgba(255,255,255,0.1); border-radius: 8px; color: #fff; cursor: pointer; transition: all 0.3s; }
-        .tab:hover { background: rgba(255,215,0,0.3); }
-        .tab.active { background: #ffd700; color: #0a2f1f; font-weight: bold; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
+        .tabs {
+            display: flex;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
         
-        /* کارت‌ها */
-        .card { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid rgba(255,215,0,0.3); }
-        .card h3 { color: #ffd700; margin-bottom: 1rem; }
+        .tab {
+            padding: 0.6rem 1.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 25px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            font-size: 0.95rem;
+        }
         
-        /* ترمینال */
-        .terminal { background: #1e1e1e; border-radius: 10px; overflow: hidden; font-family: 'Courier New', monospace; }
-        .terminal-header { background: #333; padding: 0.5rem 1rem; color: #fff; display: flex; justify-content: space-between; }
-        .terminal-body { padding: 1rem; min-height: 200px; max-height: 300px; overflow-y: auto; }
-        .terminal-input { display: flex; padding: 0.5rem; background: #2d2d2d; }
-        .terminal-prompt { color: #ffd700; margin-left: 0.5rem; }
-        .terminal-input input { flex: 1; background: transparent; border: none; color: #fff; font-family: 'Courier New', monospace; outline: none; }
-        .terminal-output { color: #0f0; margin: 0.5rem 0; white-space: pre-wrap; }
-        .terminal-error { color: #f00; }
+        .tab:hover {
+            border-color: #ffd700;
+        }
         
-        /* دستورات پرکاربرد */
-        .commands-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1rem; }
-        .command-item { background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; cursor: pointer; transition: all 0.3s; border: 1px solid transparent; }
-        .command-item:hover { border-color: #ffd700; background: rgba(255,215,0,0.1); }
-        .command-title { color: #ffd700; font-weight: bold; }
-        .command-desc { color: #aaa; font-size: 0.9rem; margin-top: 0.3rem; }
+        .tab.active {
+            background: #ffd700;
+            color: #0a2f1f;
+            font-weight: bold;
+        }
         
-        /* گرید داده‌ها */
-        .data-grid { overflow-x: auto; }
-        .data-table { width: 100%; border-collapse: collapse; }
-        .data-table th { background: rgba(255,215,0,0.2); color: #ffd700; padding: 0.8rem; text-align: right; }
-        .data-table td { padding: 0.8rem; color: #fff; border-bottom: 1px solid rgba(255,215,0,0.1); }
-        .data-table tr:hover { background: rgba(255,255,255,0.1); }
-        .data-table .editable { background: rgba(255,215,0,0.1); cursor: pointer; }
-        .data-table .editable:hover { background: rgba(255,215,0,0.3); }
+        .tab-content {
+            display: none;
+        }
         
-        /* جستجو */
-        .search-box { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
-        .search-box input, .search-box select { padding: 0.8rem; border-radius: 8px; border: 1px solid #b8860b; background: rgba(0,0,0,0.3); color: #fff; flex: 1; }
-        .search-box button { padding: 0.8rem 2rem; }
+        .tab-content.active {
+            display: block;
+        }
         
-        /* فرم ویرایش */
-        .edit-form { background: rgba(0,0,0,0.5); padding: 1rem; border-radius: 8px; margin-top: 1rem; }
-        .form-row { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
-        .form-row label { color: #ffd700; min-width: 100px; }
-        .form-row input, .form-row select { flex: 1; padding: 0.5rem; border-radius: 4px; border: 1px solid #b8860b; background: rgba(255,255,255,0.1); color: #fff; }
+        /* ===== کارت‌ها ===== */
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
         
-        .btn { background: #ffd700; color: #0a2f1f; border: none; padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.3s; }
-        .btn:hover { background: #b8860b; color: #fff; }
-        .btn-sm { padding: 0.4rem 1rem; font-size: 0.9rem; }
-        .btn-success { background: #28a745; color: #fff; }
-        .btn-success:hover { background: #1e7e34; }
-        .btn-danger { background: #dc3545; color: #fff; }
+        .card h3 {
+            color: #ffd700;
+            margin-bottom: 1.2rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
         
-        /* آمار دیتابیس */
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
-        .stat-item { background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; text-align: center; }
-        .stat-value { color: #ffd700; font-size: 1.8rem; font-weight: bold; }
-        .stat-label { color: #aaa; }
+        /* ===== آمار دیتابیس ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
         
-        /* قابلیت‌های اضافی */
-        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; }
-        .feature-btn { background: rgba(255,215,0,0.1); border: 1px solid #b8860b; color: #fff; padding: 1rem; border-radius: 8px; cursor: pointer; text-align: center; transition: all 0.3s; }
-        .feature-btn:hover { background: rgba(255,215,0,0.3); transform: translateY(-2px); }
-        .feature-btn i { color: #ffd700; font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .stat-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 1.2rem;
+            text-align: center;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        
+        .stat-value {
+            color: #ffd700;
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        
+        .stat-label {
+            color: #aaa;
+            margin-top: 0.3rem;
+            font-size: 0.9rem;
+        }
+        
+        /* ===== ترمینال ===== */
+        .terminal {
+            background: #1e1e1e;
+            border-radius: 12px;
+            overflow: hidden;
+            font-family: 'Courier New', monospace;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        
+        .terminal-header {
+            background: #2d2d2d;
+            padding: 0.6rem 1rem;
+            color: #ffd700;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        
+        .terminal-body {
+            padding: 1rem;
+            min-height: 150px;
+            max-height: 250px;
+            overflow-y: auto;
+            background: #1e1e1e;
+            color: #0f0;
+            font-size: 0.9rem;
+        }
+        
+        .terminal-input {
+            display: flex;
+            padding: 0.6rem 1rem;
+            background: #2d2d2d;
+            border-top: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        
+        .terminal-prompt {
+            color: #ffd700;
+            margin-left: 0.6rem;
+        }
+        
+        .terminal-input input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            outline: none;
+            font-size: 0.9rem;
+        }
+        
+        .terminal-output {
+            color: #0f0;
+            margin: 0.2rem 0;
+        }
+        
+        .terminal-error {
+            color: #f00;
+        }
+        
+        /* ===== دستورات پرکاربرد ===== */
+        .commands-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+        
+        .command-item {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+        }
+        
+        .command-item:hover {
+            border-color: #ffd700;
+            background: rgba(255, 215, 0, 0.05);
+        }
+        
+        .command-title {
+            color: #ffd700;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+        
+        .command-desc {
+            color: #aaa;
+            font-size: 0.8rem;
+        }
+        
+        /* ===== گرید داده‌ها ===== */
+        .data-grid {
+            overflow-x: auto;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 0.5rem;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        
+        .data-table th {
+            background: rgba(255, 215, 0, 0.15);
+            color: #ffd700;
+            padding: 0.8rem;
+            text-align: right;
+            font-weight: 500;
+        }
+        
+        .data-table td {
+            padding: 0.8rem;
+            color: #fff;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+        }
+        
+        .data-table tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        /* ===== جستجو ===== */
+        .search-box {
+            display: flex;
+            gap: 0.8rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .search-box input,
+        .search-box select {
+            padding: 0.6rem 1rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .search-box input:focus,
+        .search-box select:focus {
+            outline: none;
+            border-color: #ffd700;
+        }
+        
+        /* ===== انتخابگر جدول ===== */
+        #table-select {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            color: #fff;
+            padding: 0.6rem 1.2rem;
+            border-radius: 20px;
+            margin-bottom: 1rem;
+            min-width: 200px;
+        }
+        
+        #table-select:focus {
+            outline: none;
+            border-color: #ffd700;
+        }
     </style>
 </head>
 <body>
     <!-- سایدبار -->
-    <div class="sidebar">
-        <div class="logo">PhoenixTrade</div>
-        <nav>
-            <a href="/pprofessor/dashboard" class="menu-item">
-                <i class="fas fa-home"></i>
-                <span>داشبورد</span>
-            </a>
-            <a href="/pprofessor/backup" class="menu-item">
-                <i class="fas fa-database"></i>
-                <span>مدیریت بکاپ</span>
-            </a>
-            <a href="/pprofessor/database" class="menu-item active">
-                <i class="fas fa-server"></i>
-                <span>مدیریت دیتابیس</span>
-            </a>
-            <a href="/pprofessor/bot" class="menu-item">
-                <i class="fas fa-robot"></i>
-                <span>مدیریت ربات</span>
-            </a>
-            <a href="/pprofessor/webapp" class="menu-item">
-                <i class="fas fa-globe"></i>
-                <span>مدیریت وب اپ</span>
-            </a>
-            <a href="/pprofessor/api-settings" class="menu-item">
-                <i class="fas fa-code"></i>
-                <span>تنظیمات API</span>
-            </a>
-            <a href="/pprofessor/logout" class="menu-item" style="margin-top: 2rem;">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>خروج</span>
-            </a>
-        </nav>
-    </div>
+    <%- include('sidebar', { activePage: 'database' }) %>
 
     <!-- محتوای اصلی -->
     <div class="main-content">
@@ -132,192 +274,149 @@
             <h1><i class="fas fa-server"></i> <%= title %></h1>
         </div>
 
-        <!-- آمار سریع دیتابیس -->
+        <!-- آمار دیتابیس (داده‌های واقعی از سرور) -->
         <div class="stats-grid">
             <div class="stat-item">
-                <div class="stat-value">۱۲۴</div>
-                <div class="stat-label">کل کاربران</div>
+                <div class="stat-value"><%= stats.totalTables || 8 %></div>
+                <div class="stat-label">تعداد جداول</div>
             </div>
             <div class="stat-item">
-                <div class="stat-value">۴۵</div>
-                <div class="stat-label">درس‌ها</div>
+                <div class="stat-value"><%= stats.totalRecords || 124 %></div>
+                <div class="stat-label">کل رکوردها</div>
             </div>
             <div class="stat-item">
-                <div class="stat-value">۸</div>
-                <div class="stat-label">جدول‌ها</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value">۳.۲</div>
+                <div class="stat-value"><%= stats.dbSize || '۳.۲' %></div>
                 <div class="stat-label">حجم (مگابایت)</div>
             </div>
         </div>
 
         <!-- تب‌ها -->
         <div class="tabs">
-            <div class="tab active" onclick="showTab('terminal')">ترمینال SQL</div>
-            <div class="tab" onclick="showTab('data')">مدیریت داده‌ها</div>
-            <div class="tab" onclick="showTab('schema')">ساختار جداول</div>
-            <div class="tab" onclick="showTab('tools')">ابزارهای پیشرفته</div>
+            <div class="tab active" onclick="showTab('terminal')">
+                <i class="fas fa-terminal"></i> ترمینال SQL
+            </div>
+            <div class="tab" onclick="showTab('data')">
+                <i class="fas fa-table"></i> مدیریت داده‌ها
+            </div>
+            <div class="tab" onclick="showTab('schema')">
+                <i class="fas fa-diagram-project"></i> ساختار جداول
+            </div>
         </div>
 
-        <!-- تب 1: ترمینال SQL + دستورات پرکاربرد -->
+        <!-- تب 1: ترمینال SQL -->
         <div id="tab-terminal" class="tab-content active">
             <div class="card">
                 <h3><i class="fas fa-terminal"></i> ترمینال SQL</h3>
                 <div class="terminal">
                     <div class="terminal-header">
                         <span>SQLite Terminal</span>
-                        <span><i class="fas fa-circle" style="color: #0f0;"></i> متصل</span>
+                        <span>متصل</span>
                     </div>
                     <div class="terminal-body" id="terminal-output">
-                        <div class="terminal-output">SQLite version 3.45.1</div>
-                        <div class="terminal-output">Enter ".help" for usage hints.</div>
-                        <div class="terminal-output">sqlite></div>
+                        <% if (terminalHistory && terminalHistory.length > 0) { %>
+                            <% terminalHistory.forEach(line => { %>
+                                <div class="terminal-output"><%= line %></div>
+                            <% }); %>
+                        <% } else { %>
+                            <div class="terminal-output">SQLite version 3.45.1</div>
+                            <div class="terminal-output">Enter ".help" for usage hints.</div>
+                            <div class="terminal-output">sqlite></div>
+                        <% } %>
                     </div>
                     <div class="terminal-input">
                         <span class="terminal-prompt">sqlite></span>
-                        <input type="text" id="sql-input" placeholder="دستور SQL را وارد کنید..." onkeypress="handleSqlKeyPress(event)">
+                        <input type="text" id="sql-input" placeholder="دستور SQL را وارد کنید..." 
+                               onkeypress="handleSqlKeyPress(event)" 
+                               value="<%= lastCommand || '' %>">
                     </div>
                 </div>
 
-                <h3 style="margin-top: 2rem;"><i class="fas fa-list"></i> دستورات پرکاربرد (کلیک کنید)</h3>
-<div class="commands-grid">
-    <div class="command-item" onclick='insertSqlCommand("SELECT * FROM Admins;")'>
-        <div class="command-title">SELECT * FROM Admins</div>
-        <div class="command-desc">مشاهده همه مدیران</div>
-    </div>
-    <div class="command-item" onclick='insertSqlCommand("SELECT * FROM Lessons WHERE isActive = 1;")'>
-        <div class="command-title">SELECT فعال‌ها</div>
-        <div class="command-desc">لیست درس‌های فعال</div>
-    </div>
-    <div class="command-item" onclick='insertSqlCommand("SELECT COUNT(*) FROM Users;")'>
-        <div class="command-title">COUNT Users</div>
-        <div class="command-desc">تعداد کاربران</div>
-    </div>
-    <div class="command-item" onclick='insertSqlCommand("PRAGMA table_info(Admins);")'>
-        <div class="command-title">PRAGMA table_info</div>
-        <div class="command-desc">ساختار جدول Admins</div>
-    </div>
-    <div class="command-item" onclick='insertSqlCommand(".tables")'>
-        <div class="command-title">.tables</div>
-        <div class="command-desc">لیست همه جداول</div>
-    </div>
-    <div class="command-item" onclick='insertSqlCommand(".schema Lessons")'>
-        <div class="command-title">.schema Lessons</div>
-        <div class="command-desc">نمایش کوئری ساخت جدول</div>
-    </div>
-    <div class="command-item" onclick='insertSqlCommand("SELECT * FROM sqlite_master WHERE type=\"table\";")'>
-        <div class="command-title">اطلاعات متادیتا</div>
-        <div class="command-desc">اطلاعات کامل جداول</div>
-    </div>
-    <div class="command-item" onclick='insertSqlCommand("DELETE FROM Lessons WHERE id = 1;")'>
-        <div class="command-title">DELETE</div>
-        <div class="command-desc">حذف رکورد (احتیاط!)</div>
-    </div>
-    <div class="command-item" onclick='insertSqlCommand("UPDATE Admins SET role = \"superadmin\" WHERE id = 1;")'>
-        <div class="command-title">UPDATE</div>
-        <div class="command-desc">به‌روزرسانی</div>
-    </div>
-    <div class="command-item" onclick='insertSqlCommand("INSERT INTO Categories (name, slug) VALUES (\"جدید\", \"new\");")'>
-        <div class="command-title">INSERT</div>
-        <div class="command-desc">درج رکورد جدید</div>
-    </div>
-</div>
+                <h3 style="margin-top: 1.5rem;">دستورات پرکاربرد</h3>
+                <div class="commands-grid">
+                    <% if (commonCommands && commonCommands.length > 0) { %>
+                        <% commonCommands.forEach(cmd => { %>
+                            <div class="command-item" onclick='insertSqlCommand("<%= cmd.command %>")'>
+                                <div class="command-title"><%= cmd.title %></div>
+                                <div class="command-desc"><%= cmd.description %></div>
+                            </div>
+                        <% }); %>
+                    <% } %>
+                </div>
             </div>
         </div>
 
-        <!-- تب 2: مدیریت داده‌ها (گرافیکی + جستجو) -->
+        <!-- تب 2: مدیریت داده‌ها -->
         <div id="tab-data" class="tab-content">
             <div class="card">
                 <h3><i class="fas fa-table"></i> مدیریت داده‌ها</h3>
                 
                 <!-- انتخاب جدول -->
-                <div style="margin-bottom: 1rem;">
-                    <select id="table-select" onchange="loadTableData()" style="padding: 0.5rem; border-radius: 4px;">
-                        <option value="Admins">مدیران (Admins)</option>
-                        <option value="Categories">دسته‌بندی‌ها (Categories)</option>
-                        <option value="Lessons">درس‌ها (Lessons)</option>
-                        <option value="Brokers">بروکرها (Brokers)</option>
-                        <option value="Events">رویدادها (Events)</option>
-                        <option value="BotMessages">پیام‌های ربات (BotMessages)</option>
-                        <option value="WebappPages">صفحات وب‌اپ (WebappPages)</option>
-                    </select>
-                </div>
+                <select id="table-select" onchange="loadTableData()">
+                    <option value="">-- انتخاب جدول --</option>
+                    <% if (tables && tables.length > 0) { %>
+                        <% tables.forEach(table => { %>
+                            <option value="<%= table.name %>" <%= table.name === selectedTable ? 'selected' : '' %>>
+                                <%= table.name %> (<%= table.recordCount %> رکورد)
+                            </option>
+                        <% }); %>
+                    <% } %>
+                </select>
 
-                <!-- جستجوی پیشرفته -->
+                <!-- جستجو -->
                 <div class="search-box">
-                    <input type="text" id="search-input" placeholder="جستجو در همه فیلدها...">
+                    <input type="text" id="search-input" placeholder="جستجو...">
                     <select id="search-field">
                         <option value="all">همه فیلدها</option>
-                        <option value="id">ID</option>
-                        <option value="username">نام کاربری</option>
-                        <option value="title">عنوان</option>
-                        <option value="name">نام</option>
+                        <% if (currentColumns && currentColumns.length > 0) { %>
+                            <% currentColumns.forEach(col => { %>
+                                <option value="<%= col %>"><%= col %></option>
+                            <% }); %>
+                        <% } %>
                     </select>
-                    <select id="search-operator">
-                        <option value="contains">شامل</option>
-                        <option value="equals">مساوی</option>
-                        <option value="startswith">شروع با</option>
-                        <option value="endswith">پایان با</option>
-                        <option value="greater">بزرگتر از</option>
-                        <option value="less">کوچکتر از</option>
-                    </select>
-                    <button class="btn btn-sm" onclick="searchData()"><i class="fas fa-search"></i> جستجو</button>
-                    <button class="btn btn-sm" onclick="resetSearch()"><i class="fas fa-undo"></i> بازنشانی</button>
+                    <button class="btn btn-sm" onclick="searchData()">
+                        <i class="fas fa-search"></i> جستجو
+                    </button>
                 </div>
 
-                <!-- نمایش داده‌ها (گرید قابل ویرایش) -->
+                <!-- جدول داده‌ها -->
                 <div class="data-grid">
-                    <table class="data-table" id="data-table">
+                    <table class="data-table">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>نام کاربری</th>
-                                <th>نقش</th>
-                                <th>آخرین ورود</th>
-                                <th>عملیات</th>
+                                <% if (currentColumns && currentColumns.length > 0) { %>
+                                    <% currentColumns.forEach(col => { %>
+                                        <th><%= col %></th>
+                                    <% }); %>
+                                    <th>عملیات</th>
+                                <% } %>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td class="editable" onclick="editField(this, 'username')">pprofessor</td>
-                                <td class="editable" onclick="editField(this, 'role')">superadmin</td>
-                                <td class="editable" onclick="editField(this, 'lastLogin')">۱۴۰۴/۱۲/۰۸</td>
-                                <td>
-                                    <button class="btn btn-sm btn-success" onclick="saveRow(1)"><i class="fas fa-save"></i></button>
-                                    <button class="btn btn-sm btn-danger" onclick="deleteRow(1)"><i class="fas fa-trash"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td class="editable" onclick="editField(this, 'username')">admin1</td>
-                                <td class="editable" onclick="editField(this, 'role')">admin</td>
-                                <td class="editable" onclick="editField(this, 'lastLogin')">۱۴۰۴/۱۲/۰۷</td>
-                                <td>
-                                    <button class="btn btn-sm btn-success"><i class="fas fa-save"></i></button>
-                                    <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
-                                </td>
-                            </tr>
+                            <% if (currentData && currentData.length > 0) { %>
+                                <% currentData.forEach(row => { %>
+                                    <tr>
+                                        <% currentColumns.forEach(col => { %>
+                                            <td><%= row[col] || '-' %></td>
+                                        <% }); %>
+                                        <td>
+                                            <button class="btn btn-sm btn-success" onclick="editRow(<%= row.id %>)">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger" onclick="deleteRow(<%= row.id %>)">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="100%" style="text-align: center; color: #aaa;">
+                                        داده‌ای برای نمایش وجود ندارد
+                                    </td>
+                                </tr>
+                            <% } %>
                         </tbody>
                     </table>
-                </div>
-
-                <!-- فرم ویرایش سریع (نمونه) -->
-                <div class="edit-form" id="edit-form" style="display: none;">
-                    <h4 style="color: #ffd700;">ویرایش رکورد</h4>
-                    <div class="form-row">
-                        <label>فیلد:</label>
-                        <input type="text" id="edit-field" readonly>
-                    </div>
-                    <div class="form-row">
-                        <label>مقدار جدید:</label>
-                        <input type="text" id="edit-value">
-                    </div>
-                    <div>
-                        <button class="btn btn-sm btn-success" onclick="applyEdit()">اعمال</button>
-                        <button class="btn btn-sm" onclick="cancelEdit()">انصراف</button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -327,93 +426,24 @@
             <div class="card">
                 <h3><i class="fas fa-diagram-project"></i> ساختار جداول</h3>
                 <div class="commands-grid">
-                    <div class="command-item">
-                        <div class="command-title">Admins</div>
-                        <div class="command-desc">id, username, password, role, lastLogin, ...</div>
-                    </div>
-                    <div class="command-item">
-                        <div class="command-title">Categories</div>
-                        <div class="command-desc">id, name, slug, description, order, isActive</div>
-                    </div>
-                    <div class="command-item">
-                        <div class="command-title">Lessons</div>
-                        <div class="command-desc">id, title, content, videoUrl, order, isFree, isActive, categoryId</div>
-                    </div>
-                    <div class="command-item">
-                        <div class="command-title">Brokers</div>
-                        <div class="command-desc">id, name, logo, description, pros, cons, registerLink, minDeposit, isActive</div>
-                    </div>
-                    <div class="command-item">
-                        <div class="command-title">Events</div>
-                        <div class="command-desc">id, title, description, eventDate, duration, maxParticipants, isOnline, link, isActive</div>
-                    </div>
-                    <div class="command-item">
-                        <div class="command-title">BotMessages</div>
-                        <div class="command-desc">id, key, text, media, buttons, isActive</div>
-                    </div>
-                    <div class="command-item">
-                        <div class="command-title">WebappPages</div>
-                        <div class="command-desc">id, slug, title, content, isActive</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- تب 4: ابزارهای پیشرفته (قابلیت‌های اضافی) -->
-        <div id="tab-tools" class="tab-content">
-            <div class="card">
-                <h3><i class="fas fa-tools"></i> ابزارهای پیشرفته دیتابیس</h3>
-                <div class="feature-grid">
-                    <div class="feature-btn" onclick="optimizeDB()">
-                        <i class="fas fa-bolt"></i>
-                        <div>بهینه‌سازی دیتابیس</div>
-                        <small>VACUUM</small>
-                    </div>
-                    <div class="feature-btn" onclick="exportCSV()">
-                        <i class="fas fa-file-csv"></i>
-                        <div>خروجی CSV</div>
-                        <small>گرفتن خروجی</small>
-                    </div>
-                    <div class="feature-btn" onclick="importCSV()">
-                        <i class="fas fa-file-import"></i>
-                        <div>ورودی CSV</div>
-                        <small>بارگذاری داده</small>
-                    </div>
-                    <div class="feature-btn" onclick="backupNow()">
-                        <i class="fas fa-database"></i>
-                        <div>بکاپ فوری</div>
-                        <small>از کل دیتابیس</small>
-                    </div>
-                    <div class="feature-btn" onclick="checkIntegrity()">
-                        <i class="fas fa-check-circle"></i>
-                        <div>بررسی یکپارچگی</div>
-                        <small>PRAGMA integrity_check</small>
-                    </div>
-                    <div class="feature-btn" onclick="showIndexes()">
-                        <i class="fas fa-index"></i>
-                        <div>ایندکس‌ها</div>
-                        <small>مدیریت ایندکس</small>
-                    </div>
-                    <div class="feature-btn" onclick="queryHistory()">
-                        <i class="fas fa-history"></i>
-                        <div>تاریخچه کوئری‌ها</div>
-                        <small>۱۰۰ دستور آخر</small>
-                    </div>
-                    <div class="feature-btn" onclick="compareTables()">
-                        <i class="fas fa-not-equal"></i>
-                        <div>مقایسه جداول</div>
-                        <small>تفاوت داده‌ها</small>
-                    </div>
+                    <% if (tableSchemas && tableSchemas.length > 0) { %>
+                        <% tableSchemas.forEach(schema => { %>
+                            <div class="command-item">
+                                <div class="command-title"><%= schema.name %></div>
+                                <div class="command-desc"><%= schema.columns.join('، ') %></div>
+                            </div>
+                        <% }); %>
+                    <% } %>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        let currentEditCell = null;
-        let currentEditField = null;
-        let currentEditId = null;
-
+        // ============= متغیرهای سراسری =============
+        let currentTable = '<%= selectedTable || "" %>';
+        
+        // ============= مدیریت تب‌ها =============
         function showTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -421,6 +451,7 @@
             event.target.classList.add('active');
         }
 
+        // ============= ترمینال SQL =============
         function insertSqlCommand(cmd) {
             document.getElementById('sql-input').value = cmd;
         }
@@ -433,70 +464,106 @@
         }
 
         function executeSql(cmd) {
-            const output = document.getElementById('terminal-output');
-            output.innerHTML += `<div class="terminal-output">sqlite> ${cmd}</div>`;
-            output.innerHTML += `<div class="terminal-output">🔧 در حال توسعه - اتصال به بک‌اند</div>`;
-            output.innerHTML += `<div class="terminal-output">sqlite></div>`;
-            output.scrollTop = output.scrollHeight;
+            fetch('/pprofessor/api/database/query', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query: cmd })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('دستور با موفقیت اجرا شد');
+                    // به‌روزرسانی خروجی ترمینال
+                    const output = document.getElementById('terminal-output');
+                    output.innerHTML += `<div class="terminal-output">sqlite> ${cmd}</div>`;
+                    data.results.forEach(line => {
+                        output.innerHTML += `<div class="terminal-output">${line}</div>`;
+                    });
+                    output.innerHTML += `<div class="terminal-output">sqlite></div>`;
+                    output.scrollTop = output.scrollHeight;
+                } else {
+                    showToast('خطا: ' + data.error, 'error');
+                }
+            })
+            .catch(() => showToast('خطا در ارتباط با سرور', 'error'));
+            
             document.getElementById('sql-input').value = '';
         }
 
+        // ============= مدیریت داده‌ها =============
         function loadTableData() {
-            alert('بارگذاری داده‌های جدول ' + document.getElementById('table-select').value + ' (در حال توسعه)');
+            const table = document.getElementById('table-select').value;
+            if (!table) return;
+            
+            window.location.href = '/pprofessor/database?table=' + table;
         }
 
         function searchData() {
-            alert('جستجوی پیشرفته (در حال توسعه)');
-        }
-
-        function resetSearch() {
-            document.getElementById('search-input').value = '';
-            document.getElementById('search-field').value = 'all';
-            document.getElementById('search-operator').value = 'contains';
-        }
-
-        function editField(cell, field) {
-            currentEditCell = cell;
-            currentEditField = field;
-            currentEditId = cell.parentElement.cells[0].innerText;
+            const searchTerm = document.getElementById('search-input').value;
+            const searchField = document.getElementById('search-field').value;
             
-            document.getElementById('edit-field').value = field;
-            document.getElementById('edit-value').value = cell.innerText;
-            document.getElementById('edit-form').style.display = 'block';
+            fetch('/pprofessor/api/database/search', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    table: currentTable,
+                    field: searchField,
+                    term: searchTerm
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    // به‌روزرسانی جدول با داده‌های جدید
+                    location.reload();
+                }
+            });
         }
 
-        function applyEdit() {
-            if (currentEditCell) {
-                currentEditCell.innerText = document.getElementById('edit-value').value;
-                cancelEdit();
-                alert(`تغییرات برای ID ${currentEditId} اعمال شد (در حال توسعه)`);
-            }
-        }
-
-        function cancelEdit() {
-            document.getElementById('edit-form').style.display = 'none';
-            currentEditCell = null;
-        }
-
-        function saveRow(id) {
-            alert(`ذخیره تغییرات ردیف ${id} (در حال توسعه)`);
+        function editRow(id) {
+            window.location.href = '/pprofessor/database/edit/' + currentTable + '/' + id;
         }
 
         function deleteRow(id) {
-            if (confirm(`آیا از حذف ردیف ${id} اطمینان دارید؟`)) {
-                alert(`ردیف ${id} حذف شد (در حال توسعه)`);
+            if (confirm('آیا از حذف این رکورد اطمینان دارید؟')) {
+                fetch('/pprofessor/api/database/delete', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        table: currentTable,
+                        id: id
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast('رکورد با موفقیت حذف شد');
+                        location.reload();
+                    } else {
+                        showToast('خطا: ' + data.error, 'error');
+                    }
+                });
             }
         }
 
-        // قابلیت‌های اضافی
-        function optimizeDB() { alert('بهینه‌سازی دیتابیس (VACUUM) - در حال توسعه'); }
-        function exportCSV() { alert('خروجی CSV - در حال توسعه'); }
-        function importCSV() { alert('ورودی CSV - در حال توسعه'); }
-        function backupNow() { alert('بکاپ فوری - در حال توسعه'); }
-        function checkIntegrity() { alert('بررسی یکپارچگی - در حال توسعه'); }
-        function showIndexes() { alert('مدیریت ایندکس‌ها - در حال توسعه'); }
-        function queryHistory() { alert('تاریخچه کوئری‌ها - در حال توسعه'); }
-        function compareTables() { alert('مقایسه جداول - در حال توسعه'); }
+        // ============= تابع نمایش پیام =============
+        function showToast(message, type = 'success') {
+            let toast = document.getElementById('toast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'toast';
+                toast.className = 'toast';
+                document.body.appendChild(toast);
+            }
+            
+            toast.className = 'toast ' + type;
+            toast.textContent = message;
+            toast.style.display = 'block';
+            
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 2000);
+        }
     </script>
 </body>
 </html>

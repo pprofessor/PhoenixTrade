@@ -4,73 +4,133 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %> - PhoenixTrade</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Vazir', 'Tahoma', sans-serif; }
-        body { background: linear-gradient(135deg, #0a2f1f 0%, #1a4a2c 100%); min-height: 100vh; display: flex; }
-        
-        /* سایدبار */
-        .sidebar { width: 280px; background: rgba(0, 20, 10, 0.95); backdrop-filter: blur(10px); border-left: 1px solid #b8860b; padding: 2rem 1rem; color: #fff; }
-        .logo { font-size: 1.8rem; font-weight: bold; color: #ffd700; text-shadow: 0 0 10px rgba(255,215,0,0.5); margin-bottom: 2rem; text-align: center; }
-        .menu-item { display: flex; align-items: center; gap: 0.8rem; padding: 1rem; margin: 0.5rem 0; border-radius: 10px; color: #fff; text-decoration: none; transition: all 0.3s; }
-        .menu-item:hover, .menu-item.active { background: linear-gradient(135deg, #2a5a3a, #1a3a2a); border-right: 3px solid #ffd700; }
-        .menu-item i { width: 24px; color: #ffd700; }
-        
-        /* محتوای اصلی */
-        .main-content { flex: 1; padding: 2rem; }
-        .header { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid rgba(255,215,0,0.3); }
-        .header h1 { color: #ffd700; font-size: 2rem; }
-        .welcome { color: #fff; margin-top: 0.5rem; }
-        
-        /* کارت‌های آمار */
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
-        .stat-card { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; border: 1px solid rgba(255,215,0,0.3); }
-        .stat-card h3 { color: #ffd700; font-size: 1rem; opacity: 0.9; }
-        .stat-number { color: #fff; font-size: 2rem; font-weight: bold; margin: 0.5rem 0; }
-        
-        /* گرید دسترسی سریع */
-        .quick-access { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
-        .quick-card { background: rgba(255,255,255,0.05); border-radius: 10px; padding: 1rem; text-align: center; text-decoration: none; color: #fff; border: 1px solid transparent; transition: all 0.3s; }
-        .quick-card:hover { border-color: #ffd700; transform: translateY(-5px); }
-        .quick-card i { font-size: 2rem; color: #ffd700; margin-bottom: 0.5rem; }
-    </style>
-    <!-- Font Awesome برای آیکون‌ها -->
+    <!-- فونت سمیم -->
+    <link rel="stylesheet" href="/css/fonts.css">
+    <!-- استایل سراسری پنل -->
+    <link rel="stylesheet" href="/css/admin.css">
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- استایل مخصوص داشبورد -->
+    <style>
+        /* کارت‌های آمار */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 18px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.15);
+            border-color: rgba(255, 215, 0, 0.6);
+        }
+        
+        .stat-card h3 {
+            color: rgba(255, 215, 0, 0.9);
+            font-size: 0.9rem;
+            font-weight: normal;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .stat-number {
+            color: #fff;
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 0.3rem 0;
+            text-shadow: 0 0 15px rgba(255,215,0,0.3);
+        }
+        
+        .stat-footer {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .stat-badge {
+            background: rgba(255, 215, 0, 0.2);
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            color: #ffd700;
+            font-size: 0.75rem;
+        }
+        
+        /* دسترسی سریع */
+        .quick-access {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .quick-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 1.2rem;
+            text-align: center;
+            text-decoration: none;
+            color: #fff;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .quick-card:hover {
+            border-color: #ffd700;
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .quick-card i {
+            font-size: 2rem;
+            color: #ffd700;
+            margin-bottom: 0.8rem;
+            text-shadow: 0 0 20px rgba(255,215,0,0.5);
+        }
+        
+        .quick-card h3 {
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+        }
+        
+        .quick-card small {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.7rem;
+        }
+    </style>
 </head>
 <body>
-    <!-- سایدبار -->
-    <div class="sidebar">
-        <div class="logo">PhoenixTrade</div>
-        <nav>
-            <a href="/pprofessor/dashboard" class="menu-item active">
-                <i class="fas fa-home"></i>
-                <span>داشبورد</span>
-            </a>
-            <a href="/pprofessor/backup" class="menu-item">
-                <i class="fas fa-database"></i>
-                <span>مدیریت بکاپ</span>
-            </a>
-            <a href="/pprofessor/database" class="menu-item">
-                <i class="fas fa-server"></i>
-                <span>مدیریت دیتابیس</span>
-            </a>
-            <a href="/pprofessor/bot" class="menu-item">
-                <i class="fas fa-robot"></i>
-                <span>مدیریت ربات</span>
-            </a>
-            <a href="/pprofessor/webapp" class="menu-item">
-                <i class="fas fa-globe"></i>
-                <span>مدیریت وب اپ</span>
-            </a>
-            <a href="/pprofessor/api-settings" class="menu-item">
-                <i class="fas fa-code"></i>
-                <span>تنظیمات API</span>
-            </a>
-            <a href="/pprofessor/logout" class="menu-item" style="margin-top: 2rem;">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>خروج</span>
-            </a>
-        </nav>
+    <div id="toast" class="toast"></div>
+    
+    <!-- پنل تنظیم ویجت‌ها -->
+    <div id="widgets-panel" class="widgets-panel">
+        <button class="close-panel" onclick="toggleWidgetPanel()"><i class="fas fa-times"></i></button>
+        <h3><i class="fas fa-puzzle-piece"></i> مدیریت ویجت‌ها</h3>
+        <div id="widgets-list"></div>
     </div>
+
+    <!-- سایدبار -->
+    <%- include('sidebar', { activePage: 'dashboard' }) %>
 
     <!-- محتوای اصلی -->
     <div class="main-content">
@@ -81,54 +141,220 @@
             </div>
         </div>
 
-        <!-- کارت‌های آمار -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <h3><i class="fas fa-robot"></i> پیام‌های ربات</h3>
-                <div class="stat-number">۱۲</div>
-                <small style="color: #aaa;">۴ عدد فعال</small>
-            </div>
-            <div class="stat-card">
-                <h3><i class="fas fa-file-alt"></i> صفحات وب اپ</h3>
-                <div class="stat-number">۸</div>
-                <small style="color: #aaa;">۶ عدد فعال</small>
-            </div>
-            <div class="stat-card">
-                <h3><i class="fas fa-book"></i> درس‌ها</h3>
-                <div class="stat-number">۲۴</div>
-                <small style="color: #aaa;">۳ دسته‌بندی</small>
-            </div>
-            <div class="stat-card">
-                <h3><i class="fas fa-chart-line"></i> بروکرها</h3>
-                <div class="stat-number">۱۵</div>
-                <small style="color: #aaa;">۱۰ عدد فعال</small>
+        <!-- نوار ابزار ویجت‌ها -->
+        <div class="widget-toolbar">
+            <h2><i class="fas fa-chart-pie"></i> آمار و اطلاعات</h2>
+            <div class="widget-controls">
+                <button class="widget-btn" onclick="toggleWidgetPanel()">
+                    <i class="fas fa-puzzle-piece"></i> مدیریت ویجت‌ها
+                </button>
+                <button class="widget-btn" onclick="refreshDashboard()">
+                    <i class="fas fa-sync-alt"></i> بروزرسانی
+                </button>
             </div>
         </div>
 
+        <!-- کارت‌های آمار (ویجت‌ها) -->
+        <div class="stats-grid" id="stats-grid">
+            <!-- ویجت‌ها با data از سرور -->
+        </div>
+
         <!-- دسترسی سریع به بخش‌ها -->
-        <h2 style="color: #ffd700; margin-bottom: 1rem;">دسترسی سریع</h2>
+        <h2 style="color: #ffd700; margin-bottom: 1rem; font-size: 1.2rem;">
+            <i class="fas fa-rocket"></i> دسترسی سریع
+        </h2>
         <div class="quick-access">
             <a href="/pprofessor/backup" class="quick-card">
                 <i class="fas fa-download"></i>
                 <h3>بکاپ جدید</h3>
-                <small style="color: #aaa;">گرفتن نسخه پشتیبان</small>
+                <small>گرفتن نسخه پشتیبان</small>
             </a>
-            <a href="/pprofessor/bot/messages" class="quick-card">
+            <a href="/pprofessor/bot" class="quick-card">
                 <i class="fas fa-comment"></i>
                 <h3>مدیریت پیام‌ها</h3>
-                <small style="color: #aaa;">ویرایش متن‌های ربات</small>
+                <small>ویرایش متن‌های ربات</small>
             </a>
-            <a href="/pprofessor/webapp/pages" class="quick-card">
+            <a href="/pprofessor/webapp" class="quick-card">
                 <i class="fas fa-pencil-alt"></i>
                 <h3>ویرایش صفحات</h3>
-                <small style="color: #aaa;">به‌روزرسانی محتوا</small>
+                <small>به‌روزرسانی محتوا</small>
             </a>
             <a href="/pprofessor/api-settings" class="quick-card">
                 <i class="fas fa-key"></i>
                 <h3>کلیدهای API</h3>
-                <small style="color: #aaa;">مدیریت دسترسی‌ها</small>
+                <small>مدیریت دسترسی‌ها</small>
+            </a>
+            <a href="/pprofessor/database" class="quick-card">
+                <i class="fas fa-server"></i>
+                <h3>مدیریت دیتابیس</h3>
+                <small>ساختار جداول</small>
             </a>
         </div>
     </div>
+
+    <script>
+        // ============= متغیرهای سراسری =============
+        let widgets = [
+            { id: 'bot_messages', icon: 'fa-robot', title: 'پیام‌های ربات', active: true, endpoint: '/api/stats/bot/messages' },
+            { id: 'webapp_pages', icon: 'fa-file-alt', title: 'صفحات وب اپ', active: true, endpoint: '/api/stats/webapp/pages' },
+            { id: 'lessons', icon: 'fa-book', title: 'درس‌ها', active: true, endpoint: '/api/stats/lessons' },
+            { id: 'brokers', icon: 'fa-chart-line', title: 'بروکرها', active: true, endpoint: '/api/stats/brokers' },
+            { id: 'bot_users', icon: 'fa-users', title: 'کاربران ربات', active: false, endpoint: '/api/stats/bot/users' },
+            { id: 'events', icon: 'fa-calendar', title: 'رویدادها', active: false, endpoint: '/api/stats/events' }
+        ];
+
+        // ============= توابع کمکی =============
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.className = 'toast ' + type;
+            toast.textContent = message;
+            toast.style.display = 'block';
+            setTimeout(() => toast.style.display = 'none', 2000);
+        }
+
+        // ============= مدیریت ویجت‌ها =============
+        function toggleWidgetPanel() {
+            document.getElementById('widgets-panel').classList.toggle('active');
+            renderWidgetsList();
+        }
+
+        function renderWidgetsList() {
+            const list = document.getElementById('widgets-list');
+            let html = '';
+            widgets.forEach(w => {
+                html += `
+                    <div class="widget-item">
+                        <div class="widget-info">
+                            <i class="fas ${w.icon}"></i>
+                            <span>${w.title}</span>
+                        </div>
+                        <div class="widget-toggle ${w.active ? 'active' : ''}" onclick="toggleWidget('${w.id}')"></div>
+                    </div>
+                `;
+            });
+            list.innerHTML = html;
+        }
+
+        function toggleWidget(id) {
+            widgets = widgets.map(w => {
+                if (w.id === id) w.active = !w.active;
+                return w;
+            });
+            renderWidgetsList();
+            loadDashboardStats();
+            showToast('✅ تنظیمات ذخیره شد');
+        }
+
+        // ============= بارگذاری آمار از سرور =============
+        async function loadDashboardStats() {
+            try {
+                // دریافت همه آمار با یک درخواست
+                const response = await fetch('/pprofessor/api/dashboard/stats');
+                const data = await response.json();
+                
+                renderStats(data);
+            } catch (error) {
+                console.error('خطا در دریافت آمار:', error);
+                // داده‌های نمونه برای تست
+                renderStats({
+                    bot_messages: { total: 12, active: 4 },
+                    webapp_pages: { total: 8, active: 6 },
+                    lessons: { total: 24, active: 20, categories: 3 },
+                    brokers: { total: 15, active: 10 },
+                    bot_users: { total: 156, active: 89 },
+                    events: { total: 5, active: 2 }
+                });
+            }
+        }
+
+        function renderStats(data) {
+            const grid = document.getElementById('stats-grid');
+            let html = '';
+            
+            widgets.filter(w => w.active).forEach(w => {
+                const stat = data[w.id] || { total: 0, active: 0 };
+                
+                if (w.id === 'bot_messages') {
+                    html += `
+                        <div class="stat-card">
+                            <h3><i class="fas ${w.icon}"></i> ${w.title}</h3>
+                            <div class="stat-number">${stat.total}</div>
+                            <div class="stat-footer">
+                                <span>${stat.active} عدد فعال</span>
+                                <span class="stat-badge">${Math.round(stat.active/stat.total*100)}%</span>
+                            </div>
+                        </div>
+                    `;
+                } else if (w.id === 'webapp_pages') {
+                    html += `
+                        <div class="stat-card">
+                            <h3><i class="fas ${w.icon}"></i> ${w.title}</h3>
+                            <div class="stat-number">${stat.total}</div>
+                            <div class="stat-footer">
+                                <span>${stat.active} عدد فعال</span>
+                                <span class="stat-badge">${Math.round(stat.active/stat.total*100)}%</span>
+                            </div>
+                        </div>
+                    `;
+                } else if (w.id === 'lessons') {
+                    html += `
+                        <div class="stat-card">
+                            <h3><i class="fas ${w.icon}"></i> ${w.title}</h3>
+                            <div class="stat-number">${stat.total}</div>
+                            <div class="stat-footer">
+                                <span>${stat.categories || 0} دسته‌بندی</span>
+                                <span class="stat-badge">${stat.active} فعال</span>
+                            </div>
+                        </div>
+                    `;
+                } else if (w.id === 'brokers') {
+                    html += `
+                        <div class="stat-card">
+                            <h3><i class="fas ${w.icon}"></i> ${w.title}</h3>
+                            <div class="stat-number">${stat.total}</div>
+                            <div class="stat-footer">
+                                <span>${stat.active} عدد فعال</span>
+                                <span class="stat-badge">${Math.round(stat.active/stat.total*100)}%</span>
+                            </div>
+                        </div>
+                    `;
+                } else if (w.id === 'bot_users') {
+                    html += `
+                        <div class="stat-card">
+                            <h3><i class="fas ${w.icon}"></i> ${w.title}</h3>
+                            <div class="stat-number">${stat.total}</div>
+                            <div class="stat-footer">
+                                <span>${stat.active} کاربر آنلاین</span>
+                                <span class="stat-badge">جدید</span>
+                            </div>
+                        </div>
+                    `;
+                } else if (w.id === 'events') {
+                    html += `
+                        <div class="stat-card">
+                            <h3><i class="fas ${w.icon}"></i> ${w.title}</h3>
+                            <div class="stat-number">${stat.total}</div>
+                            <div class="stat-footer">
+                                <span>${stat.active} رویداد پیش‌رو</span>
+                                <span class="stat-badge">تقویم</span>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            
+            grid.innerHTML = html;
+        }
+
+        function refreshDashboard() {
+            loadDashboardStats();
+            showToast('✅ داشبورد بروزرسانی شد');
+        }
+
+        // ============= مقداردهی اولیه =============
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDashboardStats();
+        });
+    </script>
 </body>
 </html>

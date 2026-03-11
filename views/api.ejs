@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - PhoenixTrade</title>
+    <!-- فونت سمیم -->
+    <link rel="stylesheet" href="/css/fonts.css">
+    <!-- استایل سراسری پنل -->
+    <link rel="stylesheet" href="/css/admin.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* ===== استایل‌های اختصاصی صفحه API ===== */
+        
+        /* تب‌ها */
+        .tabs {
+            display: flex;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 0.6rem 1.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 25px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            font-size: 0.95rem;
+        }
+        
+        .tab:hover {
+            border-color: #ffd700;
+        }
+        
+        .tab.active {
+            background: #ffd700;
+            color: #0a2f1f;
+            font-weight: bold;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* ===== کارت‌ها ===== */
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        
+        .card h3 {
+            color: #ffd700;
+            margin-bottom: 1.2rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        
+        /* ===== آمار API ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .stat-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 1.2rem;
+            text-align: center;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        
+        .stat-value {
+            color: #ffd700;
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        
+        .stat-label {
+            color: #aaa;
+            margin-top: 0.3rem;
+            font-size: 0.9rem;
+        }
+        
+        /* ===== جدول کلیدها ===== */
+        .table-container {
+            overflow-x: auto;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        
+        .data-table th {
+            background: rgba(255, 215, 0, 0.15);
+            color: #ffd700;
+            padding: 0.8rem;
+            text-align: right;
+            font-weight: 500;
+        }
+        
+        .data-table td {
+            padding: 0.8rem;
+            color: #fff;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+        }
+        
+        .data-table tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-active {
+            background: rgba(40, 167, 69, 0.2);
+            color: #28a745;
+            border: 1px solid #28a745;
+        }
+        
+        .status-inactive {
+            background: rgba(220, 53, 69, 0.2);
+            color: #dc3545;
+            border: 1px solid #dc3545;
+        }
+        
+        /* ===== فرم‌ها ===== */
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        
+        .form-group label {
+            display: block;
+            color: #ffd700;
+            margin-bottom: 0.4rem;
+            font-size: 0.9rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+            font-size: 0.95rem;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #ffd700;
+        }
+        
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffd700'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: left 1rem center;
+            background-size: 1rem;
+        }
+        
+        /* ===== کلید API ===== */
+        .api-key-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border: 1px dashed #ffd700;
+            direction: ltr;
+            text-align: left;
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: #ffd700;
+            word-break: break-all;
+        }
+        
+        .copy-btn {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid #ffd700;
+            color: #ffd700;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        
+        .copy-btn:hover {
+            background: #ffd700;
+            color: #0a2f1f;
+        }
+        
+        /* ===== لاگ‌ها ===== */
+        .log-item {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 0.8rem 1rem;
+            margin-bottom: 0.5rem;
+            border-left: 3px solid #ffd700;
+            font-size: 0.85rem;
+        }
+        
+        .log-success {
+            border-left-color: #28a745;
+        }
+        
+        .log-error {
+            border-left-color: #dc3545;
+        }
+        
+        .log-method {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-left: 0.5rem;
+            font-size: 0.8rem;
+        }
+        
+        .method-get { background: #61affe; color: #fff; }
+        .method-post { background: #49cc90; color: #fff; }
+        .method-put { background: #fca130; color: #fff; }
+        .method-delete { background: #f93e3e; color: #fff; }
+    </style>
+</head>
+<body>
+    <!-- سایدبار -->
+    <%- include('sidebar', { activePage: 'api' }) %>
+
+    <!-- محتوای اصلی -->
+    <div class="main-content">
+        <div class="header">
+            <h1><i class="fas fa-code"></i> <%= title %></h1>
+        </div>
+
+        <!-- آمار API -->
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-value"><%= stats.totalKeys || 0 %></div>
+                <div class="stat-label">کل کلیدها</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value"><%= stats.activeKeys || 0 %></div>
+                <div class="stat-label">کلیدهای فعال</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value"><%= stats.totalEndpoints || 0 %></div>
+                <div class="stat-label">اندپوینت‌ها</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value"><%= stats.todayRequests || 0 %></div>
+                <div class="stat-label">درخواست‌های امروز</div>
+            </div>
+        </div>
+
+        <!-- تب‌ها -->
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('keys')">
+                <i class="fas fa-key"></i> کلیدهای API
+            </div>
+            <div class="tab" onclick="showTab('endpoints')">
+                <i class="fas fa-link"></i> اندپوینت‌ها
+            </div>
+            <div class="tab" onclick="showTab('logs')">
+                <i class="fas fa-history"></i> لاگ‌ها
+            </div>
+            <div class="tab" onclick="showTab('docs')">
+                <i class="fas fa-book"></i> مستندات
+            </div>
+        </div>
+
+        <!-- تب 1: کلیدهای API -->
+        <div id="tab-keys" class="tab-content active">
+            <div class="card">
+                <h3><i class="fas fa-key"></i> مدیریت کلیدهای API</h3>
+                
+                <button class="btn" onclick="showCreateKeyForm()" style="margin-bottom: 1rem;">
+                    <i class="fas fa-plus"></i> ایجاد کلید جدید
+                </button>
+
+                <!-- لیست کلیدها -->
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>نام</th>
+                                <th>کلید</th>
+                                <th>دسترسی‌ها</th>
+                                <th>وضعیت</th>
+                                <th>انقضا</th>
+                                <th>آخرین استفاده</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (apiKeys && apiKeys.length > 0) { %>
+                                <% apiKeys.forEach(key => { %>
+                                    <tr>
+                                        <td><%= key.name %></td>
+                                        <td><code><%= key.key.substring(0, 20) %>...</code></td>
+                                        <td><%= key.permissions.join(', ') %></td>
+                                        <td>
+                                            <span class="status-badge <%= key.isActive ? 'status-active' : 'status-inactive' %>">
+                                                <%= key.isActive ? 'فعال' : 'غیرفعال' %>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <%= key.expiresAt ? new Date(key.expiresAt).toLocaleDateString('fa-IR') : 'ندارد' %>
+                                        </td>
+                                        <td><%= key.lastUsed ? new Date(key.lastUsed).toLocaleDateString('fa-IR') : '-' %></td>
+                                        <td>
+                                            <button class="btn btn-sm" onclick="editKey('<%= key.id %>')">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm" onclick="regenerateSecret('<%= key.id %>')">
+                                                <i class="fas fa-sync"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger" onclick="deleteKey('<%= key.id %>')">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="7" style="text-align: center; color: #aaa;">
+                                        هیچ کلید API تعریف نشده است
+                                    </td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- فرم ایجاد/ویرایش کلید -->
+                <div id="key-form" style="display: none; margin-top: 2rem;">
+                    <h4 style="color: #ffd700; margin-bottom: 1rem;">ایجاد کلید جدید</h4>
+                    <input type="hidden" id="key-id">
+                    
+                    <div class="form-group">
+                        <label>نام کلید</label>
+                        <input type="text" id="key-name" class="form-control" placeholder="مثلاً: اپلیکیشن موبایل">
+                    </div>
+
+                    <div class="form-group">
+                        <label>دسترسی‌ها</label>
+                        <select id="key-permissions" class="form-control" multiple size="3">
+                            <option value="read">خواندن (read)</option>
+                            <option value="write">نوشتن (write)</option>
+                            <option value="delete">حذف (delete)</option>
+                            <option value="admin">مدیریت (admin)</option>
+                        </select>
+                        <small style="color: #aaa;">برای انتخاب چند گزینه، Ctrl را نگه دارید</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>مدت اعتبار</label>
+                        <select id="key-expires" class="form-control">
+                            <option value="never">بدون انقضا</option>
+                            <option value="30">۳۰ روز</option>
+                            <option value="60">۶۰ روز</option>
+                            <option value="90">۹۰ روز</option>
+                            <option value="180">۱۸۰ روز</option>
+                            <option value="365">۱ سال</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>وضعیت</label>
+                        <select id="key-status" class="form-control">
+                            <option value="true">فعال</option>
+                            <option value="false">غیرفعال</option>
+                        </select>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem;">
+                        <button class="btn" onclick="saveKey()">
+                            <i class="fas fa-save"></i> ذخیره
+                        </button>
+                        <button class="btn btn-danger" onclick="cancelKeyForm()">
+                            <i class="fas fa-times"></i> انصراف
+                        </button>
+                    </div>
+                </div>
+
+                <!-- نمایش کلید جدید (بعد از ایجاد) -->
+                <div id="new-key-display" style="display: none; margin-top: 2rem;">
+                    <h4 style="color: #ffd700;">✅ کلید با موفقیت ایجاد شد</h4>
+                    <div class="api-key-box">
+                        <div><strong>API Key:</strong> <span id="new-api-key"></span></div>
+                        <div style="margin-top: 0.5rem;"><strong>Secret:</strong> <span id="new-api-secret"></span></div>
+                    </div>
+                    <p style="color: #ffd700; font-size: 0.9rem;">
+                        ⚠️ این اطلاعات فقط یک بار نمایش داده می‌شود. لطفاً آن را ذخیره کنید.
+                    </p>
+                    <button class="copy-btn" onclick="copyNewKey()">
+                        <i class="fas fa-copy"></i> کپی اطلاعات
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- تب 2: اندپوینت‌ها -->
+        <div id="tab-endpoints" class="tab-content">
+            <div class="card">
+                <h3><i class="fas fa-link"></i> اندپوینت‌های API</h3>
+
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>متد</th>
+                                <th>مسیر</th>
+                                <th>نام</th>
+                                <th>دسته‌بندی</th>
+                                <th>نیاز به احراز</th>
+                                <th>وضعیت</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (endpoints && endpoints.length > 0) { %>
+                                <% endpoints.forEach(ep => { %>
+                                    <tr>
+                                        <td>
+                                            <span class="log-method method-<%= ep.method.toLowerCase() %>">
+                                                <%= ep.method %>
+                                            </span>
+                                        </td>
+                                        <td><code><%= ep.path %></code></td>
+                                        <td><%= ep.name %></td>
+                                        <td><%= ep.category || 'عمومی' %></td>
+                                        <td>
+                                            <%= ep.requiresAuth ? 
+                                                '<i class="fas fa-lock" style="color: #ffd700;"></i>' : 
+                                                '<i class="fas fa-unlock" style="color: #aaa;"></i>' %>
+                                        </td>
+                                        <td>
+                                            <span class="status-badge <%= ep.isActive ? 'status-active' : 'status-inactive' %>">
+                                                <%= ep.isActive ? 'فعال' : 'غیرفعال' %>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="6" style="text-align: center; color: #aaa;">
+                                        هیچ اندپوینتی تعریف نشده است
+                                    </td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- تب 3: لاگ‌ها -->
+        <div id="tab-logs" class="tab-content">
+            <div class="card">
+                <h3><i class="fas fa-history"></i> آخرین درخواست‌ها</h3>
+
+                <div style="margin-bottom: 1rem;">
+                    <% if (recentLogs && recentLogs.length > 0) { %>
+                        <% recentLogs.forEach(log => { %>
+                            <div class="log-item log-<%= log.statusCode >= 400 ? 'error' : 'success' %>">
+                                <div style="display: flex; justify-content: space-between;">
+                                    <div>
+                                        <span class="log-method method-<%= log.method.toLowerCase() %>">
+                                            <%= log.method %>
+                                        </span>
+                                        <code><%= log.endpoint %></code>
+                                    </div>
+                                    <span style="color: <%= log.statusCode >= 400 ? '#dc3545' : '#28a745' %>;">
+                                        <%= log.statusCode %>
+                                    </span>
+                                </div>
+                                <div style="display: flex; gap: 1rem; margin-top: 0.3rem; font-size: 0.8rem; color: #aaa;">
+                                    <span><i class="fas fa-key"></i> <%= log.apiKey ? log.apiKey.name : 'سیستم' %></span>
+                                    <span><i class="fas fa-clock"></i> <%= new Date(log.createdAt).toLocaleString('fa-IR') %></span>
+                                    <span><i class="fas fa-globe"></i> <%= log.ip || '-' %></span>
+                                </div>
+                            </div>
+                        <% }); %>
+                    <% } else { %>
+                        <p style="text-align: center; color: #aaa;">هیچ درخواستی ثبت نشده است</p>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+
+        <!-- تب 4: مستندات -->
+        <div id="tab-docs" class="tab-content">
+            <div class="card">
+                <h3><i class="fas fa-book"></i> مستندات API</h3>
+                
+                <div style="color: #fff;">
+                    <h4 style="color: #ffd700;">نحوه استفاده</h4>
+                    <p>برای استفاده از API، کلید خود را در هدر درخواست ارسال کنید:</p>
+                    <div class="api-key-box">
+                        X-API-Key: your_api_key_here<br>
+                        X-API-Secret: your_api_secret_here
+                    </div>
+
+                    <h4 style="color: #ffd700; margin-top: 1.5rem;">اندپوینت‌های عمومی</h4>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 0.5rem;">
+                            <span class="log-method method-get">GET</span>
+                            <code>/api/lessons</code> - دریافت لیست درس‌ها
+                        </li>
+                        <li style="margin-bottom: 0.5rem;">
+                            <span class="log-method method-get">GET</span>
+                            <code>/api/brokers</code> - دریافت لیست بروکرها
+                        </li>
+                        <li style="margin-bottom: 0.5rem;">
+                            <span class="log-method method-get">GET</span>
+                            <code>/api/events</code> - دریافت لیست رویدادها
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============= مدیریت تب‌ها =============
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById('tab-' + tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // ============= مدیریت کلیدها =============
+        let currentKeyId = null;
+
+        function showCreateKeyForm() {
+            document.getElementById('key-form').style.display = 'block';
+            document.getElementById('key-id').value = '';
+            document.getElementById('key-name').value = '';
+            document.getElementById('key-permissions').value = '';
+            document.getElementById('key-expires').value = 'never';
+            document.getElementById('key-status').value = 'true';
+            document.getElementById('new-key-display').style.display = 'none';
+        }
+
+        function cancelKeyForm() {
+            document.getElementById('key-form').style.display = 'none';
+        }
+
+        function saveKey() {
+            const id = document.getElementById('key-id').value;
+            const data = {
+                name: document.getElementById('key-name').value,
+                permissions: Array.from(document.getElementById('key-permissions').selectedOptions).map(o => o.value),
+                expiresIn: document.getElementById('key-expires').value,
+                isActive: document.getElementById('key-status').value === 'true'
+            };
+
+            if (!data.name) {
+                showToast('نام کلید الزامی است', 'error');
+                return;
+            }
+
+            const url = id ? `/pprofessor/api/keys/${id}` : '/pprofessor/api/keys';
+            const method = id ? 'PUT' : 'POST';
+
+            fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(res => res.json())
+            .then(result => {
+                if (result.success) {
+                    if (result.data && result.data.key) {
+                        // نمایش کلید جدید
+                        document.getElementById('new-api-key').textContent = result.data.key;
+                        document.getElementById('new-api-secret').textContent = result.data.secret;
+                        document.getElementById('new-key-display').style.display = 'block';
+                    }
+                    showToast(result.message || 'عملیات موفقیت‌آمیز بود');
+                    setTimeout(() => location.reload(), 2000);
+                } else {
+                    showToast('خطا: ' + result.error, 'error');
+                }
+            })
+            .catch(() => showToast('خطا در ارتباط با سرور', 'error'));
+        }
+
+        function editKey(id) {
+            fetch('/pprofessor/api/keys')
+                .then(res => res.json())
+                .then(result => {
+                    if (result.success) {
+                        const key = result.data.find(k => k.id == id);
+                        if (key) {
+                            document.getElementById('key-form').style.display = 'block';
+                            document.getElementById('key-id').value = key.id;
+                            document.getElementById('key-name').value = key.name;
+                            
+                            // انتخاب دسترسی‌ها
+                            const select = document.getElementById('key-permissions');
+                            Array.from(select.options).forEach(opt => {
+                                opt.selected = key.permissions.includes(opt.value);
+                            });
+                            
+                            document.getElementById('key-expires').value = key.expiresAt ? '30' : 'never';
+                            document.getElementById('key-status').value = key.isActive ? 'true' : 'false';
+                        }
+                    }
+                });
+        }
+
+        function regenerateSecret(id) {
+            if (confirm('آیا از بازتولید سکرت این کلید اطمینان دارید؟')) {
+                fetch(`/pprofessor/api/keys/${id}/regenerate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                })
+                .then(res => res.json())
+                .then(result => {
+                    if (result.success) {
+                        alert(`سکرت جدید: ${result.secret}\nلطفاً آن را ذخیره کنید.`);
+                        showToast('سکرت با موفقیت بازتولید شد');
+                    } else {
+                        showToast('خطا: ' + result.error, 'error');
+                    }
+                });
+            }
+        }
+
+        function deleteKey(id) {
+            if (confirm('آیا از حذف این کلید اطمینان دارید؟')) {
+                fetch(`/pprofessor/api/keys/${id}`, {
+                    method: 'DELETE'
+                })
+                .then(res => res.json())
+                .then(result => {
+                    if (result.success) {
+                        showToast('کلید با موفقیت حذف شد');
+                        setTimeout(() => location.reload(), 1000);
+                    } else {
+                        showToast('خطا: ' + result.error, 'error');
+                    }
+                });
+            }
+        }
+
+        function copyNewKey() {
+            const key = document.getElementById('new-api-key').textContent;
+            const secret = document.getElementById('new-api-secret').textContent;
+            const text = `API Key: ${key}\nSecret: ${secret}`;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('اطلاعات کپی شد');
+            });
+        }
+
+        // ============= تابع نمایش پیام =============
+        function showToast(message, type = 'success') {
+            let toast = document.getElementById('toast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'toast';
+                toast.className = 'toast';
+                document.body.appendChild(toast);
+            }
+            
+            toast.className = 'toast ' + type;
+            toast.textContent = message;
+            toast.style.display = 'block';
+            
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

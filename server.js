@@ -13,8 +13,10 @@ app.use(express.urlencoded({ extended: true }));
 // ============= فایل‌های استاتیک =============
 // سرویس دهی فایل‌های آپلود شده
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-// سرویس دهی فایل‌های عمومی (اختیاری)
+// سرویس دهی فایل‌های عمومی (برای CSS, JS, fonts)
 app.use('/public', express.static(path.join(__dirname, 'public')));
+// سرویس دهی مستقیم پوشه public (برای دسترسی ساده‌تر)
+app.use(express.static(path.join(__dirname, 'public')));
 
 // ============= Session Configuration =============
 app.use(session({
@@ -38,7 +40,7 @@ const { syncDatabase } = require('./models');
 syncDatabase().then(() => {
   console.log('✅ Database synced For Running Telegram Bot');
   
-  // راه‌اندازی ربات (فقط در محیط لوکال یا همیشه؟)
+  // راه‌اندازی ربات
   try {
     require('./services/telegramBot');
     console.log('🤖 Telegram bot started');
@@ -52,7 +54,10 @@ syncDatabase().then(() => {
 // ============= Routes =============
 const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const apiRoutes = require('./routes/apiRoutes');
 
+// مسیرهای API
+app.use('/pprofessor/api', apiRoutes);
 // مسیرهای پنل مدیریت
 app.use('/pprofessor', authRoutes);
 app.use('/pprofessor', adminRoutes);
@@ -76,4 +81,5 @@ app.listen(PORT, () => {
   console.log(`✅ Server running on http://localhost:${PORT}`);
   console.log(`🔐 Login: http://localhost:${PORT}/pprofessor/login`);
   console.log(`📁 Uploads directory: ${path.join(__dirname, 'uploads')}`);
+  console.log(`📁 Public directory: ${path.join(__dirname, 'public')}`);
 });

@@ -4,6 +4,7 @@ const multer = require('multer');
 const path = require('path');
 const { isAuthenticated } = require('../middleware/auth');
 const botController = require('../controllers/botController');
+const databaseController = require('../controllers/databaseController'); // اضافه شد
 const { BotMenu, BotMessage, BotUser, BotUserMessage } = require('../models');
 const { checkBotStatus } = require('../services/telegramBot');
 
@@ -51,14 +52,14 @@ router.get('/backup', isAuthenticated, (req, res) => {
   });
 });
 
-// مدیریت دیتابیس
-router.get('/database', isAuthenticated, (req, res) => {
-  res.render('database', { 
-    title: 'مدیریت دیتابیس',
-    user: req.session.adminUsername,
-    activePage: 'database'
-  });
-});
+// ============= مدیریت دیتابیس =============
+// صفحه اصلی مدیریت دیتابیس (یک مسیر واحد)
+router.get('/database', isAuthenticated, databaseController.databaseIndex);
+
+// API‌های دیتابیس
+router.post('/api/database/query', isAuthenticated, databaseController.executeQuery);
+router.post('/api/database/search', isAuthenticated, databaseController.searchData);
+router.post('/api/database/delete', isAuthenticated, databaseController.deleteRow);
 
 // ============= مدیریت ربات =============
 // صفحه اصلی مدیریت ربات
