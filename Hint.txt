@@ -1,144 +1,68 @@
-مستندات کامل پروژه PhoenixTrade برای شروع مجدد چت
-تاریخ: 27 فوریه 2026
-وضعیت: پایدار و آماده توسعه
+سلام ربات هوشمند و مهندس دقیق من
+این متن رو با دقت مطالعه کن تا بریم برای ادامه پروژه
 
-1. نمای کلی پروژه
-پروژه PhoenixTrade یک پلتفرم آموزشی برای بازار طلا (فارکس) است که از سه بخش اصلی تشکیل شده: ربات تلگرام، WebApp و پنل مدیریت. هدف اصلی آموزش گام‌به‌گام مفاهیم معامله‌گری با رویکرد روانشناسی و جامعه‌شناسی مخاطب ایرانی است.
+ نکات فنی مهم برای ادامه
 
-2. وضعیت فعلی (پایدار)
-✅ پنل مدیریت Django فعال: https://phoenixtrade.info/admin/
-✅ API جنگو فعال: https://phoenixtrade.info/api/lessons/
-✅ ربات تلگرام فعال و متصل به API
-✅ WebApp در مسیر /webapp/ قابل دسترسی
-✅ زیرساخت کامل: Nginx + Gunicorn + PostgreSQL + Cloudflare + SSL
+در محیط لوکال از SQLite استفاده شده برای سرعت توسعه
 
-3. اطلاعات سرور
-IP: 37.59.154.5
-OS: Ubuntu 22.04
-Python: 3.10
-دامنه: phoenixtrade.info
-SSL: Let's Encrypt (معتبر تا 27 می 2026)
-Cloudflare: فعال با SSL Full
+برای session از express-session با حافظه داخلی استفاده شده (بعداً به Redis منتقل شود)
 
-4. مسیرهای فیزیکی پروژه
-/var/www/phoenixtrade/
-├── .env                               # متغیرهای محیطی
-├── venv/                              # محیط مجازی Python
-├── django_backend/                     # پروژه Django
-│   ├── manage.py
-│   ├── core/                           # تنظیمات اصلی
-│   │   ├── settings.py
-│   │   ├── urls.py
-│   │   └── wsgi.py
-│   ├── accounts/                        # اپ کاربران
-│   ├── lessons/                         # اپ درس‌ها
-│   │   ├── models.py (Category, Lesson)
-│   │   ├── admin.py
-│   │   ├── serializers.py
-│   │   └── views.py
-│   ├── brokers/                         # اپ بروکرها
-│   │   ├── models.py (Broker)
-│   │   ├── admin.py
-│   │   ├── serializers.py
-│   │   └── views.py
-│   ├── events/                          # اپ رویدادها
-│   │   ├── models.py (Event, Registration)
-│   │   ├── admin.py
-│   │   ├── serializers.py
-│   │   └── views.py
-│   └── api/                             # اپ مدیریت API
-│       └── urls.py
-├── webapp/                              # فایل‌های HTML (WebApp)
-└── django_static/                       # فایل‌های استاتیک جنگو
+ساختار کنترلرها با baseController.js یکپارچه شده
 
-5. دیتابیس PostgreSQL
-نام دیتابیس: phoenixdb
-کاربر: phoenix_user
-رمز: Shh0012108197
-پورت: 5432
-میزبان: localhost
+تمام مدل‌ها در یک فایل برای سادگی در توسعه لوکال
 
-6. مدل‌های داده
-lessons: Category(id, name, slug, order), Lesson(id, title, category(FK), content, video_url, order, is_free, created_at)
-brokers: Broker(id, name, logo, description, pros, cons, register_link, min_deposit, is_active, created_at)
-events: Event(id, title, description, event_date, duration, max_participants, is_online, link, created_at)
-events: Registration(id, user(FK), event(FK), registered_at, attended) با unique_together
+طراحی پنل با رنگ‌های سبز و طلایی لوکس (مطابق با برند)
 
-7. APIهای ایجاد شده (Django REST Framework)
-GET  /api/categories/ - لیست دسته‌بندی درس‌ها
-GET  /api/lessons/ - لیست درس‌ها (فیلتر: category, is_free)
-GET  /api/lessons/{id}/ - جزئیات یک درس
-GET  /api/brokers/ - لیست بروکرهای فعال
-GET  /api/brokers/{id}/ - جزئیات یک بروکر
-GET  /api/events/ - رویدادهای آینده
-GET  /api/events/{id}/ - جزئیات یک رویداد
-POST /api/events/{id}/register/ - ثبت‌نام در رویداد (نیاز به احراز هویت)
+مسیرها با middleware isAuthenticated محافظت می‌شوند
 
-8. کتابخانه‌های نصب شده
-Django==5.2.11
-djangorestframework==3.16.0
-django-cors-headers==4.7.0
-django-filter==25.1
-psycopg2-binary==2.9.10
-gunicorn==25.1.0
-python-dotenv==1.1.0
-aiogram==3.18.0
-aiohttp==3.11.16
-django-dbbackup==5.2.0  # برای بکاپ دیتابیس
-djbackup==2.3.2          # برای بکاپ فایل‌ها (با مشکل نمایش استوریج)
+پس از انتقال به سرور، باید از dotenv برای متغیرهای محیطی استفاده کامل شود
 
-9. پکیج‌های بکاپ
-- django-dbbackup: برای بکاپ دیتابیس (با cron قابل تنظیم)
-- djbackup: برای بکاپ فایل‌ها و کدها از طریق پنل گرافیکی در آدرس /dj-backup/
+ دستورات کاربردی برای ادامه
 
-مشکل فعلی: منوی کشویی Store in در پنل djbackup گزینه LOCAL را نمایش نمی‌دهد با اینکه در settings.py تعریف شده.
 
-10. کاربران پنل مدیریت
-superuser: pprofessor
-رمز: Shh@0012108197
+# اجرای پروژه در محیط لوکال
+node server.js
+# یا با nodemon (اگر نصب باشد)
+npx nodemon server.js
 
-11. سرویس‌های systemd
-phoenix-django.service: Gunicorn روی پورت 8000
-phoenix-bot.service: ربات تلگرام
+# ایجاد فایل‌های جدید
+# ساختار MVC رعایت شود
 
-12. تنظیمات Nginx (خلاصه)
-location /admin/     -> http://127.0.0.1:8000
-location /api/       -> http://127.0.0.1:8000
-location /dj-backup/ -> http://127.0.0.1:8000
-location /static/    -> /var/www/phoenixtrade/django_static/
-location /webapp/    -> /var/www/phoenixtrade/webapp/
+# بعد از اتمام توسعه لوکال
+# انتقال کدها به سرور با git یا SCP
 
-13. کارهای انجام شده تا اینجا
-- راه‌اندازی سرور و دامنه با SSL
-- نصب و تنظیم PostgreSQL
-- ایجاد ساختار Django با اپلیکیشن‌های lessons, brokers, events
-- ایجاد مدل‌ها و ثبت در پنل ادمین
-- ایجاد APIهای خواندنی با DRF
-- اتصال ربات تلگرام به API
-- نصب و پیکربندی django-dbbackup
-- نصب و پیکربندی djbackup (با مشکل فعلی)
+معماری نهایی پیشنهادی برای سرور
 
-14. کارهای باقی‌مانده (طبق اولویت)
-1. رفع مشکل نمایش استوریج در djbackup
-2. تکمیل WebApp برای دریافت داده از API
-3. اضافه کردن احراز هویت برای کاربران تلگرام
-4. پیاده‌سازی سیستم پیشرفت کاربر (درس‌های مطالعه شده)
-5. اضافه کردن قابلیت گیمیفیکیشن (نشان‌ها و امتیازات)
-6. ایجاد APIهای POST برای ثبت‌نام و تعامل بیشتر
 
-15. نکات فنی مهم
-- DEBUG = False در settings.py
-- ALLOWED_HOSTS محدود به دامنه اصلی
-- CSRF_TRUSTED_ORIGINS تنظیم شده
-- CORS برای دامنه اصلی فعال است
-- بکاپ خودکار دیتابیس هر 12 ساعت با cron تنظیم شده
-- بکاپ فایل‌ها از طریق پنل djbackup قابل انجام است (پس از رفع مشکل)
+[Client] → [Cloudflare] → [Nginx] → [Node.js (PM2)] → [PostgreSQL]
+                                         ↓
+                                      [Redis]
 
-16. دستورات کاربردی
-وضعیت سرویس: sudo systemctl status phoenix-django
-ری‌استارت: sudo systemctl restart phoenix-django
-لاگ: sudo journalctl -u phoenix-django -n 50
-شل جنگو: cd /var/www/phoenixtrade/django_backend && python manage.py shell
-migrate: python manage.py migrate
-بکاپ دیتابیس: python manage.py dbbackup
-لیست بکاپ‌ها: python manage.py listbackups
+ نکات امنیتی (برای پیاده‌سازی در سرور)
+استفاده از helmet.js برای هدرهای امنیتی
+
+محدود کردن نرخ درخواست (rate limiting)
+
+رمزگذاری کوکی‌ها
+
+استفاده از محیط مجازی برای متغیرها
+
+بکاپ خودکار دیتابیس
+
+مانیتورینگ با PM2
+
+
+
+خب آماده ادامه دادن  مابقی پروژه با تو هستم اما قبلش میخام چند تا نکته رو حتما به دقت رعایت کنی تا انتهای این چت و قبل از هر پیامی که به من میدی اینهارو مد نظر داشته باشی:
+1- خیلی خلاصه و کلیدی و شفاف و بدون توضیحات اضافه با من صحبت کن
+2- هر جا قرار هست فایل یا کدی رو تغییر بدیم محل دقیق قرار گیری کد رو به من بگو
+3- هر از چند گاهی ظرفیت باقی مونده چت من و خودت رو به من اطلاع بدهبا درصد
+4- هرگز چرخه های بی فایده و لوپ درست نکن و زمان رو هدر نده و با دقت و تحقیق و بررسی کامل به من اهنمایی کن تا خطا نداشته باشیم . این خیلی مهمه !
+5- هرگز در یک پیامی که به من میدی چندتا دستور یا عملیات رو قرار نده . اصولی این هست که یک عملیات رو انجام بدم و بعد از تایید من و نبودن مشکل برییم برای حرکت بعدی . اینکار از اشتباه و اتلاف زمان جلوگیری میکنه . پس به این خیلی دقت کن !!
+6- ازت میخام در ابتدای کار دستوراتی که لازم هست رو به من بگی تا اجرا کنم تا ساختار کامل دیتابیس رو متوجه بشی و تمام کدهایی که به من میخای بدی منطبق باشه با همون ساختار
+7- لینک عمومی گیت هاب پروژه رو بهت میدم که اونجا میتونی به صورت کامل فایل readme.md پروژه رو ببینی و اطلاعاتت رو از پروژه بیشتر کنی و کدهای داخل تمام فایلهارو باید برای ارائه کدها و راهنمایی دقیق به من حتما بررسی کنی
+8- لینک گیت هاب پروژه : https://github.com/pprofessor/PhoenixTrade/tree/main
+
+
+
+https://chat.deepseek.com/share/geg1sd1z0no7mnfc4u

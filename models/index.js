@@ -24,7 +24,6 @@ const Admin = sequelize.define('Admin', {
   }
 });
 
-// متد بررسی رمز عبور
 Admin.prototype.validatePassword = async function(password) {
   return bcrypt.compare(password, this.password);
 };
@@ -47,7 +46,8 @@ const Lesson = sequelize.define('Lesson', {
   videoUrl: { type: Sequelize.STRING(500) },
   order: { type: Sequelize.INTEGER, defaultValue: 0 },
   isFree: { type: Sequelize.BOOLEAN, defaultValue: false },
-  isActive: { type: Sequelize.BOOLEAN, defaultValue: true }
+  isActive: { type: Sequelize.BOOLEAN, defaultValue: true },
+  categoryId: { type: Sequelize.INTEGER }
 }, { timestamps: true });
 
 // ============= مدل Broker (بروکرها) =============
@@ -96,19 +96,6 @@ const WebappPage = sequelize.define('WebappPage', {
 }, { timestamps: true });
 
 // ============= مدل BotMenu (منوهای ربات) =============
-// const BotMenu = sequelize.define('BotMenu', {
-//   id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
-//   name: { type: Sequelize.STRING(100), allowNull: true }, // نام داخلی منو
-//   text: { type: Sequelize.STRING(100), allowNull: false }, // متن نمایشی به کاربر
-//   emoji: { type: Sequelize.STRING(10), defaultValue: '🔹' }, // ایموجی کنار منو
-//   type: { type: Sequelize.ENUM('main', 'submenu'), defaultValue: 'main' }, // حذف command
-//   parentId: { type: Sequelize.INTEGER, defaultValue: null }, // آیدی والد (برای زیرمنوها)
-//   order: { type: Sequelize.INTEGER, defaultValue: 0 }, // ترتیب نمایش
-//   content: { type: Sequelize.TEXT }, // متن نمایشی وقتی کاربر کلیک میکنه (جدید)
-//   apiEndpoint: { type: Sequelize.STRING(500) }, // آدرس API متصل به منو
-//   color: { type: Sequelize.STRING(20), defaultValue: '#ffd700' }, // رنگ منو
-//   isActive: { type: Sequelize.BOOLEAN, defaultValue: true }
-// }, { timestamps: true });
 const BotMenu = sequelize.define('BotMenu', {
   id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
   text: { type: Sequelize.STRING(100), allowNull: false },
@@ -117,11 +104,7 @@ const BotMenu = sequelize.define('BotMenu', {
   content: { type: Sequelize.TEXT },
   order: { type: Sequelize.INTEGER, defaultValue: 0 },
   isActive: { type: Sequelize.BOOLEAN, defaultValue: true }
-});
-
-// ارتباطات منوها - فقط یکبار تعریف کن
-BotMenu.belongsTo(BotMenu, { as: 'parentMenu', foreignKey: 'parentId' });
-BotMenu.hasMany(BotMenu, { as: 'subMenus', foreignKey: 'parentId' });
+}, { timestamps: true });
 
 // ============= مدل BotUser (کاربران ربات) =============
 const BotUser = sequelize.define('BotUser', {
@@ -148,21 +131,17 @@ const BotUserMessage = sequelize.define('BotUserMessage', {
   type: { type: Sequelize.ENUM('text', 'command', 'callback'), defaultValue: 'text' }
 }, { timestamps: true });
 
-// ============= تعریف ارتباطات بین مدل‌ها =============
+// ============= تعریف ارتباطات =============
+Category.hasMany(Lesson, { foreignKey: 'categoryId', as: 'lessons' });
+Lesson.belongsTo(Category, { foreignKey: 'categoryId', as: 'category' });
 
-// ارتباط Lesson با Category
-Category.hasMany(Lesson, { as: 'lessons', foreignKey: 'categoryId' });
-Lesson.belongsTo(Category, { as: 'category', foreignKey: 'categoryId' });
-
-// ارتباطات منوها (خودارجاعی برای زیرمنوها)
 BotMenu.belongsTo(BotMenu, { as: 'parent', foreignKey: 'parentId' });
-BotMenu.hasMany(BotMenu, { as: 'submenus', foreignKey: 'parentId' });
+BotMenu.hasMany(BotMenu, { as: 'children', foreignKey: 'parentId' });
 
-// ارتباط پیام‌ها با کاربران
-BotUserMessage.belongsTo(BotUser, { foreignKey: 'userId', as: 'user' });
 BotUser.hasMany(BotUserMessage, { foreignKey: 'userId', as: 'messages' });
+BotUserMessage.belongsTo(BotUser, { foreignKey: 'userId', as: 'user' });
 
-// ============= سینک دیتابیس و ایجاد داده‌های پیش‌فرض =============
+// ============= سینک دیتابیس و داده‌های پیش‌فرض =============
 const syncDatabase = async () => {
   try {
     await sequelize.authenticate();
@@ -171,14 +150,14 @@ const syncDatabase = async () => {
     // غیرفعال کردن موقت FOREIGN KEY برای SQLite
     await sequelize.query('PRAGMA foreign_keys = OFF;');
     
-    // همگام‌سازی مدل‌ها با force
-    await sequelize.sync({ force: true });
-    console.log('✅ Models synced');
+    // همگام‌سازی بدون پاک کردن داده‌ها
+    await sequelize.sync({ alter: true });
+    console.log('✅ Models synced (alter mode)');
     
     // فعال کردن مجدد FOREIGN KEY
     await sequelize.query('PRAGMA foreign_keys = ON;');
     
-    // ایجاد ادمین پیش‌فرض
+    // ایجاد ادمین پیش‌فرض (فقط اگر هیچ ادمینی وجود نداشته باشد)
     const adminCount = await Admin.count();
     if (adminCount === 0) {
       await Admin.create({
@@ -189,7 +168,7 @@ const syncDatabase = async () => {
       console.log('✅ Default admin created');
     }
     
-    // ایجاد پیام‌های پیش‌فرض
+    // ایجاد پیام‌های پیش‌فرض (فقط اگر هیچ پیامی وجود نداشته باشد)
     const messageCount = await BotMessage.count();
     if (messageCount === 0) {
       await BotMessage.create({
@@ -203,54 +182,55 @@ const syncDatabase = async () => {
       console.log('✅ Default messages created');
     }
     
-    // ایجاد منوهای پیش‌فرض
+    // ایجاد منوهای پیش‌فرض (فقط اگر هیچ منویی وجود نداشته باشد)
     const menuCount = await BotMenu.count();
     if (menuCount === 0) {
-      // منوی اصلی
+      console.log('📝 Creating default menus...');
+      
+      // منوی اصلی (بدون parent)
       const mainMenu = await BotMenu.create({
-        name: 'main',
         text: 'منوی اصلی',
         emoji: '🏠',
-        type: 'main',
-        order: 1,
-        content: 'لطفاً یکی از گزینه‌های زیر را انتخاب کنید:'
+        content: 'لطفاً یکی از گزینه‌های زیر را انتخاب کنید:',
+        order: 1
       });
       
       // زیرمنوها
       await BotMenu.create({
-        name: 'lessons',
         text: 'دوره‌های آموزشی',
         emoji: '📚',
-        type: 'submenu',
         parentId: mainMenu.id,
-        order: 1,
         content: 'دوره‌های آموزشی:\n- مقدماتی\n- پیشرفته\n- تخصصی',
-        apiEndpoint: '/api/lessons'
+        order: 1
       });
       
       await BotMenu.create({
-        name: 'brokers',
         text: 'بروکرها',
         emoji: '💹',
-        type: 'submenu',
         parentId: mainMenu.id,
-        order: 2,
         content: 'لیست بروکرهای معتبر:',
-        apiEndpoint: '/api/brokers'
+        order: 2
       });
       
       await BotMenu.create({
-        name: 'profile',
         text: 'پروفایل من',
         emoji: '👤',
-        type: 'submenu',
         parentId: mainMenu.id,
-        order: 3,
         content: 'اطلاعات پروفایل شما:',
-        apiEndpoint: '/api/profile'
+        order: 3
       });
       
-      console.log('✅ Default bot menus created');
+      await BotMenu.create({
+        text: 'رویدادها',
+        emoji: '📅',
+        parentId: mainMenu.id,
+        content: 'رویدادهای پیش‌رو:',
+        order: 4
+      });
+      
+      console.log('✅ Default menus created');
+    } else {
+      console.log(`📊 Existing menus found: ${menuCount} menu(s) - keeping them`);
     }
     
   } catch (error) {
@@ -258,7 +238,6 @@ const syncDatabase = async () => {
   }
 };
 
-// ============= خروجی ماژول‌ها =============
 module.exports = { 
   sequelize, 
   Admin, 

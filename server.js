@@ -6,58 +6,74 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
+// ============= Middleware =============
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Session configuration
+// ============= فایل‌های استاتیک =============
+// سرویس دهی فایل‌های آپلود شده
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// سرویس دهی فایل‌های عمومی (اختیاری)
+app.use('/public', express.static(path.join(__dirname, 'public')));
+
+// ============= Session Configuration =============
 app.use(session({
-  secret: 'phoenix-secret-key-2026',
+  secret: process.env.SESSION_SECRET || 'phoenix-secret-key-2026',
   resave: false,
   saveUninitialized: false,
   cookie: { 
-    secure: false, // برای لوکال false باشه
+    secure: process.env.NODE_ENV === 'production', // در محیط production true باشد
     maxAge: 1000 * 60 * 60 * 24 * 7 // 1 هفته
   }
 }));
 
-// تنظیم EJS
+// ============= View Engine =============
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// دیتابیس
+// ============= Database =============
 const { syncDatabase } = require('./models');
+
+// سینک دیتابیس و سپس راه‌اندازی ربات
 syncDatabase().then(() => {
-    console.log('✅ syncDatabase completed');
-    // راه‌اندازی ربات بعد از sync
-    if (process.env.NODE_ENV !== 'production') {
-        require('./services/telegramBot');
-    }
+  console.log('✅ Database synced For Running Telegram Bot');
+  
+  // راه‌اندازی ربات (فقط در محیط لوکال یا همیشه؟)
+  try {
+    require('./services/telegramBot');
+    console.log('🤖 Telegram bot started');
+  } catch (botError) {
+    console.error('❌ Bot startup error:', botError.message);
+  }
+}).catch(err => {
+  console.error('❌ Database sync error:', err);
 });
 
-// راه‌اندازی ربات تلگرام (فقط در محیط لوکال)
-if (process.env.NODE_ENV !== 'production') {
-    require('./services/telegramBot');
-}
-
-// مسیرهای پنل مدیریت
+// ============= Routes =============
 const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+
+// مسیرهای پنل مدیریت
 app.use('/pprofessor', authRoutes);
 app.use('/pprofessor', adminRoutes);
 
-// صفحه اصلی (اختیاری)
+// صفحه اصلی
 app.get('/', (req, res) => {
   res.send('PhoenixTrade API is running');
 });
 
-// مدیریت خطا
+// ============= Error Handler =============
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Something broke!');
+  console.error('❌ Server error:', err.stack);
+  res.status(500).json({ 
+    error: 'Internal server error',
+    message: process.env.NODE_ENV === 'development' ? err.message : undefined
+  });
 });
 
+// ============= Start Server =============
 app.listen(PORT, () => {
   console.log(`✅ Server running on http://localhost:${PORT}`);
-  console.log(`🔐 Login page: http://localhost:${PORT}/pprofessor/login`);
+  console.log(`🔐 Login: http://localhost:${PORT}/pprofessor/login`);
+  console.log(`📁 Uploads directory: ${path.join(__dirname, 'uploads')}`);
 });

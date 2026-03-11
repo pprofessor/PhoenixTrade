@@ -1,7 +1,37 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const path = require('path');
 const { isAuthenticated } = require('../middleware/auth');
 const botController = require('../controllers/botController');
+const { BotMenu, BotMessage, BotUser, BotUserMessage } = require('../models');
+const { checkBotStatus } = require('../services/telegramBot');
+
+// ============= تنظیمات آپلود فایل =============
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/');
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const ext = path.extname(file.originalname);
+    cb(null, 'media-' + uniqueSuffix + ext);
+  }
+});
+
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 50 * 1024 * 1024 }, // حداکثر 50 مگابایت
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = /jpeg|jpg|png|gif|mp4|mp3|pdf|doc|docx/;
+    const ext = path.extname(file.originalname).toLowerCase().substring(1);
+    if (allowedTypes.test(ext)) {
+      cb(null, true);
+    } else {
+      cb(new Error('نوع فایل مجاز نیست. فقط: تصاویر، ویدئو، صدا، PDF و DOC'));
+    }
+  }
+});
 
 // ============= مسیرهای اصلی مدیریت =============
 router.get('/dashboard', isAuthenticated, (req, res) => {
@@ -12,7 +42,7 @@ router.get('/dashboard', isAuthenticated, (req, res) => {
   });
 });
 
-// 1- مدیریت بکاپ
+// مدیریت بکاپ
 router.get('/backup', isAuthenticated, (req, res) => {
   res.render('backup', { 
     title: 'مدیریت بکاپ',
@@ -21,7 +51,7 @@ router.get('/backup', isAuthenticated, (req, res) => {
   });
 });
 
-// 2- مدیریت دیتابیس
+// مدیریت دیتابیس
 router.get('/database', isAuthenticated, (req, res) => {
   res.render('database', { 
     title: 'مدیریت دیتابیس',
@@ -30,204 +60,140 @@ router.get('/database', isAuthenticated, (req, res) => {
   });
 });
 
-// ============= مسیرهای مدیریت ربات =============
+// ============= مدیریت ربات =============
 // صفحه اصلی مدیریت ربات
 router.get('/bot', isAuthenticated, botController.botIndex);
 
-// API های منوها
+// ============= API منوها با قابلیت آپلود فایل =============
+// دریافت لیست منوها
 router.get('/api/bot/menus', isAuthenticated, botController.getMenus);
 
-router.post('/api/bot/menus', isAuthenticated, async (req, res) => {
-    try {
-        const { BotMenu } = require('../models');
-        const menuData = req.body;
-        
-        // اعتبارسنجی
-        if (!menuData.text) {
-            return res.status(400).json({ error: 'متن منو الزامی است' });
-        }
-        
-        // بررسی parentId برای زیرمنو
-        if (menuData.type === 'submenu') {
-            if (!menuData.parentId) {
-                return res.status(400).json({ error: 'منوی والد برای زیرمنو الزامی است' });
-            }
-            // بررسی وجود منوی والد
-            const parentMenu = await BotMenu.findByPk(menuData.parentId);
-            if (!parentMenu) {
-                return res.status(400).json({ error: 'منوی والد معتبر نیست' });
-            }
-        }
-        
-        // حذف فیلدهای اضافی
-        delete menuData.id;
-        delete menuData.createdAt;
-        delete menuData.updatedAt;
-        
-        // اگر parentId برای منوی اصلی null باشه
-        if (menuData.type === 'main') {
-            menuData.parentId = null;
-        }
-        
-        const menu = await BotMenu.create(menuData);
-        res.json(menu);
-    } catch (error) {
-        console.error('❌ خطا در ایجاد منو:', error);
-        res.status(500).json({ error: error.message });
+// ایجاد منوی جدید با امکان آپلود فایل
+router.post('/api/bot/menus', isAuthenticated, upload.single('media'), async (req, res) => {
+  try {
+    console.log('📝 ایجاد منوی جدید با فایل:', req.file ? 'دارد' : 'ندارد');
+    
+    const menuData = {
+      text: req.body.text,
+      emoji: req.body.emoji || null,
+      parentId: req.body.parentId || null,
+      content: req.body.content || '',
+      order: parseInt(req.body.order) || 0,
+      isActive: true
+    };
+    
+    // اگر فایل آپلود شده باشد
+    if (req.file) {
+      menuData.media_url = '/uploads/' + req.file.filename;
+      menuData.media_type = req.file.mimetype.split('/')[0]; // image, video, audio
+      console.log('📁 فایل آپلود شد:', menuData.media_url);
     }
+    
+    const menu = await BotMenu.create(menuData);
+    
+    const newMenu = await BotMenu.findByPk(menu.id, {
+      include: [{ model: BotMenu, as: 'children' }]
+    });
+    
+    res.status(201).json(newMenu);
+  } catch (error) {
+    console.error('❌ خطا در ایجاد منو:', error);
+    res.status(500).json({ error: error.message });
+  }
 });
 
-router.put('/api/bot/menus/:id', isAuthenticated, async (req, res) => {
-    try {
-        const { BotMenu } = require('../models');
-        const menu = await BotMenu.findByPk(req.params.id);
-        
-        if (!menu) {
-            return res.status(404).json({ error: 'منو یافت نشد' });
-        }
-        
-        const menuData = req.body;
-        
-        // اعتبارسنجی برای زیرمنو
-        if (menuData.type === 'submenu' && menuData.parentId) {
-            const parentMenu = await BotMenu.findByPk(menuData.parentId);
-            if (!parentMenu) {
-                return res.status(400).json({ error: 'منوی والد معتبر نیست' });
-            }
-        }
-        
-        // اگر منوی اصلیه، parentId رو null کن
-        if (menuData.type === 'main') {
-            menuData.parentId = null;
-        }
-        
-        await menu.update(menuData);
-        res.json(menu);
-    } catch (error) {
-        console.error('❌ خطا در ویرایش منو:', error);
-        res.status(500).json({ error: error.message });
+// ویرایش منو با امکان آپلود فایل جدید
+router.put('/api/bot/menus/:id', isAuthenticated, upload.single('media'), async (req, res) => {
+  try {
+    console.log('📝 ویرایش منو ID:', req.params.id, 'فایل:', req.file ? 'دارد' : 'ندارد');
+    
+    const menu = await BotMenu.findByPk(req.params.id);
+    if (!menu) {
+      return res.status(404).json({ error: 'منو یافت نشد' });
     }
+    
+    const menuData = {
+      text: req.body.text,
+      emoji: req.body.emoji || null,
+      parentId: req.body.parentId || null,
+      content: req.body.content,
+      order: parseInt(req.body.order) || 0,
+      isActive: req.body.isActive !== undefined ? req.body.isActive : menu.isActive
+    };
+    
+    // اگر فایل جدید آپلود شده باشد
+    if (req.file) {
+      menuData.media_url = '/uploads/' + req.file.filename;
+      menuData.media_type = req.file.mimetype.split('/')[0];
+      console.log('📁 فایل جدید آپلود شد:', menuData.media_url);
+    }
+    
+    await menu.update(menuData);
+    
+    const updatedMenu = await BotMenu.findByPk(menu.id, {
+      include: [{ model: BotMenu, as: 'children' }]
+    });
+    
+    res.json(updatedMenu);
+  } catch (error) {
+    console.error('❌ خطا در ویرایش منو:', error);
+    res.status(500).json({ error: error.message });
+  }
 });
 
+// حذف منو
 router.delete('/api/bot/menus/:id', isAuthenticated, async (req, res) => {
-    try {
-        const { BotMenu } = require('../models');
-        const menu = await BotMenu.findByPk(req.params.id);
-        
-        if (!menu) {
-            return res.status(404).json({ error: 'منو یافت نشد' });
-        }
-        
-        // بررسی وجود زیرمنو برای این منو
-        const submenus = await BotMenu.findAll({ where: { parentId: menu.id } });
-        if (submenus.length > 0) {
-            return res.status(400).json({ error: 'این منو دارای زیرمنو است. ابتدا زیرمنوها را حذف کنید' });
-        }
-        
-        await menu.destroy();
-        res.json({ success: true });
-    } catch (error) {
-        console.error('❌ خطا در حذف منو:', error);
-        res.status(500).json({ error: error.message });
+  try {
+    const menu = await BotMenu.findByPk(req.params.id);
+    if (!menu) return res.status(404).json({ error: 'منو یافت نشد' });
+    
+    // بررسی وجود زیرمنو
+    const children = await BotMenu.findAll({ where: { parentId: menu.id } });
+    if (children.length > 0) {
+      return res.status(400).json({ error: 'این منو زیرمنو دارد. ابتدا زیرمنوها را حذف کنید.' });
     }
+    
+    await menu.destroy();
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
-// API های دستورات (اختیاری - فعلاً غیرفعال)
-// router.get('/api/bot/commands', isAuthenticated, botController.getCommands);
-// router.post('/api/bot/commands', isAuthenticated, botController.createCommand);
-// router.put('/api/bot/commands/:id', isAuthenticated, botController.updateCommand);
-// router.delete('/api/bot/commands/:id', isAuthenticated, botController.deleteCommand);
+// ============= API پیام‌ها =============
+// دریافت لیست پیام‌ها
+router.get('/api/bot/messages', isAuthenticated, botController.getMessages);
 
-// ============= API های پیام‌ها =============
-router.get('/api/bot/messages', isAuthenticated, async (req, res) => {
-    try {
-        const { BotMessage } = require('../models');
-        const messages = await BotMessage.findAll();
-        res.json(messages);
-    } catch (error) {
-        console.error('❌ خطا در دریافت پیام‌ها:', error);
-        res.status(500).json({ error: error.message });
-    }
-});
+// ویرایش پیام
+router.put('/api/bot/messages/:id', isAuthenticated, botController.updateMessage);
 
+// ایجاد یا ویرایش پیام بر اساس کلید
 router.post('/api/bot/messages', isAuthenticated, async (req, res) => {
-    try {
-        const { BotMessage } = require('../models');
-        const { key, text } = req.body;
-        
-        // پیدا کردن یا ایجاد پیام
-        const [message, created] = await BotMessage.findOrCreate({
-            where: { key },
-            defaults: { key, text }
-        });
-        
-        if (!created) {
-            await message.update({ text });
-        }
-        
-        res.json({ success: true, message });
-    } catch (error) {
-        console.error('❌ خطا در ذخیره پیام:', error);
-        res.status(500).json({ error: error.message });
-    }
+  try {
+    const { key, text } = req.body;
+    const [message, created] = await BotMessage.findOrCreate({
+      where: { key },
+      defaults: { key, text }
+    });
+    if (!created) await message.update({ text });
+    res.json({ success: true, message });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
-router.put('/api/bot/messages/:id', isAuthenticated, async (req, res) => {
-    try {
-        const { BotMessage } = require('../models');
-        const message = await BotMessage.findByPk(req.params.id);
-        if (!message) {
-            return res.status(404).json({ error: 'پیام یافت نشد' });
-        }
-        await message.update(req.body);
-        res.json(message);
-    } catch (error) {
-        console.error('❌ خطا در ویرایش پیام:', error);
-        res.status(500).json({ error: error.message });
-    }
-});
+// ============= API کاربران =============
+// دریافت لیست کاربران
+router.get('/api/bot/users', isAuthenticated, botController.getUsers);
 
-// ============= API های کاربران =============
-router.get('/api/bot/users', isAuthenticated, async (req, res) => {
-    try {
-        const { BotUser } = require('../models');
-        const users = await BotUser.findAll({
-            order: [['createdAt', 'DESC']]
-        });
-        res.json(users);
-    } catch (error) {
-        console.error('❌ خطا در دریافت کاربران:', error);
-        res.status(500).json({ error: error.message });
-    }
-});
-
-router.get('/api/bot/users/:id/messages', isAuthenticated, async (req, res) => {
-    try {
-        const { BotUserMessage } = require('../models');
-        const messages = await BotUserMessage.findAll({
-            where: { userId: req.params.id },
-            order: [['createdAt', 'ASC']]
-        });
-        res.json(messages);
-    } catch (error) {
-        console.error('❌ خطا در دریافت پیام‌های کاربر:', error);
-        res.status(500).json({ error: error.message });
-    }
-});
+// دریافت پیام‌های یک کاربر
+router.get('/api/bot/users/:id/messages', isAuthenticated, botController.getUserMessages);
 
 // ============= وضعیت ربات =============
-router.get('/api/bot/status', isAuthenticated, async (req, res) => {
-    try {
-        const { bot } = require('../services/telegramBot');
-        const botInfo = await bot.getMe();
-        res.json({ online: true, username: botInfo.username });
-    } catch (error) {
-        console.error('❌ خطا در بررسی وضعیت ربات:', error);
-        res.json({ online: false, error: error.message });
-    }
-});
+// بررسی وضعیت اتصال ربات
+router.get('/api/bot/status', isAuthenticated, botController.getBotStatus);
 
-// 4- مدیریت وب اپ
+// ============= مدیریت وب اپ =============
 router.get('/webapp', isAuthenticated, (req, res) => {
   res.render('webapp/index', { 
     title: 'مدیریت وب اپ',
@@ -236,7 +202,7 @@ router.get('/webapp', isAuthenticated, (req, res) => {
   });
 });
 
-// 5- مدیریت API های عمومی
+// ============= تنظیمات API =============
 router.get('/api-settings', isAuthenticated, (req, res) => {
   res.render('api-settings', { 
     title: 'تنظیمات API',

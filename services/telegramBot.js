@@ -1,486 +1,270 @@
-// const TelegramBot = require('node-telegram-bot-api');
-// const { BotMenu, BotMessage, BotUser, BotUserMessage } = require('../models');
-
-// const token = '8223148206:AAGIN2pqe7we5TPU8jNDDISoCFYm2FfhonQ';
-// const bot = new TelegramBot(token, { polling: true });
-
-// // ============= ذخیره وضعیت کاربر (برای دکمه بازگشت) =============
-// const userState = new Map(); // chatId -> { currentMenuId, history[] }
-
-// // ============= توابع کمکی =============
-
-// // ساخت کیبورد از لیست منوها
-// function buildKeyboardFromMenus(menus, showBackButton = false) {
-//     if (!menus || menus.length === 0) return null;
-    
-//     const keyboard = [];
-//     let row = [];
-    
-//     for (let i = 0; i < menus.length; i++) {
-//         const menu = menus[i];
-//         const buttonText = (menu.emoji ? menu.emoji + ' ' : '') + menu.text;
-//         row.push(buttonText);
-        
-//         if (row.length === 2 || i === menus.length - 1) {
-//             keyboard.push(row);
-//             row = [];
-//         }
-//     }
-    
-//     if (showBackButton) {
-//         keyboard.push(['🔙 بازگشت']);
-//     }
-    
-//     return {
-//         reply_markup: {
-//             keyboard: keyboard,
-//             resize_keyboard: true
-//         }
-//     };
-// }
-
-// // دریافت زیرمنوهای یک منو
-// async function getSubmenus(menuId) {
-//     return await BotMenu.findAll({
-//         where: { parentId: menuId, isActive: true },
-//         order: [['order', 'ASC']]
-//     });
-// }
-
-// // دریافت منوی اصلی
-// async function getMainMenu() {
-//     return await BotMenu.findOne({
-//         where: { type: 'main', isActive: true },
-//         order: [['order', 'ASC']]
-//     });
-// }
-
-// // دریافت پیام بر اساس کلید
-// async function getMessageByKey(key) {
-//     try {
-//         const message = await BotMessage.findOne({
-//             where: { key, isActive: true }
-//         });
-//         return message ? message.text : null;
-//     } catch (error) {
-//         return null;
-//     }
-// }
-
-// // ثبت یا به‌روزرسانی کاربر
-// async function updateUser(telegramUser) {
-//     try {
-//         const [user, created] = await BotUser.findOrCreate({
-//             where: { telegramId: telegramUser.id.toString() },
-//             defaults: {
-//                 firstName: telegramUser.first_name,
-//                 lastName: telegramUser.last_name,
-//                 username: telegramUser.username,
-//                 lastInteraction: new Date()
-//             }
-//         });
-        
-//         if (!created) {
-//             await user.update({
-//                 firstName: telegramUser.first_name,
-//                 lastName: telegramUser.last_name,
-//                 username: telegramUser.username,
-//                 lastInteraction: new Date()
-//             });
-//         }
-        
-//         return user;
-//     } catch (error) {
-//         console.error('❌ خطا در ثبت کاربر:', error);
-//         return null;
-//     }
-// }
-
-// // ثبت پیام کاربر
-// async function saveUserMessage(userId, message, response = null) {
-//     try {
-//         await BotUserMessage.create({
-//             userId,
-//             message,
-//             response,
-//             type: 'text'
-//         });
-//     } catch (error) {
-//         console.error('❌ خطا در ثبت پیام:', error);
-//     }
-// }
-
-// // ============= نمایش منو =============
-// async function showMenu(chatId, menuId, customText = null) {
-//     try {
-//         const menu = await BotMenu.findByPk(menuId);
-//         if (!menu) return false;
-        
-//         // دریافت زیرمنوها
-//         const submenus = await getSubmenus(menu.id);
-        
-//         // ذخیره وضعیت کاربر
-//         const state = userState.get(chatId) || { history: [] };
-//         state.currentMenuId = menu.id;
-//         userState.set(chatId, state);
-        
-//         if (submenus.length > 0) {
-//             // اگه زیرمنو داره، زیرمنوها رو نمایش بده
-//             const keyboard = buildKeyboardFromMenus(submenus, true);
-//             const text = customText || menu.content || menu.text + ':';
-//             await bot.sendMessage(chatId, text, keyboard);
-//         } else {
-//             // اگه زیرمنو نداره، محتوا رو نمایش بده
-//             await bot.sendMessage(chatId, menu.content || 'اطلاعات این بخش موجود نیست');
-            
-//             // بعد از نمایش محتوا، منوی قبلی رو نشون بده (اگه تاریخچه داره)
-//             if (state.history.length > 0) {
-//                 const parentId = state.history[state.history.length - 1];
-//                 const parentMenu = await BotMenu.findByPk(parentId);
-//                 if (parentMenu) {
-//                     const parentSubmenus = await getSubmenus(parentId);
-//                     if (parentSubmenus.length > 0) {
-//                         const keyboard = buildKeyboardFromMenus(parentSubmenus, true);
-//                         await bot.sendMessage(chatId, parentMenu.content || parentMenu.text + ':', keyboard);
-//                     }
-//                 }
-//             }
-//         }
-        
-//         return true;
-//     } catch (error) {
-//         console.error('❌ خطا در نمایش منو:', error);
-//         return false;
-//     }
-// }
-
-// // ============= نمایش منوی اصلی =============
-// async function showMainMenu(chatId) {
-//     const mainMenu = await getMainMenu();
-//     if (!mainMenu) {
-//         await bot.sendMessage(chatId, 'منویی تعریف نشده است.');
-//         return;
-//     }
-    
-//     const submenus = await getSubmenus(mainMenu.id);
-    
-//     // ریست وضعیت کاربر
-//     userState.set(chatId, { history: [], currentMenuId: mainMenu.id });
-    
-//     if (submenus.length > 0) {
-//         const keyboard = buildKeyboardFromMenus(submenus, false);
-//         const welcomeReturn = await getMessageByKey('welcome_return') || 'منوی اصلی:';
-//         await bot.sendMessage(chatId, welcomeReturn, keyboard);
-//     } else {
-//         await bot.sendMessage(chatId, mainMenu.content || 'منوی اصلی');
-//     }
-// }
-
-// // ============= رویدادهای ربات =============
-
-// // دستور /start
-// bot.onText(/\/start/, async (msg) => {
-//     const chatId = msg.chat.id;
-//     await updateUser(msg.from);
-    
-//     const welcomeText = await getMessageByKey('welcome_new') || 'به ربات خوش آمدید';
-//     await bot.sendMessage(chatId, welcomeText);
-//     await showMainMenu(chatId);
-// });
-
-// // دستور /menu
-// bot.onText(/\/menu/, async (msg) => {
-//     await showMainMenu(msg.chat.id);
-// });
-
-// // دکمه بازگشت
-// bot.onText(/🔙 بازگشت/, async (msg) => {
-//     const chatId = msg.chat.id;
-//     const state = userState.get(chatId);
-    
-//     if (state && state.history.length > 0) {
-//         // برگشت به منوی قبلی
-//         const previousMenuId = state.history.pop();
-//         state.currentMenuId = previousMenuId;
-//         userState.set(chatId, state);
-        
-//         const previousMenu = await BotMenu.findByPk(previousMenuId);
-//         if (previousMenu) {
-//             const submenus = await getSubmenus(previousMenuId);
-//             const keyboard = buildKeyboardFromMenus(submenus, state.history.length > 0);
-//             await bot.sendMessage(chatId, previousMenu.content || previousMenu.text + ':', keyboard);
-//         } else {
-//             await showMainMenu(chatId);
-//         }
-//     } else {
-//         // اگه تاریخچه نبود، برو به منوی اصلی
-//         await showMainMenu(chatId);
-//     }
-// });
-
-// // پیام‌های متنی (انتخاب منو)
-// bot.on('message', async (msg) => {
-//     if (msg.text && !msg.text.startsWith('/') && !msg.text.startsWith('🔙')) {
-//         const chatId = msg.chat.id;
-//         const text = msg.text;
-//         const user = await updateUser(msg.from);
-        
-//         // حذف ایموجی از ابتدای متن برای جستجو
-//         const cleanText = text.replace(/^[\u{1F600}-\u{1F6FF}\s]+/u, '').trim();
-        
-//         // جستجوی منو با این متن
-//         const menu = await BotMenu.findOne({
-//             where: { text: cleanText, isActive: true }
-//         });
-        
-//         if (menu) {
-//             const state = userState.get(chatId) || { history: [] };
-            
-//             // اگه منوی قبلی وجود داره و با منوی فعلی فرق داره، به تاریخچه اضافه کن
-//             if (state.currentMenuId && state.currentMenuId !== menu.id) {
-//                 state.history.push(state.currentMenuId);
-//             }
-            
-//             state.currentMenuId = menu.id;
-//             userState.set(chatId, state);
-            
-//             // دریافت زیرمنوها
-//             const submenus = await getSubmenus(menu.id);
-            
-//             if (submenus.length > 0) {
-//                 // نمایش زیرمنوها
-//                 const keyboard = buildKeyboardFromMenus(submenus, state.history.length > 0);
-//                 await bot.sendMessage(chatId, menu.content || menu.text + ':', keyboard);
-//             } else {
-//                 // نمایش محتوا
-//                 await bot.sendMessage(chatId, menu.content || 'اطلاعات این بخش موجود نیست');
-                
-//                 // بعد از نمایش محتوا، منوی قبلی رو نشون بده
-//                 if (state.history.length > 0) {
-//                     const parentId = state.history[state.history.length - 1];
-//                     const parentMenu = await BotMenu.findByPk(parentId);
-//                     if (parentMenu) {
-//                         const parentSubmenus = await getSubmenus(parentId);
-//                         if (parentSubmenus.length > 0) {
-//                             const keyboard = buildKeyboardFromMenus(parentSubmenus, state.history.length > 1);
-//                             await bot.sendMessage(chatId, parentMenu.content || parentMenu.text + ':', keyboard);
-//                         }
-//                     }
-//                 }
-//             }
-            
-//             await saveUserMessage(user.id, text, 'منو انتخاب شد');
-//         } else {
-//             // متن نامعتبر
-//             await showMainMenu(chatId);
-//         }
-//     }
-// });
-
-// // ============= وضعیت سنجی ربات =============
-// bot.getMe().then((botInfo) => {
-//     console.log('🤖 ربات @' + botInfo.username + ' فعال شد');
-// }).catch((error) => {
-//     console.error('❌ خطا در اتصال ربات:', error);
-// });
-
-// // API برای وضعیت
-// const checkBotStatus = async () => {
-//     try {
-//         const botInfo = await bot.getMe();
-//         return { online: true, username: botInfo.username };
-//     } catch (error) {
-//         return { online: false, error: error.message };
-//     }
-// };
-
-// module.exports = { bot, checkBotStatus };
-
-
-
-
-
-
 const TelegramBot = require('node-telegram-bot-api');
 const { BotMenu, BotMessage, BotUser, BotUserMessage } = require('../models');
 
 const token = '8223148206:AAGIN2pqe7we5TPU8jNDDISoCFYm2FfhonQ';
 const bot = new TelegramBot(token, { polling: true });
 
-// ============= ذخیره وضعیت کاربر =============
-const userState = new Map(); // chatId -> { currentMenuId, history[] }
+// User state store
+const userState = new Map();
 
-// ============= توابع کمکی =============
-
-// ساخت کیبورد از لیست منوها
-function buildKeyboard(menus, showBack = false) {
-    if (!menus || menus.length === 0) return null;
-    
-    const keyboard = [];
-    let row = [];
-    
-    for (let i = 0; i < menus.length; i++) {
-        const menu = menus[i];
-        const btnText = (menu.emoji || '🔹') + ' ' + menu.text;
-        row.push(btnText);
-        
-        if (row.length === 2 || i === menus.length - 1) {
-            keyboard.push(row);
-            row = [];
-        }
-    }
-    
-    if (showBack) {
-        keyboard.push(['🔙 بازگشت']);
-    }
-    
-    return {
-        reply_markup: {
-            keyboard: keyboard,
-            resize_keyboard: true
-        }
-    };
-}
-
-// دریافت زیرمنوهای یک منو
-async function getChildren(parentId) {
+// Helper: get children
+const getChildren = async (parentId) => {
+  try {
     return await BotMenu.findAll({
-        where: { parentId, isActive: true },
-        order: [['order', 'ASC']]
+      where: { parentId, isActive: true },
+      order: [['order', 'ASC']],
+      raw: true
     });
-}
+  } catch {
+    return [];
+  }
+};
 
-// دریافت منوی اصلی
-async function getRootMenu() {
+// Helper: get root menu
+const getRootMenu = async () => {
+  try {
     return await BotMenu.findOne({
-        where: { parentId: null, isActive: true },
-        order: [['order', 'ASC']]
+      where: { parentId: null, isActive: true },
+      order: [['order', 'ASC']],
+      raw: true
     });
-}
+  } catch {
+    return null;
+  }
+};
 
-// دریافت پیام
-async function getMessage(key) {
-    const msg = await BotMessage.findOne({ where: { key } });
+// Helper: get menu by ID
+const getMenuById = async (menuId) => {
+  try {
+    return await BotMenu.findByPk(menuId, { raw: true });
+  } catch {
+    return null;
+  }
+};
+
+// Helper: get message by key
+const getMessage = async (key) => {
+  try {
+    const msg = await BotMessage.findOne({ where: { key, isActive: true }, raw: true });
     return msg ? msg.text : null;
-}
+  } catch {
+    return null;
+  }
+};
 
-// ============= نمایش منو =============
-async function showMenu(chatId, menuId) {
-    const menu = await BotMenu.findByPk(menuId);
-    if (!menu) return false;
-    
-    const children = await getChildren(menu.id);
-    const state = userState.get(chatId) || { history: [] };
-    
-    if (children.length > 0) {
-        // اگه فرزند داره، فرزندان رو نشون بده
-        const keyboard = buildKeyboard(children, state.history.length > 0);
-        await bot.sendMessage(chatId, menu.content || menu.text + ':', keyboard);
-        state.currentMenuId = menu.id;
-        userState.set(chatId, state);
+// Helper: update user
+const updateUser = async (tgUser) => {
+  try {
+    const [user] = await BotUser.findOrCreate({
+      where: { telegramId: tgUser.id.toString() },
+      defaults: {
+        firstName: tgUser.first_name,
+        lastName: tgUser.last_name,
+        username: tgUser.username,
+        lastInteraction: new Date()
+      }
+    });
+    if (!user.isNewRecord) {
+      await user.update({
+        firstName: tgUser.first_name,
+        lastName: tgUser.last_name,
+        username: tgUser.username,
+        lastInteraction: new Date()
+      });
+    }
+    return user;
+  } catch {
+    return null;
+  }
+};
+
+// Build inline keyboard (with navigation buttons)
+const buildKeyboard = (menus, showBack = false, showMain = false) => {
+  const inlineKeyboard = [];
+  
+  // Add menu buttons if any
+  if (menus?.length) {
+    let row = [];
+    for (let i = 0; i < menus.length; i++) {
+      const menu = menus[i];
+      const btnText = `${menu.emoji || '🔹'} ${menu.text}`;
+      row.push({ text: btnText, callback_data: `menu_${menu.id}` });
+      if (row.length === 2 || i === menus.length - 1) {
+        inlineKeyboard.push(row);
+        row = [];
+      }
+    }
+  }
+  
+  // Navigation buttons (always added if needed)
+  const nav = [];
+  if (showBack) nav.push({ text: '🔙 منوی قبلی', callback_data: 'back' });
+  if (showMain) nav.push({ text: '🏠 منوی اصلی', callback_data: 'main' });
+  if (nav.length) inlineKeyboard.push(nav);
+  
+  return inlineKeyboard.length ? { reply_markup: { inline_keyboard: inlineKeyboard } } : null;
+};
+
+// Show menu (edits existing message)
+const showMenu = async (chatId, menuId, msgId) => {
+  const menu = await getMenuById(menuId);
+  if (!menu) return false;
+  
+  const children = await getChildren(menu.id);
+  const state = userState.get(chatId) || { history: [] };
+  const hasChildren = children.length > 0;
+  
+  // Title + content (both centered naturally due to RTL)
+  const title = `${menu.emoji || '🔹'} ${menu.text}`;
+  const content = menu.content || '  ';
+  const text = `*${title}*\n\n${content}`;
+  
+  // Build keyboard: always show navigation if needed, regardless of children
+  const keyboard = buildKeyboard(
+    children,
+    state.history.length > 0,      // show back if history exists
+    true                            // always show main menu button
+  );
+  
+  try {
+    if (msgId) {
+      await bot.editMessageText(text, {
+        chat_id: chatId,
+        message_id: msgId,
+        parse_mode: 'Markdown',
+        ...(keyboard || {})
+      });
     } else {
-        // اگه فرزند نداره، محتوا رو نشون بده
-        await bot.sendMessage(chatId, menu.content || 'اطلاعاتی موجود نیست');
-        
-        // برگشت به منوی قبلی
-        if (state.history.length > 0) {
-            const parentId = state.history.pop();
-            const parent = await BotMenu.findByPk(parentId);
-            if (parent) {
-                const parentChildren = await getChildren(parent.id);
-                const keyboard = buildKeyboard(parentChildren, state.history.length > 0);
-                await bot.sendMessage(chatId, parent.content || parent.text + ':', keyboard);
-                state.currentMenuId = parent.id;
-                userState.set(chatId, state);
-            }
-        }
+      await bot.sendMessage(chatId, text, {
+        parse_mode: 'Markdown',
+        ...(keyboard || {})
+      });
+    }
+    
+    // Update state (only if this menu has children, to allow back navigation)
+    if (hasChildren) {
+      state.currentMenuId = menu.id;
+      userState.set(chatId, state);
+    } else {
+      // For leaf menus, we keep state as is (history already contains parent)
+      // No need to change currentMenuId because we are not going deeper
     }
     return true;
-}
-
-// ============= رویدادها =============
-
-bot.onText(/\/start/, async (msg) => {
-    const chatId = msg.chat.id;
-    const root = await getRootMenu();
-    
-    const welcome = await getMessage('welcome_new') || 'به ربات خوش آمدید';
-    await bot.sendMessage(chatId, welcome);
-    
-    if (root) {
-        const children = await getChildren(root.id);
-        const keyboard = buildKeyboard(children, false);
-        await bot.sendMessage(chatId, root.content || 'منوی اصلی:', keyboard);
-        userState.set(chatId, { history: [], currentMenuId: root.id });
+  } catch (e) {
+    if (!e.message.includes('message is not modified')) {
+      console.error('Menu error:', e.message);
     }
+    return false;
+  }
+};
+
+// Show main menu
+const showMainMenu = async (chatId, welcomeBack = false) => {
+  const root = await getRootMenu();
+  if (!root) {
+    await bot.sendMessage(chatId, 'سیستم در حال راه‌اندازی است.');
+    return;
+  }
+  
+  const children = await getChildren(root.id);
+  const welcome = welcomeBack
+    ? (await getMessage('welcome_return') || 'خوش آمدید')
+    : (await getMessage('welcome_new') || 'به ربات خوش آمدید');
+  
+  const text = `*🏠 منوی اصلی*\n\n${welcome}`;
+  const keyboard = children.length ? buildKeyboard(children, false, false) : null;
+  
+  await bot.sendMessage(chatId, text, {
+    parse_mode: 'Markdown',
+    ...(keyboard || {})
+  });
+  userState.set(chatId, { history: [], currentMenuId: root.id });
+};
+
+// Commands
+bot.onText(/\/start/, async (msg) => {
+  const chatId = msg.chat.id;
+  await updateUser(msg.from);
+  // حذف هر کیبورد قبلی و نمایش مستقیم منوی اصلی
+  await bot.sendMessage(chatId, 'چند لحظه کن  ...', { reply_markup: { remove_keyboard: true } })
+    .then(sentMsg => bot.deleteMessage(chatId, sentMsg.message_id).catch(() => {}));
+  await showMainMenu(chatId, false);
 });
 
 bot.onText(/\/menu/, async (msg) => {
-    const chatId = msg.chat.id;
-    const root = await getRootMenu();
-    if (root) {
-        const children = await getChildren(root.id);
-        const keyboard = buildKeyboard(children, false);
-        const welcomeBack = await getMessage('welcome_return') || 'منوی اصلی:';
-        await bot.sendMessage(chatId, welcomeBack, keyboard);
-        userState.set(chatId, { history: [], currentMenuId: root.id });
-    }
+  await showMainMenu(msg.chat.id, true);
 });
 
-bot.onText(/🔙 بازگشت/, async (msg) => {
-    const chatId = msg.chat.id;
-    const state = userState.get(chatId);
-    
-    if (state && state.history.length > 0) {
-        const parentId = state.history.pop();
-        const parent = await BotMenu.findByPk(parentId);
-        if (parent) {
-            const children = await getChildren(parent.id);
-            const keyboard = buildKeyboard(children, state.history.length > 0);
-            await bot.sendMessage(chatId, parent.content || parent.text + ':', keyboard);
-            state.currentMenuId = parent.id;
-            userState.set(chatId, state);
-        }
-    } else {
-        // برگشت به اصلی
-        const root = await getRootMenu();
-        if (root) {
-            const children = await getChildren(root.id);
-            const keyboard = buildKeyboard(children, false);
-            await bot.sendMessage(chatId, 'منوی اصلی:', keyboard);
-            userState.set(chatId, { history: [], currentMenuId: root.id });
-        }
-    }
-});
-
-bot.on('message', async (msg) => {
-    if (msg.text && !msg.text.startsWith('/') && !msg.text.startsWith('🔙')) {
-        const chatId = msg.chat.id;
-        const text = msg.text.replace(/[🔹🔸📚💹👤🏠]/g, '').trim();
-        
-        const menu = await BotMenu.findOne({ where: { text, isActive: true } });
-        if (!menu) {
-            const root = await getRootMenu();
-            if (root) {
-                const children = await getChildren(root.id);
-                const keyboard = buildKeyboard(children, false);
-                await bot.sendMessage(chatId, 'لطفاً از دکمه‌های منو استفاده کنید.', keyboard);
-            }
-            return;
-        }
-        
-        const state = userState.get(chatId) || { history: [] };
-        if (state.currentMenuId) {
-            state.history.push(state.currentMenuId);
-        }
+// Callback queries
+bot.on('callback_query', async (q) => {
+  const chatId = q.message.chat.id;
+  const msgId = q.message.message_id;
+  const data = q.data;
+  
+  await bot.answerCallbackQuery(q.id);
+  await updateUser(q.from);
+  
+  const state = userState.get(chatId) || { history: [], currentMenuId: null };
+  
+  if (data === 'main') {
+    await showMainMenu(chatId, true);
+    return;
+  }
+  
+  if (data === 'back') {
+    if (state.history.length) {
+      const parentId = state.history.pop();
+      const parent = await getMenuById(parentId);
+      if (parent) {
+        state.currentMenuId = parent.id;
         userState.set(chatId, state);
-        
-        await showMenu(chatId, menu.id);
+        await showMenu(chatId, parent.id, msgId);
+      } else {
+        await showMainMenu(chatId, true);
+      }
+    } else {
+      await showMainMenu(chatId, true);
     }
+    return;
+  }
+  
+  if (data.startsWith('menu_')) {
+    const menuId = parseInt(data.split('_')[1]);
+    const menu = await getMenuById(menuId);
+    if (!menu) return;
+    
+    // Update history
+    if (state.currentMenuId && state.currentMenuId !== menu.id) {
+      state.history.push(state.currentMenuId);
+    }
+    state.currentMenuId = menu.id;
+    userState.set(chatId, state);
+    
+    await showMenu(chatId, menu.id, msgId);
+    
+    // Save message
+    const dbUser = await BotUser.findOne({ where: { telegramId: q.from.id.toString() } });
+    if (dbUser) {
+      await BotUserMessage.create({
+        userId: dbUser.id,
+        message: menu.text,
+        response: 'منو انتخاب شد',
+        type: 'text'
+      });
+    }
+  }
 });
 
-bot.getMe().then(info => {
-    console.log('🤖 ربات @' + info.username + ' فعال شد');
+// Ready Message
+bot.getMe().then((info) => {
+  console.log(`✅ Bot @${info.username} Connected To Server`);
 });
 
-module.exports = { bot };
+module.exports = { bot, checkBotStatus: async () => {
+  try {
+    const info = await bot.getMe();
+    return { online: true, username: info.username };
+  } catch {
+    return { online: false };
+  }
+} };
