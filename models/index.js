@@ -86,15 +86,6 @@ const BotMessage = sequelize.define('BotMessage', {
   isActive: { type: Sequelize.BOOLEAN, defaultValue: true }
 }, { timestamps: true });
 
-// ============= مدل WebappPage (صفحات وب‌اپ) =============
-const WebappPage = sequelize.define('WebappPage', {
-  id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
-  slug: { type: Sequelize.STRING(100), allowNull: false, unique: true },
-  title: { type: Sequelize.STRING(200) },
-  content: { type: Sequelize.TEXT },
-  isActive: { type: Sequelize.BOOLEAN, defaultValue: true }
-}, { timestamps: true });
-
 // ============= مدل BotMenu (منوهای ربات) =============
 const BotMenu = sequelize.define('BotMenu', {
   id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
@@ -137,7 +128,7 @@ const ApiKey = sequelize.define('ApiKey', {
   name: { type: Sequelize.STRING(100), allowNull: false },
   key: { type: Sequelize.STRING(100), allowNull: false, unique: true },
   secret: { type: Sequelize.STRING(100), allowNull: false },
-  permissions: { type: Sequelize.TEXT, defaultValue: '["read"]' }, // JSON array
+  permissions: { type: Sequelize.TEXT, defaultValue: '["read"]' },
   isActive: { type: Sequelize.BOOLEAN, defaultValue: true },
   expiresAt: { type: Sequelize.DATE },
   lastUsed: { type: Sequelize.DATE },
@@ -153,7 +144,7 @@ const ApiEndpoint = sequelize.define('ApiEndpoint', {
   description: { type: Sequelize.TEXT },
   category: { type: Sequelize.STRING(50) },
   requiresAuth: { type: Sequelize.BOOLEAN, defaultValue: true },
-  permissions: { type: Sequelize.TEXT, defaultValue: '[]' }, // JSON array
+  permissions: { type: Sequelize.TEXT, defaultValue: '[]' },
   isActive: { type: Sequelize.BOOLEAN, defaultValue: true }
 }, { timestamps: true });
 
@@ -166,8 +157,187 @@ const ApiLog = sequelize.define('ApiLog', {
   statusCode: { type: Sequelize.INTEGER },
   ip: { type: Sequelize.STRING(50) },
   userAgent: { type: Sequelize.TEXT },
-  responseTime: { type: Sequelize.INTEGER } // میلی‌ثانیه
+  responseTime: { type: Sequelize.INTEGER }
 }, { timestamps: true });
+
+
+// ============= مدل WebappPage (صفحات وب‌اپ) =============
+const WebappPage = sequelize.define('WebappPage', {
+  id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+  
+  // اطلاعات پایه
+  title_fa: { type: Sequelize.STRING(200), allowNull: false },
+  title_en: { type: Sequelize.STRING(200), allowNull: false },
+  title_ar: { type: Sequelize.STRING(200), allowNull: false },
+  
+  slug: { type: Sequelize.STRING(100), allowNull: false, unique: true },
+  
+  // محتوای صفحه (JSON برای ذخیره ساختار المان‌ها)
+  content_fa: { type: Sequelize.TEXT('long'), defaultValue: '[]' },
+  content_en: { type: Sequelize.TEXT('long'), defaultValue: '[]' },
+  content_ar: { type: Sequelize.TEXT('long'), defaultValue: '[]' },
+  
+  // تنظیمات سئو
+  meta_title_fa: { type: Sequelize.STRING(200) },
+  meta_title_en: { type: Sequelize.STRING(200) },
+  meta_title_ar: { type: Sequelize.STRING(200) },
+  meta_description_fa: { type: Sequelize.TEXT },
+  meta_description_en: { type: Sequelize.TEXT },
+  meta_description_ar: { type: Sequelize.TEXT },
+  
+  // وضعیت
+  isActive: { type: Sequelize.BOOLEAN, defaultValue: true },
+  isHomepage: { type: Sequelize.BOOLEAN, defaultValue: false }, // صفحه اصلی سایت
+  template: { type: Sequelize.STRING(50), defaultValue: 'default' }, // قالب صفحه
+  
+  order: { type: Sequelize.INTEGER, defaultValue: 0 },
+  viewCount: { type: Sequelize.INTEGER, defaultValue: 0 }
+  
+}, { timestamps: true });
+
+// ============= مدل WebappMenu (منوی وب‌اپ) =============
+const WebappMenu = sequelize.define('WebappMenu', {
+  id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+  
+  name_fa: { type: Sequelize.STRING(100), allowNull: false },
+  name_en: { type: Sequelize.STRING(100), allowNull: false },
+  name_ar: { type: Sequelize.STRING(100), allowNull: false },
+  
+  url: { type: Sequelize.STRING(200) }, // اگر لینک خارجی باشد
+  pageId: { type: Sequelize.INTEGER }, // اگر به صفحه داخلی لینک دهد
+  parentId: { type: Sequelize.INTEGER, defaultValue: null }, // برای زیرمنو
+  
+  icon: { type: Sequelize.STRING(50) }, // کلاس آیکون
+  target: { type: Sequelize.ENUM('_self', '_blank'), defaultValue: '_self' },
+  
+  order: { type: Sequelize.INTEGER, defaultValue: 0 },
+  isActive: { type: Sequelize.BOOLEAN, defaultValue: true },
+  location: { type: Sequelize.ENUM('header', 'footer', 'sidebar'), defaultValue: 'header' }
+  
+}, { timestamps: true });
+
+// ============= مدل WebappElement (المان‌های قابل استفاده) =============
+const WebappElement = sequelize.define('WebappElement', {
+  id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+  
+  name_fa: { type: Sequelize.STRING(100), allowNull: false },
+  name_en: { type: Sequelize.STRING(100), allowNull: false },
+  name_ar: { type: Sequelize.STRING(100), allowNull: false },
+  
+  type: { type: Sequelize.ENUM(
+    'text', 'image', 'video', 'audio', 'gallery', 
+    'slider', 'form', 'button', 'card', 'grid', 
+    'hero', 'feature', 'testimonial', 'contact', 'social'
+  ), allowNull: false },
+  
+  // قالب پیش‌فرض المان (JSON)
+  defaultConfig: { type: Sequelize.TEXT, defaultValue: '{}' },
+  
+  thumbnail: { type: Sequelize.STRING(500) }, // تصویر پیش‌نمایش
+  category: { type: Sequelize.STRING(50) }, // دسته‌بندی المان‌ها
+  isActive: { type: Sequelize.BOOLEAN, defaultValue: true }
+  
+}, { timestamps: true });
+
+// ============= مدل WebappMedia (کتابخانه رسانه) =============
+const WebappMedia = sequelize.define('WebappMedia', {
+  id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+  
+  filename: { type: Sequelize.STRING(500), allowNull: false },
+  originalName: { type: Sequelize.STRING(500) },
+  path: { type: Sequelize.STRING(500), allowNull: false },
+  url: { type: Sequelize.STRING(500), allowNull: false },
+  
+  type: { type: Sequelize.ENUM('image', 'video', 'audio', 'document', 'other'), allowNull: false },
+  mimeType: { type: Sequelize.STRING(100) },
+  size: { type: Sequelize.INTEGER }, // حجم بر حسب بایت
+  
+  width: { type: Sequelize.INTEGER }, // برای تصاویر
+  height: { type: Sequelize.INTEGER }, // برای تصاویر
+  duration: { type: Sequelize.INTEGER }, // برای ویدئو و صوت
+  
+  alt_fa: { type: Sequelize.STRING(200) },
+  alt_en: { type: Sequelize.STRING(200) },
+  alt_ar: { type: Sequelize.STRING(200) },
+  
+  title_fa: { type: Sequelize.STRING(200) },
+  title_en: { type: Sequelize.STRING(200) },
+  title_ar: { type: Sequelize.STRING(200) },
+  
+  uploadedBy: { type: Sequelize.INTEGER }, // آیدی ادمین آپلودکننده
+  usedCount: { type: Sequelize.INTEGER, defaultValue: 0 }
+  
+}, { timestamps: true });
+
+// ============= مدل WebappForm (فرم‌ها) =============
+const WebappForm = sequelize.define('WebappForm', {
+  id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+  
+  name_fa: { type: Sequelize.STRING(200), allowNull: false },
+  name_en: { type: Sequelize.STRING(200), allowNull: false },
+  name_ar: { type: Sequelize.STRING(200), allowNull: false },
+  
+  formConfig: { type: Sequelize.TEXT('long'), defaultValue: '[]' }, // JSON ساختار فرم
+  recipientEmail: { type: Sequelize.STRING(200) }, // ایمیل دریافت‌کننده
+  successMessage_fa: { type: Sequelize.TEXT },
+  successMessage_en: { type: Sequelize.TEXT },
+  successMessage_ar: { type: Sequelize.TEXT },
+  
+  isActive: { type: Sequelize.BOOLEAN, defaultValue: true }
+  
+}, { timestamps: true });
+
+// ============= مدل WebappFormEntry (پاسخ‌های دریافتی فرم‌ها) =============
+const WebappFormEntry = sequelize.define('WebappFormEntry', {
+  id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+  
+  formId: { type: Sequelize.INTEGER, allowNull: false },
+  data: { type: Sequelize.TEXT('long'), allowNull: false }, // JSON داده‌های ارسالی
+  ip: { type: Sequelize.STRING(50) },
+  userAgent: { type: Sequelize.TEXT },
+  isRead: { type: Sequelize.BOOLEAN, defaultValue: false }
+  
+}, { timestamps: true });
+
+// ============= مدل WebappUser (کاربران وب‌اپ) =============
+const WebappUser = sequelize.define('WebappUser', {
+  id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+  
+  email: { type: Sequelize.STRING(100), unique: true },
+  phone: { type: Sequelize.STRING(20), unique: true },
+  password: { type: Sequelize.STRING(255) }, // اگر ثبت‌نام با رمز باشد
+  
+  firstName_fa: { type: Sequelize.STRING(100) },
+  lastName_fa: { type: Sequelize.STRING(100) },
+  firstName_en: { type: Sequelize.STRING(100) },
+  lastName_en: { type: Sequelize.STRING(100) },
+  firstName_ar: { type: Sequelize.STRING(100) },
+  lastName_ar: { type: Sequelize.STRING(100) },
+  
+  avatar: { type: Sequelize.STRING(500) },
+  language: { type: Sequelize.ENUM('fa', 'en', 'ar'), defaultValue: 'fa' },
+  
+  isActive: { type: Sequelize.BOOLEAN, defaultValue: true },
+  lastLogin: { type: Sequelize.DATE },
+  emailVerified: { type: Sequelize.BOOLEAN, defaultValue: false },
+  phoneVerified: { type: Sequelize.BOOLEAN, defaultValue: false }
+  
+}, { timestamps: true });
+
+// ============= مدل WebappSetting (تنظیمات کلی وب‌اپ) =============
+const WebappSetting = sequelize.define('WebappSetting', {
+  id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+  
+  key: { type: Sequelize.STRING(100), unique: true, allowNull: false },
+  value_fa: { type: Sequelize.TEXT },
+  value_en: { type: Sequelize.TEXT },
+  value_ar: { type: Sequelize.TEXT },
+  
+  type: { type: Sequelize.ENUM('text', 'image', 'color', 'number', 'boolean'), defaultValue: 'text' },
+  category: { type: Sequelize.STRING(50) } // general, social, contact, etc.
+  
+}, { timestamps: true });
+
 
 // ============= تعریف ارتباطات =============
 Category.hasMany(Lesson, { foreignKey: 'categoryId', as: 'lessons' });
@@ -178,6 +348,17 @@ BotMenu.hasMany(BotMenu, { as: 'children', foreignKey: 'parentId' });
 
 BotUser.hasMany(BotUserMessage, { foreignKey: 'userId', as: 'messages' });
 BotUserMessage.belongsTo(BotUser, { foreignKey: 'userId', as: 'user' });
+
+// ارتباطات وب‌اپ
+WebappMenu.belongsTo(WebappPage, { foreignKey: 'pageId', as: 'page' });
+WebappMenu.belongsTo(WebappMenu, { as: 'parent', foreignKey: 'parentId' });
+WebappMenu.hasMany(WebappMenu, { as: 'children', foreignKey: 'parentId' });
+
+WebappForm.hasMany(WebappFormEntry, { foreignKey: 'formId', as: 'entries' });
+WebappFormEntry.belongsTo(WebappForm, { foreignKey: 'formId', as: 'form' });
+
+// ارتباط با مدل‌های قبلی (اختیاری)
+WebappMedia.belongsTo(Admin, { foreignKey: 'uploadedBy', as: 'uploader' });
 
 // ارتباطات API
 ApiKey.hasMany(ApiLog, { foreignKey: 'apiKeyId', as: 'logs' });

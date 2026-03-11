@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ویرایشگر صفحه - PhoenixTrade</title>
+    <!-- فونت سمیم -->
+    <link rel="stylesheet" href="/css/fonts.css">
+    <!-- استایل سراسری پنل -->
+    <link rel="stylesheet" href="/css/admin.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- GridStack برای ویرایشگر گرافیکی -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gridstack/9.0.1/gridstack.min.css">
+    <style>
+        /* استایل اختصاصی ویرایشگر */
+        body {
+            overflow: hidden;
+        }
+        
+        .builder-container {
+            display: flex;
+            height: 100vh;
+            width: 100%;
+        }
+        
+        /* سایدبار ابزارها */
+        .builder-sidebar {
+            width: 280px;
+            background: rgba(0, 30, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-left: 1px solid rgba(255, 215, 0, 0.3);
+            padding: 1rem;
+            overflow-y: auto;
+            z-index: 100;
+        }
+        
+        .builder-sidebar h3 {
+            color: #ffd700;
+            font-size: 1rem;
+            margin: 1rem 0 0.5rem;
+        }
+        
+        .element-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .element-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 8px;
+            padding: 0.8rem 0.5rem;
+            text-align: center;
+            cursor: move;
+            color: #fff;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+        
+        .element-item:hover {
+            border-color: #ffd700;
+            background: rgba(255, 215, 0, 0.1);
+        }
+        
+        .element-item i {
+            display: block;
+            font-size: 1.5rem;
+            color: #ffd700;
+            margin-bottom: 0.3rem;
+        }
+        
+        /* منطقه اصلی ویرایش */
+        .builder-main {
+            flex: 1;
+            background: #f0f2f5;
+            overflow-y: auto;
+            padding: 2rem;
+            position: relative;
+        }
+        
+        /* کادر ویرایش */
+        .builder-canvas {
+            background: white;
+            max-width: 1200px;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        /* نوار ابزار بالا */
+        .builder-toolbar {
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+            padding: 0.5rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .page-title {
+            font-size: 1.1rem;
+            color: #0a2f1f;
+        }
+        
+        .toolbar-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .preview-size {
+            display: flex;
+            gap: 0.3rem;
+            margin-left: 1rem;
+        }
+        
+        .size-btn {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            color: #b8860b;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        
+        .size-btn.active {
+            background: #ffd700;
+            color: #0a2f1f;
+        }
+        
+        /* پنل تنظیمات المان */
+        .element-settings {
+            position: fixed;
+            right: -350px;
+            top: 0;
+            width: 350px;
+            height: 100vh;
+            background: rgba(0, 30, 15, 0.95);
+            backdrop-filter: blur(20px);
+            border-left: 1px solid rgba(255, 215, 0, 0.3);
+            padding: 2rem 1rem;
+            transition: right 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .element-settings.active {
+            right: 0;
+        }
+        
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #ffd700;
+            margin-bottom: 1.5rem;
+        }
+        
+        .settings-close {
+            cursor: pointer;
+        }
+        
+        .setting-group {
+            margin-bottom: 1.2rem;
+        }
+        
+        .setting-group label {
+            display: block;
+            color: #ffd700;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+        
+        .setting-group input,
+        .setting-group select,
+        .setting-group textarea {
+            width: 100%;
+            padding: 0.6rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+        }
+        
+        .coordinates {
+            display: flex;
+            gap: 0.5rem;
+            color: #ffd700;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="builder-container">
+        <!-- سایدبار ابزارها -->
+        <div class="builder-sidebar">
+            <h3><i class="fas fa-cubes"></i> المان‌ها</h3>
+            <div class="element-group">
+                <div class="element-item" draggable="true" data-type="text">
+                    <i class="fas fa-paragraph"></i>
+                    متن
+                </div>
+                <div class="element-item" draggable="true" data-type="image">
+                    <i class="fas fa-image"></i>
+                    تصویر
+                </div>
+                <div class="element-item" draggable="true" data-type="video">
+                    <i class="fas fa-video"></i>
+                    ویدئو
+                </div>
+                <div class="element-item" draggable="true" data-type="button">
+                    <i class="fas fa-square"></i>
+                    دکمه
+                </div>
+                <div class="element-item" draggable="true" data-type="gallery">
+                    <i class="fas fa-images"></i>
+                    گالری
+                </div>
+                <div class="element-item" draggable="true" data-type="slider">
+                    <i class="fas fa-sliders-h"></i>
+                    اسلایدر
+                </div>
+                <div class="element-item" draggable="true" data-type="form">
+                    <i class="fas fa-wpforms"></i>
+                    فرم
+                </div>
+                <div class="element-item" draggable="true" data-type="card">
+                    <i class="fas fa-credit-card"></i>
+                    کارت
+                </div>
+            </div>
+
+            <h3><i class="fas fa-language"></i> زبان</h3>
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                <button class="btn btn-sm" onclick="setLanguage('fa')">🇮🇷 فارسی</button>
+                <button class="btn btn-sm" onclick="setLanguage('en')">🇬🇧 English</button>
+                <button class="btn btn-sm" onclick="setLanguage('ar')">🇸🇦 عربي</button>
+            </div>
+
+            <h3><i class="fas fa-paint-brush"></i> استایل‌ها</h3>
+            <div class="setting-group">
+                <label>فونت</label>
+                <select id="global-font">
+                    <option value="Samim">سمیم</option>
+                    <option value="Vazir">وزیر</option>
+                    <option value="Tahoma">تاهوما</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- منطقه اصلی ویرایش -->
+        <div class="builder-main">
+            <div class="builder-toolbar">
+                <div class="page-title">
+                    <i class="fas fa-file"></i> ویرایش صفحه: <span id="page-name">صفحه اصلی</span>
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <div class="preview-size">
+                        <button class="size-btn active" onclick="setPreviewSize('desktop')"><i class="fas fa-desktop"></i></button>
+                        <button class="size-btn" onclick="setPreviewSize('tablet')"><i class="fas fa-tablet-alt"></i></button>
+                        <button class="size-btn" onclick="setPreviewSize('mobile')"><i class="fas fa-mobile-alt"></i></button>
+                    </div>
+                    <div class="toolbar-buttons">
+                        <button class="btn btn-sm" onclick="savePage()"><i class="fas fa-save"></i> ذخیره</button>
+                        <button class="btn btn-sm" onclick="previewPage()"><i class="fas fa-eye"></i> پیش‌نمایش</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- کانواس ویرایش (GridStack) -->
+            <div class="builder-canvas" id="builder-canvas">
+                <div class="grid-stack" id="grid-stack"></div>
+            </div>
+        </div>
+
+        <!-- پنل تنظیمات المان -->
+        <div class="element-settings" id="element-settings">
+            <div class="settings-header">
+                <span><i class="fas fa-sliders-h"></i> تنظیمات المان</span>
+                <span class="settings-close" onclick="closeSettings()"><i class="fas fa-times"></i></span>
+            </div>
+            <div id="settings-content"></div>
+            <div class="coordinates" id="element-coords"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gridstack/9.0.1/gridstack.min.js"></script>
+    <script>
+        // ============= متغیرهای سراسری =============
+        let grid = null;
+        let currentLanguage = 'fa';
+        let currentPageId = <%= pageId || 0 %>;
+        let currentElement = null;
+
+        // ============= مقداردهی اولیه GridStack =============
+        function initGrid() {
+            grid = GridStack.init({
+                cellHeight: 80,
+                minRow: 5,
+                margin: 10,
+                float: true,
+                acceptWidgets: true
+            });
+            
+            // بارگذاری المان‌های ذخیره شده
+            loadPageElements();
+        }
+
+        // ============= مدیریت المان‌ها =============
+        function addElement(type) {
+            const element = createElement(type);
+            grid.addWidget(element, {
+                x: 0,
+                y: 0,
+                width: 4,
+                height: 3
+            });
+        }
+
+        function createElement(type) {
+            const element = document.createElement('div');
+            element.className = 'grid-stack-item';
+            element.setAttribute('data-type', type);
+            
+            const content = document.createElement('div');
+            content.className = 'grid-stack-item-content';
+            content.style.cssText = 'background: white; border: 2px solid #ffd700; border-radius: 8px; padding: 1rem;';
+            
+            switch(type) {
+                case 'text':
+                    content.innerHTML = '<p contenteditable="true" style="margin:0;">متن خود را وارد کنید...</p>';
+                    break;
+                case 'image':
+                    content.innerHTML = '<div style="text-align:center;"><i class="fas fa-image" style="font-size:3rem; color:#aaa;"></i><br><small>تصویر</small></div>';
+                    break;
+                case 'button':
+                    content.innerHTML = '<button style="background:#ffd700; border:none; padding:0.5rem 1rem; border-radius:5px;">دکمه</button>';
+                    break;
+                default:
+                    content.innerHTML = `<div style="text-align:center;"><i class="fas fa-cube" style="font-size:3rem; color:#aaa;"></i><br><small>${type}</small></div>`;
+            }
+            
+            element.appendChild(content);
+            
+            // رویداد کلیک برای نمایش تنظیمات
+            element.addEventListener('click', (e) => {
+                e.stopPropagation();
+                showElementSettings(element);
+            });
+            
+            return element;
+        }
+
+        // ============= تنظیمات المان =============
+        function showElementSettings(element) {
+            currentElement = element;
+            document.getElementById('element-settings').classList.add('active');
+            
+            const type = element.getAttribute('data-type');
+            const coords = grid.getItemGridOptions(element);
+            
+            document.getElementById('element-coords').innerHTML = 
+                `x: ${coords.x}, y: ${coords.y}, عرض: ${coords.width}, ارتفاع: ${coords.height}`;
+            
+            let settingsHtml = '';
+            
+            switch(type) {
+                case 'text':
+                    settingsHtml = `
+                        <div class="setting-group">
+                            <label>متن (فارسی)</label>
+                            <textarea rows="3">متن نمونه</textarea>
+                        </div>
+                        <div class="setting-group">
+                            <label>متن (English)</label>
+                            <textarea rows="3">Sample text</textarea>
+                        </div>
+                        <div class="setting-group">
+                            <label>متن (عربي)</label>
+                            <textarea rows="3">نص عينة</textarea>
+                        </div>
+                        <div class="setting-group">
+                            <label>سایز فونت</label>
+                            <input type="number" value="16"> px
+                        </div>
+                        <div class="setting-group">
+                            <label>رنگ</label>
+                            <input type="color" value="#000000">
+                        </div>
+                    `;
+                    break;
+                case 'image':
+                    settingsHtml = `
+                        <div class="setting-group">
+                            <label>انتخاب تصویر</label>
+                            <button class="btn btn-sm" onclick="openMediaLibrary()">انتخاب از مدیا</button>
+                        </div>
+                        <div class="setting-group">
+                            <label>Alt (فارسی)</label>
+                            <input type="text">
+                        </div>
+                        <div class="setting-group">
+                            <label>Alt (English)</label>
+                            <input type="text">
+                        </div>
+                    `;
+                    break;
+                default:
+                    settingsHtml = '<p style="color:#aaa;">تنظیمات در حال توسعه</p>';
+            }
+            
+            document.getElementById('settings-content').innerHTML = settingsHtml;
+        }
+
+        function closeSettings() {
+            document.getElementById('element-settings').classList.remove('active');
+            currentElement = null;
+        }
+
+        // ============= پیش‌نمایش ریسپانسیو =============
+        function setPreviewSize(size) {
+            document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const canvas = document.querySelector('.builder-canvas');
+            switch(size) {
+                case 'mobile':
+                    canvas.style.maxWidth = '375px';
+                    break;
+                case 'tablet':
+                    canvas.style.maxWidth = '768px';
+                    break;
+                default:
+                    canvas.style.maxWidth = '1200px';
+            }
+        }
+
+        // ============= تغییر زبان =============
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            // TODO: به‌روزرسانی محتوای المان‌ها بر اساس زبان
+        }
+
+        // ============= ذخیره صفحه =============
+        function savePage() {
+            const elements = [];
+            grid.engine.nodes.forEach(node => {
+                elements.push({
+                    type: node.el.getAttribute('data-type'),
+                    x: node.x,
+                    y: node.y,
+                    width: node.width,
+                    height: node.height,
+                    content: node.el.querySelector('.grid-stack-item-content').innerHTML
+                });
+            });
+            
+            fetch(`/pprofessor/api/webapp/pages/${currentPageId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    content_fa: currentLanguage === 'fa' ? JSON.stringify(elements) : undefined,
+                    content_en: currentLanguage === 'en' ? JSON.stringify(elements) : undefined,
+                    content_ar: currentLanguage === 'ar' ? JSON.stringify(elements) : undefined
+                })
+            })
+            .then(res => res.json())
+            .then(result => {
+                if (result.success) {
+                    showToast('صفحه با موفقیت ذخیره شد');
+                }
+            });
+        }
+
+        // ============= بارگذاری المان‌های صفحه =============
+        function loadPageElements() {
+            // TODO: دریافت داده‌های صفحه از سرور
+        }
+
+        // ============= نمایش پیام =============
+        function showToast(message, type = 'success') {
+            // استفاده از تابع showToast موجود
+        }
+
+        // ============= مقداردهی اولیه =============
+        document.addEventListener('DOMContentLoaded', initGrid);
+
+        // ============= رویداد Drag & Drop =============
+        document.querySelectorAll('.element-item').forEach(item => {
+            item.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', e.target.dataset.type);
+            });
+        });
+
+        document.getElementById('grid-stack').addEventListener('drop', (e) => {
+            e.preventDefault();
+            const type = e.dataTransfer.getData('text/plain');
+            if (type) {
+                addElement(type);
+            }
+        });
+
+        document.getElementById('grid-stack').addEventListener('dragover', (e) => {
+            e.preventDefault();
+        });
+    </script>
+</body>
+</html>

@@ -67,6 +67,10 @@ app.get('/', (req, res) => {
   res.send('PhoenixTrade API is running');
 });
 
+// ============= Webapp Public API =============
+const webappApi = require('./routes/webappApi');
+app.use('/api/webapp', webappApi);
+
 // ============= Error Handler =============
 app.use((err, req, res, next) => {
   console.error('❌ Server error:', err.stack);
@@ -83,3 +87,4 @@ app.listen(PORT, () => {
   console.log(`📁 Uploads directory: ${path.join(__dirname, 'uploads')}`);
   console.log(`📁 Public directory: ${path.join(__dirname, 'public')}`);
 });
+

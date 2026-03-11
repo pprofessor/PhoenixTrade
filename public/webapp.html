@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhoenixTrade - وب‌اپ</title>
+    <!-- فونت سمیم -->
+    <link rel="stylesheet" href="/css/fonts.css">
+    <!-- GridStack برای نمایش المان‌ها -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gridstack/9.0.1/gridstack.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Samim', sans-serif; background: #f5f5f5; }
+        
+        /* منو */
+        .header {
+            background: linear-gradient(135deg, #0a2f1f, #1a4a2c);
+            color: white;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffd700;
+        }
+        
+        .menu {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .menu a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .menu a:hover {
+            color: #ffd700;
+        }
+        
+        .language-selector {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .lang-btn {
+            background: transparent;
+            border: 1px solid #ffd700;
+            color: #ffd700;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        
+        .lang-btn.active {
+            background: #ffd700;
+            color: #0a2f1f;
+        }
+        
+        /* محتوای اصلی */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        /* المان‌های GridStack */
+        .grid-stack {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            min-height: 500px;
+        }
+        
+        .grid-stack-item-content {
+            background: white;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            padding: 1rem;
+        }
+        
+        /* فوتر */
+        .footer {
+            background: #1a2f2a;
+            color: white;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer h3 {
+            color: #ffd700;
+            margin-bottom: 1rem;
+        }
+        
+        .footer a {
+            color: #aaa;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer a:hover {
+            color: #ffd700;
+        }
+    </style>
+</head>
+<body>
+    <!-- هدر -->
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">PhoenixTrade</div>
+            <ul class="menu" id="main-menu"></ul>
+            <div class="language-selector">
+                <button class="lang-btn active" onclick="changeLanguage('fa')">🇮🇷</button>
+                <button class="lang-btn" onclick="changeLanguage('en')">🇬🇧</button>
+                <button class="lang-btn" onclick="changeLanguage('ar')">🇸🇦</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- محتوای اصلی -->
+    <main class="container">
+        <div class="grid-stack" id="page-content"></div>
+    </main>
+
+    <!-- فوتر -->
+    <footer class="footer">
+        <div class="footer-content" id="footer-content"></div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gridstack/9.0.1/gridstack.min.js"></script>
+    <script>
+        let currentLang = 'fa';
+        let grid = null;
+        
+        // ============= تغییر زبان =============
+        function changeLanguage(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            loadPage();
+            loadMenu();
+            loadFooter();
+        }
+        
+        // ============= بارگذاری صفحه =============
+        async function loadPage() {
+            try {
+                const response = await fetch(`/api/webapp/home?lang=${currentLang}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    document.title = result.data.meta_title || result.data.title;
+                    renderContent(result.data.content);
+                }
+            } catch (error) {
+                console.error('Error loading page:', error);
+            }
+        }
+        
+        // ============= رندر محتوا با GridStack =============
+        function renderContent(elements) {
+            const container = document.getElementById('page-content');
+            container.innerHTML = '';
+            
+            if (!grid) {
+                grid = GridStack.init({
+                    cellHeight: 80,
+                    margin: 10,
+                    float: true,
+                    disableDrag: true,
+                    disableResize: true
+                }, container);
+            } else {
+                grid.removeAll();
+            }
+            
+            elements.forEach(el => {
+                const item = document.createElement('div');
+                item.className = 'grid-stack-item';
+                item.setAttribute('data-type', el.type);
+                
+                const content = document.createElement('div');
+                content.className = 'grid-stack-item-content';
+                
+                // رندر براساس نوع المان
+                switch(el.type) {
+                    case 'text':
+                        const tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = el.content;
+                        content.innerHTML = tempDiv.querySelector('p')?.innerHTML || el.content;
+                        break;
+                    case 'image':
+                        content.innerHTML = '<img src="/uploads/sample.jpg" style="max-width:100%; border-radius:4px;">';
+                        break;
+                    case 'button':
+                        content.innerHTML = '<button style="background:#ffd700; border:none; padding:0.5rem 1rem; border-radius:5px; cursor:pointer;">دکمه</button>';
+                        break;
+                    default:
+                        content.innerHTML = el.content || `<div style="text-align:center; padding:2rem;">${el.type}</div>`;
+                }
+                
+                item.appendChild(content);
+                grid.addWidget(item, {
+                    x: el.x,
+                    y: el.y,
+                    width: el.width,
+                    height: el.height
+                });
+            });
+        }
+        
+        // ============= بارگذاری منو =============
+        async function loadMenu() {
+            try {
+                const response = await fetch(`/api/webapp/menu/header?lang=${currentLang}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    const menuEl = document.getElementById('main-menu');
+                    menuEl.innerHTML = result.data.map(item => `
+                        <li><a href="${item.url}">${item.title}</a></li>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('Error loading menu:', error);
+            }
+        }
+        
+        // ============= بارگذاری فوتر =============
+        async function loadFooter() {
+            try {
+                const [menuResponse, settingsResponse] = await Promise.all([
+                    fetch(`/api/webapp/menu/footer?lang=${currentLang}`),
+                    fetch(`/api/webapp/settings?lang=${currentLang}`)
+                ]);
+                
+                const menu = await menuResponse.json();
+                const settings = await settingsResponse.json();
+                
+                let footerHtml = '';
+                
+                if (menu.success) {
+                    footerHtml += `
+                        <div>
+                            <h3>لینک‌های سریع</h3>
+                            ${menu.data.map(item => `<a href="${item.url}">${item.title}</a>`).join('')}
+                        </div>
+                    `;
+                }
+                
+                if (settings.success) {
+                    footerHtml += `
+                        <div>
+                            <h3>تماس با ما</h3>
+                            <p>تلفن: ${settings.data.phone || '-'}</p>
+                            <p>ایمیل: ${settings.data.email || '-'}</p>
+                            <p>آدرس: ${settings.data.address || '-'}</p>
+                        </div>
+                        <div>
+                            <h3>شبکه‌های اجتماعی</h3>
+                            ${settings.data.instagram ? `<a href="${settings.data.instagram}">اینستاگرام</a>` : ''}
+                            ${settings.data.telegram ? `<a href="${settings.data.telegram}">تلگرام</a>` : ''}
+                            ${settings.data.twitter ? `<a href="${settings.data.twitter}">توییتر</a>` : ''}
+                        </div>
+                    `;
+                }
+                
+                document.getElementById('footer-content').innerHTML = footerHtml;
+                
+            } catch (error) {
+                console.error('Error loading footer:', error);
+            }
+        }
+        
+        // ============= مقداردهی اولیه =============
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPage();
+            loadMenu();
+            loadFooter();
+        });
+    </script>
+</body>
+</html>

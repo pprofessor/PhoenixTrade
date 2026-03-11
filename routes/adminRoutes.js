@@ -5,8 +5,9 @@ const path = require('path');
 const { isAuthenticated } = require('../middleware/auth');
 const botController = require('../controllers/botController');
 const databaseController = require('../controllers/databaseController');
-const apiController = require('../controllers/apiController'); // اضافه شد
-const { BotMenu, BotMessage, BotUser, BotUserMessage } = require('../models');
+const apiController = require('../controllers/apiController');
+const webappController = require('../controllers/webappController'); // انتقال به بالا
+const { BotMenu, BotMessage, BotUser, BotUserMessage, WebappPage } = require('../models'); // اضافه شدن WebappPage
 const { checkBotStatus } = require('../services/telegramBot');
 
 // ============= تنظیمات آپلود فایل =============
@@ -61,7 +62,7 @@ router.post('/api/database/delete', isAuthenticated, databaseController.deleteRo
 // ============= مدیریت ربات =============
 router.get('/bot', isAuthenticated, botController.botIndex);
 
-// ============= API منوها =============
+// ============= API منوهای ربات =============
 router.get('/api/bot/menus', isAuthenticated, botController.getMenus);
 router.post('/api/bot/menus', isAuthenticated, upload.single('media'), async (req, res) => {
   try {
@@ -149,7 +150,7 @@ router.delete('/api/bot/menus/:id', isAuthenticated, async (req, res) => {
   }
 });
 
-// ============= API پیام‌ها =============
+// ============= API پیام‌های ربات =============
 router.get('/api/bot/messages', isAuthenticated, botController.getMessages);
 router.put('/api/bot/messages/:id', isAuthenticated, botController.updateMessage);
 router.post('/api/bot/messages', isAuthenticated, async (req, res) => {
@@ -166,7 +167,7 @@ router.post('/api/bot/messages', isAuthenticated, async (req, res) => {
   }
 });
 
-// ============= API کاربران =============
+// ============= API کاربران ربات =============
 router.get('/api/bot/users', isAuthenticated, botController.getUsers);
 router.get('/api/bot/users/:id/messages', isAuthenticated, botController.getUserMessages);
 
@@ -194,13 +195,49 @@ router.get('/api/logs', isAuthenticated, apiController.getLogs);
 router.post('/api/logs/clear', isAuthenticated, apiController.clearLogs);
 router.get('/api/stats', isAuthenticated, apiController.getStats);
 
-// ============= مدیریت وب اپ =============
-router.get('/webapp', isAuthenticated, (req, res) => {
-  res.render('webapp/index', { 
-    title: 'مدیریت وب اپ',
-    user: req.session.adminUsername,
-    activePage: 'webapp'
-  });
+// ============= مدیریت وب‌اپ =============
+// صفحه اصلی مدیریت وب‌اپ (مسیر یکتا)
+router.get('/webapp', isAuthenticated, webappController.webappIndex);
+
+// ویرایشگر صفحه
+router.get('/webapp/builder/:id', isAuthenticated, async (req, res) => {
+    try {
+        const page = await WebappPage.findByPk(req.params.id);
+        if (!page) {
+            return res.status(404).send('صفحه یافت نشد');
+        }
+        res.render('webapp-builder', {
+            pageId: page.id,
+            pageTitle: page.title_fa,
+            user: req.session.adminUsername,
+            activePage: 'webapp'
+        });
+    } catch (error) {
+        console.error('❌ خطا در ویرایشگر صفحه:', error);
+        res.status(500).send('خطا');
+    }
 });
+
+// ============= API وب‌اپ =============
+router.get('/api/webapp/pages', isAuthenticated, webappController.getPages);
+router.post('/api/webapp/pages', isAuthenticated, webappController.createPage);
+router.put('/api/webapp/pages/:id', isAuthenticated, webappController.updatePage);
+router.delete('/api/webapp/pages/:id', isAuthenticated, webappController.deletePage);
+
+router.get('/api/webapp/media', isAuthenticated, webappController.getMedia);
+router.post('/api/webapp/media/upload', isAuthenticated, upload.single('file'), webappController.uploadMedia);
+router.delete('/api/webapp/media/:id', isAuthenticated, webappController.deleteMedia);
+
+router.get('/api/webapp/menus', isAuthenticated, webappController.getMenus);
+router.post('/api/webapp/menus', isAuthenticated, webappController.createMenu);
+router.put('/api/webapp/menus/:id', isAuthenticated, webappController.updateMenu);
+router.delete('/api/webapp/menus/:id', isAuthenticated, webappController.deleteMenu);
+
+router.get('/api/webapp/forms', isAuthenticated, webappController.getForms);
+router.post('/api/webapp/forms', isAuthenticated, webappController.createForm);
+router.get('/api/webapp/forms/:id/entries', isAuthenticated, webappController.getFormEntries);
+
+router.get('/api/webapp/settings', isAuthenticated, webappController.getSettings);
+router.post('/api/webapp/settings', isAuthenticated, webappController.updateSettings);
 
 module.exports = router;
