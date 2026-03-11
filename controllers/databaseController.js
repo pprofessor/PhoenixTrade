@@ -108,7 +108,7 @@ const databaseIndex = async (req, res) => {
     console.error('❌ خطا در صفحه دیتابیس:', error);
     res.status(500).render('error', {
       title: 'خطا',
-      message: 'خطا در بارگذاری صفحه دیتابیس',
+      message: "DataBese Page Loading Error",
       error: process.env.NODE_ENV === 'development' ? error : {},
       user: req.session.adminUsername
     });

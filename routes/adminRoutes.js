@@ -4,7 +4,8 @@ const multer = require('multer');
 const path = require('path');
 const { isAuthenticated } = require('../middleware/auth');
 const botController = require('../controllers/botController');
-const databaseController = require('../controllers/databaseController'); // اضافه شد
+const databaseController = require('../controllers/databaseController');
+const apiController = require('../controllers/apiController'); // اضافه شد
 const { BotMenu, BotMessage, BotUser, BotUserMessage } = require('../models');
 const { checkBotStatus } = require('../services/telegramBot');
 
@@ -22,7 +23,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 50 * 1024 * 1024 }, // حداکثر 50 مگابایت
+  limits: { fileSize: 50 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     const allowedTypes = /jpeg|jpg|png|gif|mp4|mp3|pdf|doc|docx/;
     const ext = path.extname(file.originalname).toLowerCase().substring(1);
@@ -43,7 +44,6 @@ router.get('/dashboard', isAuthenticated, (req, res) => {
   });
 });
 
-// مدیریت بکاپ
 router.get('/backup', isAuthenticated, (req, res) => {
   res.render('backup', { 
     title: 'مدیریت بکاپ',
@@ -53,23 +53,16 @@ router.get('/backup', isAuthenticated, (req, res) => {
 });
 
 // ============= مدیریت دیتابیس =============
-// صفحه اصلی مدیریت دیتابیس (یک مسیر واحد)
 router.get('/database', isAuthenticated, databaseController.databaseIndex);
-
-// API‌های دیتابیس
 router.post('/api/database/query', isAuthenticated, databaseController.executeQuery);
 router.post('/api/database/search', isAuthenticated, databaseController.searchData);
 router.post('/api/database/delete', isAuthenticated, databaseController.deleteRow);
 
 // ============= مدیریت ربات =============
-// صفحه اصلی مدیریت ربات
 router.get('/bot', isAuthenticated, botController.botIndex);
 
-// ============= API منوها با قابلیت آپلود فایل =============
-// دریافت لیست منوها
+// ============= API منوها =============
 router.get('/api/bot/menus', isAuthenticated, botController.getMenus);
-
-// ایجاد منوی جدید با امکان آپلود فایل
 router.post('/api/bot/menus', isAuthenticated, upload.single('media'), async (req, res) => {
   try {
     console.log('📝 ایجاد منوی جدید با فایل:', req.file ? 'دارد' : 'ندارد');
@@ -83,10 +76,9 @@ router.post('/api/bot/menus', isAuthenticated, upload.single('media'), async (re
       isActive: true
     };
     
-    // اگر فایل آپلود شده باشد
     if (req.file) {
       menuData.media_url = '/uploads/' + req.file.filename;
-      menuData.media_type = req.file.mimetype.split('/')[0]; // image, video, audio
+      menuData.media_type = req.file.mimetype.split('/')[0];
       console.log('📁 فایل آپلود شد:', menuData.media_url);
     }
     
@@ -103,7 +95,6 @@ router.post('/api/bot/menus', isAuthenticated, upload.single('media'), async (re
   }
 });
 
-// ویرایش منو با امکان آپلود فایل جدید
 router.put('/api/bot/menus/:id', isAuthenticated, upload.single('media'), async (req, res) => {
   try {
     console.log('📝 ویرایش منو ID:', req.params.id, 'فایل:', req.file ? 'دارد' : 'ندارد');
@@ -122,7 +113,6 @@ router.put('/api/bot/menus/:id', isAuthenticated, upload.single('media'), async 
       isActive: req.body.isActive !== undefined ? req.body.isActive : menu.isActive
     };
     
-    // اگر فایل جدید آپلود شده باشد
     if (req.file) {
       menuData.media_url = '/uploads/' + req.file.filename;
       menuData.media_type = req.file.mimetype.split('/')[0];
@@ -142,13 +132,11 @@ router.put('/api/bot/menus/:id', isAuthenticated, upload.single('media'), async 
   }
 });
 
-// حذف منو
 router.delete('/api/bot/menus/:id', isAuthenticated, async (req, res) => {
   try {
     const menu = await BotMenu.findByPk(req.params.id);
     if (!menu) return res.status(404).json({ error: 'منو یافت نشد' });
     
-    // بررسی وجود زیرمنو
     const children = await BotMenu.findAll({ where: { parentId: menu.id } });
     if (children.length > 0) {
       return res.status(400).json({ error: 'این منو زیرمنو دارد. ابتدا زیرمنوها را حذف کنید.' });
@@ -162,13 +150,8 @@ router.delete('/api/bot/menus/:id', isAuthenticated, async (req, res) => {
 });
 
 // ============= API پیام‌ها =============
-// دریافت لیست پیام‌ها
 router.get('/api/bot/messages', isAuthenticated, botController.getMessages);
-
-// ویرایش پیام
 router.put('/api/bot/messages/:id', isAuthenticated, botController.updateMessage);
-
-// ایجاد یا ویرایش پیام بر اساس کلید
 router.post('/api/bot/messages', isAuthenticated, async (req, res) => {
   try {
     const { key, text } = req.body;
@@ -184,15 +167,32 @@ router.post('/api/bot/messages', isAuthenticated, async (req, res) => {
 });
 
 // ============= API کاربران =============
-// دریافت لیست کاربران
 router.get('/api/bot/users', isAuthenticated, botController.getUsers);
-
-// دریافت پیام‌های یک کاربر
 router.get('/api/bot/users/:id/messages', isAuthenticated, botController.getUserMessages);
 
 // ============= وضعیت ربات =============
-// بررسی وضعیت اتصال ربات
 router.get('/api/bot/status', isAuthenticated, botController.getBotStatus);
+
+// ============= تنظیمات API =============
+router.get('/api-settings', isAuthenticated, apiController.apiSettingsIndex);
+
+// ============= API کلیدها =============
+router.get('/api/keys', isAuthenticated, apiController.getApiKeys);
+router.post('/api/keys', isAuthenticated, apiController.createApiKey);
+router.put('/api/keys/:id', isAuthenticated, apiController.updateApiKey);
+router.delete('/api/keys/:id', isAuthenticated, apiController.deleteApiKey);
+router.post('/api/keys/:id/regenerate', isAuthenticated, apiController.regenerateSecret);
+
+// ============= API اندپوینت‌ها =============
+router.get('/api/endpoints', isAuthenticated, apiController.getEndpoints);
+router.post('/api/endpoints', isAuthenticated, apiController.createEndpoint);
+router.put('/api/endpoints/:id', isAuthenticated, apiController.updateEndpoint);
+router.delete('/api/endpoints/:id', isAuthenticated, apiController.deleteEndpoint);
+
+// ============= API لاگ‌ها و آمار =============
+router.get('/api/logs', isAuthenticated, apiController.getLogs);
+router.post('/api/logs/clear', isAuthenticated, apiController.clearLogs);
+router.get('/api/stats', isAuthenticated, apiController.getStats);
 
 // ============= مدیریت وب اپ =============
 router.get('/webapp', isAuthenticated, (req, res) => {
@@ -200,15 +200,6 @@ router.get('/webapp', isAuthenticated, (req, res) => {
     title: 'مدیریت وب اپ',
     user: req.session.adminUsername,
     activePage: 'webapp'
-  });
-});
-
-// ============= تنظیمات API =============
-router.get('/api-settings', isAuthenticated, (req, res) => {
-  res.render('api-settings', { 
-    title: 'تنظیمات API',
-    user: req.session.adminUsername,
-    activePage: 'api'
   });
 });
 

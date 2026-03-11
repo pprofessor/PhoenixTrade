@@ -32,7 +32,7 @@ const login = async (req, res) => {
       });
     }
     
-    console.log('✅ ورود موفق');
+    console.log('✅ Successfull Login ');
     req.session.isAdmin = true;
     req.session.adminId = admin.id;
     req.session.adminRole = admin.role;
@@ -45,8 +45,8 @@ const login = async (req, res) => {
   } catch (error) {
     console.error('❌ Login error:', error);
     res.render('login', { 
-      title: 'ورود به پنل مدیریت',
-      error: 'خطا در سرور' 
+      title: "Enter To Manage Panel",
+      error: "Server Error " 
     });
   }
 };

@@ -131,6 +131,44 @@ const BotUserMessage = sequelize.define('BotUserMessage', {
   type: { type: Sequelize.ENUM('text', 'command', 'callback'), defaultValue: 'text' }
 }, { timestamps: true });
 
+// ============= مدل ApiKey (کلیدهای API) =============
+const ApiKey = sequelize.define('ApiKey', {
+  id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+  name: { type: Sequelize.STRING(100), allowNull: false },
+  key: { type: Sequelize.STRING(100), allowNull: false, unique: true },
+  secret: { type: Sequelize.STRING(100), allowNull: false },
+  permissions: { type: Sequelize.TEXT, defaultValue: '["read"]' }, // JSON array
+  isActive: { type: Sequelize.BOOLEAN, defaultValue: true },
+  expiresAt: { type: Sequelize.DATE },
+  lastUsed: { type: Sequelize.DATE },
+  createdBy: { type: Sequelize.INTEGER }
+}, { timestamps: true });
+
+// ============= مدل ApiEndpoint (اندپوینت‌های API) =============
+const ApiEndpoint = sequelize.define('ApiEndpoint', {
+  id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+  name: { type: Sequelize.STRING(100), allowNull: false },
+  path: { type: Sequelize.STRING(200), allowNull: false },
+  method: { type: Sequelize.ENUM('GET', 'POST', 'PUT', 'DELETE', 'PATCH'), allowNull: false },
+  description: { type: Sequelize.TEXT },
+  category: { type: Sequelize.STRING(50) },
+  requiresAuth: { type: Sequelize.BOOLEAN, defaultValue: true },
+  permissions: { type: Sequelize.TEXT, defaultValue: '[]' }, // JSON array
+  isActive: { type: Sequelize.BOOLEAN, defaultValue: true }
+}, { timestamps: true });
+
+// ============= مدل ApiLog (لاگ درخواست‌های API) =============
+const ApiLog = sequelize.define('ApiLog', {
+  id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+  apiKeyId: { type: Sequelize.INTEGER },
+  endpoint: { type: Sequelize.STRING(200), allowNull: false },
+  method: { type: Sequelize.STRING(10), allowNull: false },
+  statusCode: { type: Sequelize.INTEGER },
+  ip: { type: Sequelize.STRING(50) },
+  userAgent: { type: Sequelize.TEXT },
+  responseTime: { type: Sequelize.INTEGER } // میلی‌ثانیه
+}, { timestamps: true });
+
 // ============= تعریف ارتباطات =============
 Category.hasMany(Lesson, { foreignKey: 'categoryId', as: 'lessons' });
 Lesson.belongsTo(Category, { foreignKey: 'categoryId', as: 'category' });
@@ -140,6 +178,10 @@ BotMenu.hasMany(BotMenu, { as: 'children', foreignKey: 'parentId' });
 
 BotUser.hasMany(BotUserMessage, { foreignKey: 'userId', as: 'messages' });
 BotUserMessage.belongsTo(BotUser, { foreignKey: 'userId', as: 'user' });
+
+// ارتباطات API
+ApiKey.hasMany(ApiLog, { foreignKey: 'apiKeyId', as: 'logs' });
+ApiLog.belongsTo(ApiKey, { foreignKey: 'apiKeyId', as: 'apiKey' });
 
 // ============= سینک دیتابیس و داده‌های پیش‌فرض =============
 const syncDatabase = async () => {
@@ -232,6 +274,48 @@ const syncDatabase = async () => {
     } else {
       console.log(`📊 Existing menus found: ${menuCount} menu(s) - keeping them`);
     }
+
+// ایجاد اندپوینت‌های پیش‌فرض (فقط اگر هیچ اندپوینتی وجود نداشته باشد)
+const endpointCount = await ApiEndpoint.count();
+if (endpointCount === 0) {
+  console.log('📝 Creating default API endpoints...');
+  
+  const endpoints = [
+    // اندپوینت‌های عمومی
+    { name: 'دریافت درس‌ها', path: '/api/lessons', method: 'GET', description: 'دریافت لیست تمام درس‌ها', category: 'lessons', requiresAuth: false },
+    { name: 'دریافت درس', path: '/api/lessons/:id', method: 'GET', description: 'دریافت اطلاعات یک درس', category: 'lessons', requiresAuth: false },
+    { name: 'دریافت بروکرها', path: '/api/brokers', method: 'GET', description: 'دریافت لیست بروکرها', category: 'brokers', requiresAuth: false },
+    { name: 'دریافت بروکر', path: '/api/brokers/:id', method: 'GET', description: 'دریافت اطلاعات یک بروکر', category: 'brokers', requiresAuth: false },
+    { name: 'دریافت رویدادها', path: '/api/events', method: 'GET', description: 'دریافت لیست رویدادها', category: 'events', requiresAuth: false },
+    { name: 'دریافت رویداد', path: '/api/events/:id', method: 'GET', description: 'دریافت اطلاعات یک رویداد', category: 'events', requiresAuth: false },
+    
+    // اندپوینت‌های داشبورد (نیازمند احراز هویت)
+    { name: 'آمار داشبورد', path: '/api/dashboard/stats', method: 'GET', description: 'دریافت آمار داشبورد مدیریت', category: 'dashboard', requiresAuth: true, permissions: '["admin"]' },
+    
+    // اندپوینت‌های ربات
+    { name: 'وضعیت ربات', path: '/api/bot/status', method: 'GET', description: 'بررسی وضعیت ربات', category: 'bot', requiresAuth: true },
+    { name: 'دریافت منوها', path: '/api/bot/menus', method: 'GET', description: 'دریافت ساختار منوهای ربات', category: 'bot', requiresAuth: false },
+    { name: 'دریافت پیام‌ها', path: '/api/bot/messages', method: 'GET', description: 'دریافت لیست پیام‌های ربات', category: 'bot', requiresAuth: true },
+    { name: 'دریافت کاربران ربات', path: '/api/bot/users', method: 'GET', description: 'دریافت لیست کاربران ربات', category: 'bot', requiresAuth: true },
+    
+    // اندپوینت‌های مدیریت دیتابیس
+    { name: 'اجرای کوئری', path: '/api/database/query', method: 'POST', description: 'اجرای دستور SQL', category: 'database', requiresAuth: true, permissions: '["admin"]' },
+    { name: 'جستجو در داده‌ها', path: '/api/database/search', method: 'POST', description: 'جستجو در جداول', category: 'database', requiresAuth: true, permissions: '["admin"]' },
+    
+    // اندپوینت‌های کاربران
+    { name: 'ثبت‌نام کاربر', path: '/api/user/register', method: 'POST', description: 'ثبت‌نام کاربر جدید', category: 'users', requiresAuth: false },
+    { name: 'پروفایل کاربر', path: '/api/user/profile', method: 'GET', description: 'دریافت اطلاعات پروفایل', category: 'users', requiresAuth: true },
+    
+    // اندپوینت تماس
+    { name: 'تماس با ما', path: '/api/contact', method: 'POST', description: 'ارسال پیام تماس', category: 'contact', requiresAuth: false }
+  ];
+  
+  for (const ep of endpoints) {
+    await ApiEndpoint.create(ep);
+  }
+  
+  console.log(`✅ ${endpoints.length} API endpoints created`);
+}
     
   } catch (error) {
     console.error('❌ Database error:', error);
@@ -250,5 +334,8 @@ module.exports = {
   BotMenu,
   BotUser,
   BotUserMessage,
+  ApiKey,        // اضافه شد
+  ApiEndpoint,   // اضافه شد
+  ApiLog,        // اضافه شد
   syncDatabase 
 };

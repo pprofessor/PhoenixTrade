@@ -11,11 +11,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // ============= فایل‌های استاتیک =============
-// سرویس دهی فایل‌های آپلود شده
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-// سرویس دهی فایل‌های عمومی (برای CSS, JS, fonts)
 app.use('/public', express.static(path.join(__dirname, 'public')));
-// سرویس دهی مستقیم پوشه public (برای دسترسی ساده‌تر)
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ============= Session Configuration =============
@@ -24,8 +21,8 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: { 
-    secure: process.env.NODE_ENV === 'production', // در محیط production true باشد
-    maxAge: 1000 * 60 * 60 * 24 * 7 // 1 هفته
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 1000 * 60 * 60 * 24 * 7
   }
 }));
 
@@ -36,11 +33,9 @@ app.set('views', path.join(__dirname, 'views'));
 // ============= Database =============
 const { syncDatabase } = require('./models');
 
-// سینک دیتابیس و سپس راه‌اندازی ربات
 syncDatabase().then(() => {
   console.log('✅ Database synced For Running Telegram Bot');
   
-  // راه‌اندازی ربات
   try {
     require('./services/telegramBot');
     console.log('🤖 Telegram bot started');
@@ -54,10 +49,15 @@ syncDatabase().then(() => {
 // ============= Routes =============
 const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');
-const apiRoutes = require('./routes/apiRoutes');
+const apiRoutes = require('./routes/apiRoutes'); // مسیرهای API پنل
+const apiPublicRoutes = require('./routes/apiRoutes'); // مسیرهای عمومی API
 
-// مسیرهای API
+// مسیرهای عمومی API (بدون نیاز به احراز هویت پنل)
+app.use('/api', apiPublicRoutes);
+
+// مسیرهای API پنل مدیریت (با احراز هویت)
 app.use('/pprofessor/api', apiRoutes);
+
 // مسیرهای پنل مدیریت
 app.use('/pprofessor', authRoutes);
 app.use('/pprofessor', adminRoutes);

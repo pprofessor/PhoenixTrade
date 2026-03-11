@@ -68,9 +68,9 @@ const botIndex = async (req, res) => {
         attributes: ['id', 'title', 'slug'],
         order: [['title', 'ASC']]
       });
-      console.log(`✅ ${webappPages.length} صفحه وب‌اپ یافت شد`);
+      console.log(`✅ ${webappPages.length}"Page Not Found"`);
     } catch (err) {
-      console.error('❌ خطا در دریافت صفحات وب‌اپ:', err.message);
+      console.error('❌ Error In Web Page Recieve', err.message);
     }
 
     // وضعیت ربات
@@ -90,7 +90,7 @@ const botIndex = async (req, res) => {
 
   } catch (error) {
     console.error('❌ Bot index error:', error);
-    res.status(500).send('خطای سرور');
+    res.status(500).send("Server Error");
   }
 };
 

@@ -2,6 +2,7 @@
 // کنترلر مدیریت تنظیمات API و کلیدهای دسترسی
 
 const { ApiKey, ApiEndpoint, ApiLog } = require('../models');
+const { Op } = require('sequelize'); // <-- این خط را اضافه کنید
 const { v4: uuidv4 } = require('uuid');
 const crypto = require('crypto');
 
@@ -48,13 +49,13 @@ const apiSettingsIndex = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('❌ خطا در بارگذاری صفحه API:', error);
-    res.status(500).render('error', {
-      title: 'خطا',
-      message: 'خطا در بارگذاری صفحه تنظیمات API',
-      error: process.env.NODE_ENV === 'development' ? error : {},
-      user: req.session.adminUsername
-    });
+    console.error('❌Error In Loading API Page:', error);
+res.status(500).render('error', {
+  title: 'خطا',
+  message: 'خطا در بارگذاری صفحه تنظیمات API',
+  error: process.env.NODE_ENV === 'development' ? error : {},
+  user: req.session.adminUsername
+});
   }
 };
 
