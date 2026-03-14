@@ -32,7 +32,6 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 // ============= Database =============
-// اضافه کردن WebappSetting و WebappPage به import
 const { syncDatabase, WebappSetting, WebappPage } = require('./models');
 
 syncDatabase().then(() => {
@@ -54,14 +53,12 @@ app.get('/api/webapp/home', async (req, res) => {
     const { lang = 'fa' } = req.query;
     console.log('✅ API /api/webapp/home called with lang:', lang);
 
-    // دریافت تنظیمات از دیتابیس
     const settings = await WebappSetting.findAll();
     const settingsObj = {};
     settings.forEach(s => {
       settingsObj[s.key] = lang === 'en' ? s.value_en : lang === 'ar' ? s.value_ar : s.value_fa;
     });
 
-    // دریافت صفحه اصلی از دیتابیس
     const homepage = await WebappPage.findOne({
       where: { isHomepage: true, isActive: true }
     });
@@ -77,7 +74,6 @@ app.get('/api/webapp/home', async (req, res) => {
       }
     }
 
-    // داده‌های نهایی
     const responseData = {
       settings: settingsObj,
       page: {
@@ -108,10 +104,17 @@ const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const apiRoutes = require('./routes/apiRoutes');
 
-// مسیرهای پنل مدیریت
+// *** ترتیب صحیح مسیرها - بسیار مهم ***
+// 1. اول مسیرهای عمومی API (با /api)
+app.use('/api', apiRoutes);  // اینجا apiRoutes را برای مسیرهای عمومی قرار می‌دهیم
+
+// 2. بعد مسیرهای پنل مدیریت (با /pprofessor)
 app.use('/pprofessor', authRoutes);
 app.use('/pprofessor', adminRoutes);
-app.use('/pprofessor/api', apiRoutes);
+
+// 3. بعد مسیرهای API پنل مدیریت (با /pprofessor/api) - اینها از middleware isAuthenticated استفاده می‌کنند
+// توجه: این مسیر دیگر نیازی به تعریف جداگانه نیست چون apiRoutes قبلاً برای /api تعریف شده
+// app.use('/pprofessor/api', apiRoutes); // این خط را حذف می‌کنیم
 
 // صفحه اصلی سایت
 app.get('/', async (req, res) => {

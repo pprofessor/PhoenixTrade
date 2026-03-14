@@ -54,7 +54,7 @@ router.get('/lessons', async (req, res) => {
 
 /**
  * @route   GET /api/brokers
- * @desc    دریافت لیست تمام بروکرها
+ * @desc    دریافت لیست بروکرها
  * @access  Public
  */
 router.get('/brokers', async (req, res) => {
@@ -74,6 +74,7 @@ router.get('/brokers', async (req, res) => {
 
     res.json({ success: true, data: brokers });
   } catch (error) {
+    console.error('❌ Error fetching brokers:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });

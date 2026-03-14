@@ -468,9 +468,9 @@ const EducationalContent = sequelize.define('EducationalContent', {
   category: { type: Sequelize.ENUM('basic', 'strategy', 'technical', 'fundamental'), allowNull: false },
 
   // محتوا
-  content_fa: { type: Sequelize.TEXT('long'), defaultValue: '' },
-  content_en: { type: Sequelize.TEXT('long'), defaultValue: '' },
-  content_ar: { type: Sequelize.TEXT('long'), defaultValue: '' },
+  content_fa: { type: Sequelize.TEXT, defaultValue: '' },
+  content_en: { type: Sequelize.TEXT, defaultValue: '' },
+  content_ar: { type: Sequelize.TEXT, defaultValue: '' },
 
   // خلاصه
   excerpt_fa: { type: Sequelize.TEXT, defaultValue: '' },

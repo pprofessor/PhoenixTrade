@@ -7,7 +7,7 @@ const botController = require('../controllers/botController');
 const databaseController = require('../controllers/databaseController');
 const apiController = require('../controllers/apiController');
 const webappController = require('../controllers/webappController');
-const { BotMenu, BotMessage, BotUser, BotUserMessage, WebappPage } = require('../models');
+const { BotMenu, BotMessage, BotUser, BotUserMessage, WebappPage, Broker } = require('../models');
 const { checkBotStatus } = require('../services/telegramBot');
 
 // ============= تنظیمات آپلود فایل =============
@@ -33,6 +33,21 @@ const upload = multer({
     } else {
       cb(new Error('نوع فایل مجاز نیست. فقط: تصاویر، ویدئو، صدا، PDF و DOC'));
     }
+  }
+});
+
+// ============= آپلود لوگوی بروکر =============
+router.post('/api/upload/logo', isAuthenticated, upload.single('logo'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, error: 'فایلی آپلود نشده' });
+    }
+
+    const logoUrl = '/uploads/' + req.file.filename;
+    res.json({ success: true, url: logoUrl });
+  } catch (error) {
+    console.error('❌ Error:', error);
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -246,10 +261,26 @@ router.get('/api/webapp/users', isAuthenticated, webappController.getUsers);
 router.get('/api/webapp/users/:id', isAuthenticated, webappController.getUser);
 router.patch('/api/webapp/users/:id/toggle', isAuthenticated, webappController.toggleUserStatus);
 
-// ============= مدیریت بروکرها =============
-const { Broker } = require('../models');
+// ویرایشگر صفحه
+router.get('/webapp/builder/:id', isAuthenticated, async (req, res) => {
+  try {
+    const { WebappPage } = require('../models');
+    const page = await WebappPage.findByPk(req.params.id);
+    if (!page) {
+      return res.status(404).send('صفحه یافت نشد');
+    }
+    res.render('webapp-builder', {
+      pageId: page.id,
+      pageTitle: page.title_fa,
+      user: req.session.adminUsername
+    });
+  } catch (error) {
+    console.error('❌ خطا در ویرایشگر صفحه:', error);
+    res.status(500).send('خطا');
+  }
+});
 
-// صفحه لیست بروکرها
+// ============= مدیریت بروکرها =============
 router.get('/brokers', isAuthenticated, async (req, res) => {
   try {
     const brokers = await Broker.findAll({
@@ -268,7 +299,7 @@ router.get('/brokers', isAuthenticated, async (req, res) => {
   }
 });
 
-// API دریافت لیست بروکرها
+// ============= API بروکرها =============
 router.get('/api/brokers', isAuthenticated, async (req, res) => {
   try {
     const brokers = await Broker.findAll({
@@ -280,12 +311,12 @@ router.get('/api/brokers', isAuthenticated, async (req, res) => {
   }
 });
 
-// API ایجاد بروکر جدید
 router.post('/api/brokers', isAuthenticated, async (req, res) => {
   try {
     const brokerData = {
       name: req.body.name,
       slug: req.body.slug,
+      logo: req.body.logo || '',
       foundedYear: req.body.foundedYear,
       usersCount: req.body.usersCount,
       rating: req.body.rating || 0,
@@ -294,8 +325,8 @@ router.post('/api/brokers', isAuthenticated, async (req, res) => {
       leverage: req.body.leverage,
       minDeposit: req.body.minDeposit,
       registerLink: req.body.registerLink,
-      isActive: req.body.isActive !== 'false',
-      isFeatured: req.body.isFeatured === 'true',
+      isActive: req.body.isActive,
+      isFeatured: req.body.isFeatured,
       order: req.body.order || 0
     };
 
@@ -307,7 +338,6 @@ router.post('/api/brokers', isAuthenticated, async (req, res) => {
   }
 });
 
-// API ویرایش بروکر
 router.put('/api/brokers/:id', isAuthenticated, async (req, res) => {
   try {
     const broker = await Broker.findByPk(req.params.id);
@@ -318,6 +348,7 @@ router.put('/api/brokers/:id', isAuthenticated, async (req, res) => {
     const updateData = {
       name: req.body.name,
       slug: req.body.slug,
+      logo: req.body.logo || '',
       foundedYear: req.body.foundedYear,
       usersCount: req.body.usersCount,
       rating: req.body.rating,
@@ -326,8 +357,8 @@ router.put('/api/brokers/:id', isAuthenticated, async (req, res) => {
       leverage: req.body.leverage,
       minDeposit: req.body.minDeposit,
       registerLink: req.body.registerLink,
-      isActive: req.body.isActive !== 'false',
-      isFeatured: req.body.isFeatured === 'true',
+      isActive: req.body.isActive,
+      isFeatured: req.body.isFeatured,
       order: req.body.order
     };
 
@@ -339,7 +370,6 @@ router.put('/api/brokers/:id', isAuthenticated, async (req, res) => {
   }
 });
 
-// API حذف بروکر
 router.delete('/api/brokers/:id', isAuthenticated, async (req, res) => {
   try {
     const broker = await Broker.findByPk(req.params.id);
@@ -355,22 +385,17 @@ router.delete('/api/brokers/:id', isAuthenticated, async (req, res) => {
   }
 });
 
-// ویرایشگر صفحه
-router.get('/webapp/builder/:id', isAuthenticated, async (req, res) => {
+// ============= دریافت اطلاعات یک بروکر برای ویرایش =============
+router.get('/api/brokers/:id', isAuthenticated, async (req, res) => {
   try {
-    const { WebappPage } = require('../models');
-    const page = await WebappPage.findByPk(req.params.id);
-    if (!page) {
-      return res.status(404).send('صفحه یافت نشد');
+    const broker = await Broker.findByPk(req.params.id);
+    if (!broker) {
+      return res.status(404).json({ success: false, error: 'بروکر یافت نشد' });
     }
-    res.render('webapp-builder', {
-      pageId: page.id,
-      pageTitle: page.title_fa,
-      user: req.session.adminUsername
-    });
+    res.json({ success: true, data: broker });  
   } catch (error) {
-    console.error('❌ خطا در ویرایشگر صفحه:', error);
-    res.status(500).send('خطا');
+    console.error('❌ Error:', error);
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 

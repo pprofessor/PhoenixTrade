@@ -432,6 +432,22 @@
             box-shadow: 0 10px 20px rgba(255, 215, 0, 0.3);
         }
 
+        .rating-stars {
+            color: #ffd700;
+            font-size: 1.1rem;
+        }
+
+        .regulator-badge {
+            display: inline-block;
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid #ffd700;
+            color: #ffd700;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin: 2px;
+        }
+
         .broker-info h3 {
             font-size: 1.8rem;
             color: #ffd700;
@@ -846,56 +862,13 @@
                     رتبه‌بندی دقیق</p>
             </div>
 
-            <div class="section-content" id="brokers-block">
-                <div class="broker-card">
-                    <div class="broker-header">
-                        <div class="broker-logo">📊</div>
-                        <div class="broker-info">
-                            <h3>TIOmarkets</h3>
-                            <div class="broker-rating">
-                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
-                                    class="fas fa-star"></i><i class="fas fa-star"></i>
-                                <span style="margin-right:5px; color:white;">(۵.۰)</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="broker-details">
-                        <div class="broker-detail-item">
-                            <span class="broker-detail-label" data-fa="سابقه:" data-en="Founded:"
-                                data-ar="تأسست:">سابقه:</span>
-                            <span>۲۰۱۴</span>
-                        </div>
-                        <div class="broker-detail-item">
-                            <span class="broker-detail-label" data-fa="کاربران:" data-en="Users:"
-                                data-ar="المستخدمون:">کاربران:</span>
-                            <span>+۵۰۰٬۰۰۰</span>
-                        </div>
-                        <div class="broker-detail-item">
-                            <span class="broker-detail-label" data-fa="رگوله:" data-en="Regulation:"
-                                data-ar="الترخيص:">رگوله:</span>
-                            <div class="regulators">
-                                <span class="regulator-badge">FCA (UK)</span>
-                                <span class="regulator-badge">CySEC (EU)</span>
-                                <span class="regulator-badge">SVG</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <a href="#" class="broker-btn" data-fa="مقایسه و ثبت‌نام" data-en="Compare & Register"
-                        data-ar="قارن وسجل">مقایسه و ثبت‌نام</a>
-                </div>
-
-                <div class="broker-card">
-                    <!-- محتوای کارت دوم به همین شکل -->
-                </div>
-
-                <div class="broker-card">
-                    <!-- محتوای کارت سوم به همین شکل -->
+            <div class="section-content" id="brokers-container">
+                <div style="text-align: center; padding: 50px;">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: #ffd700;"></i>
+                    <p style="margin-top: 20px;">در حال بارگذاری بروکرها...</p>
                 </div>
             </div>
         </div>
-
         <!-- ===== بلوک آموزش ===== -->
         <div class="section-wrapper">
             <div class="section-title-box">
@@ -1116,6 +1089,92 @@
         // ============= بارگذاری اولیه =============
         document.addEventListener('DOMContentLoaded', () => {
             changeLanguage('fa');
+        });
+    </script>
+
+    <script>
+        // ============= بارگذاری بروکرها =============
+        async function loadBrokers() {
+            try {
+                const response = await fetch('/api/brokers?limit=6');
+                const result = await response.json();
+
+                if (result.success) {
+                    const container = document.getElementById('brokers-container');
+                    let html = '<div class="section-content" id="brokers-block">';
+
+                    result.data.forEach(broker => {
+                        const regulations = JSON.parse(broker.regulations || '[]');
+                        const rating = parseFloat(broker.rating).toFixed(1);
+
+                        // ساخت ستاره‌ها
+                        let stars = '';
+                        for (let i = 1; i <= 5; i++) {
+                            if (i <= Math.floor(broker.rating)) {
+                                stars += '★';
+                            } else {
+                                stars += '☆';
+                            }
+                        }
+
+                        // نمایش لوگو یا آیکون پیش‌فرض
+                        const logoHtml = broker.logo
+                            ? `<img src="${broker.logo}" alt="${broker.name}" style="width: 50px; height: 50px; border-radius: 10px;">`
+                            : `<div class="broker-logo">📊</div>`;
+
+                        html += `
+                        <div class="broker-card">
+                            <div class="broker-header">
+                                ${logoHtml}
+                                <div class="broker-info">
+                                    <h3>${broker.name}</h3>
+                                    <div class="broker-rating">
+                                        <span class="rating-stars">${stars}</span>
+                                        <span style="color:#aaa;">(${rating})</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="broker-details">
+                                <div class="broker-detail-item">
+                                    <span class="broker-detail-label" data-fa="سابقه:" data-en="Founded:" data-ar="تأسست:">سابقه:</span>
+                                    <span>${broker.foundedYear || '-'}</span>
+                                </div>
+                                <div class="broker-detail-item">
+                                    <span class="broker-detail-label" data-fa="کاربران:" data-en="Users:" data-ar="المستخدمون:">کاربران:</span>
+                                    <span>${broker.usersCount || '۰'}</span>
+                                </div>
+                                <div class="broker-detail-item">
+                                    <span class="broker-detail-label" data-fa="رگوله:" data-en="Regulation:" data-ar="الترخيص:">رگوله:</span>
+                                    <div class="regulators">
+                                        ${regulations.map(r => `<span class="regulator-badge">${r}</span>`).join(' ')}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <a href="${broker.registerLink || '#'}" class="broker-btn" target="_blank" data-fa="مقایسه و ثبت‌نام" data-en="Compare & Register" data-ar="قارن وسجل">مقایسه و ثبت‌نام</a>
+                        </div>
+                    `;
+                    });
+
+                    html += '</div>';
+                    container.innerHTML = html;
+                }
+            } catch (error) {
+                console.error('Error loading brokers:', error);
+                document.getElementById('brokers-container').innerHTML = `
+                <div style="text-align: center; padding: 50px; color: #dc3545;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 3rem;"></i>
+                    <p style="margin-top: 20px;">خطا در بارگذاری بروکرها</p>
+                </div>
+            `;
+            }
+        }
+
+        // فراخوانی تابع در هنگام بارگذاری صفحه
+        document.addEventListener('DOMContentLoaded', () => {
+            loadBrokers();
+            // توابع قبلی مثل changeLanguage همچنان باقی می‌مانند
         });
     </script>
 </body>
