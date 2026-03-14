@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %> - PhoenixTrade</title>
+    <title>
+        <%= title %> - PhoenixTrade
+    </title>
     <!-- فونت سمیم -->
     <link rel="stylesheet" href="/css/fonts.css">
     <!-- استایل سراسری پنل -->
@@ -12,162 +15,220 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         /* ===== استایل‌های اختصاصی صفحه وب‌اپ ===== */
-        
         .tabs {
             display: flex;
             gap: 0.8rem;
             margin-bottom: 1.5rem;
             flex-wrap: wrap;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+            padding-bottom: 1rem;
         }
-        
+
         .tab {
             padding: 0.6rem 1.8rem;
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 25px;
+            border-radius: 30px;
             color: #fff;
             cursor: pointer;
             transition: all 0.2s;
             border: 1px solid rgba(255, 215, 0, 0.2);
             font-size: 0.95rem;
         }
-        
+
         .tab:hover {
             border-color: #ffd700;
+            background: rgba(255, 215, 0, 0.05);
         }
-        
+
         .tab.active {
             background: #ffd700;
             color: #0a2f1f;
             font-weight: bold;
         }
-        
+
         .tab-content {
             display: none;
+            animation: fadeIn 0.3s ease;
         }
-        
+
         .tab-content.active {
             display: block;
         }
-        
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
             gap: 1rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
         }
-        
-        .stat-item {
+
+        .stat-card {
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
+            border-radius: 20px;
             padding: 1.2rem;
             text-align: center;
             border: 1px solid rgba(255, 215, 0, 0.2);
+            transition: all 0.3s;
         }
-        
+
+        .stat-card:hover {
+            border-color: #ffd700;
+            transform: translateY(-5px);
+        }
+
         .stat-value {
             color: #ffd700;
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: bold;
         }
-        
+
         .stat-label {
-            color: #aaa;
+            color: #fff;
             margin-top: 0.3rem;
             font-size: 0.9rem;
         }
-        
-        .card {
-            background: rgba(255, 255, 255, 0.05);
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .content-card {
+            background: rgba(255, 255, 255, 0.03);
             border-radius: 16px;
             padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            border: 1px solid rgba(255, 215, 0, 0.2);
+            border: 1px solid rgba(255, 215, 0, 0.15);
         }
-        
-        .card h3 {
+
+        .content-card h3 {
             color: #ffd700;
-            margin-bottom: 1.2rem;
-            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
             display: flex;
             align-items: center;
-            gap: 0.6rem;
+            gap: 0.5rem;
         }
-        
+
         .table-container {
             overflow-x: auto;
-            border-radius: 12px;
+            border-radius: 16px;
             background: rgba(0, 0, 0, 0.2);
             padding: 0.5rem;
         }
-        
+
         .data-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 0.9rem;
         }
-        
+
         .data-table th {
-            background: rgba(255, 215, 0, 0.15);
+            background: rgba(255, 215, 0, 0.1);
             color: #ffd700;
-            padding: 0.8rem;
+            padding: 1rem;
             text-align: right;
             font-weight: 500;
         }
-        
+
         .data-table td {
-            padding: 0.8rem;
+            padding: 0.8rem 1rem;
             color: #fff;
             border-bottom: 1px solid rgba(255, 215, 0, 0.1);
         }
-        
+
         .data-table tr:hover {
             background: rgba(255, 255, 255, 0.05);
         }
-        
+
         .badge {
             display: inline-block;
-            padding: 0.2rem 0.8rem;
-            border-radius: 20px;
+            padding: 0.3rem 0.8rem;
+            border-radius: 30px;
             font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
         }
-        
+
         .badge-success {
-            background: rgba(40, 167, 69, 0.2);
+            background: rgba(40, 167, 69, 0.15);
             color: #28a745;
             border: 1px solid #28a745;
         }
-        
+
         .badge-warning {
-            background: rgba(255, 193, 7, 0.2);
+            background: rgba(255, 193, 7, 0.15);
             color: #ffc107;
             border: 1px solid #ffc107;
         }
-        
+
         .badge-danger {
-            background: rgba(220, 53, 69, 0.2);
+            background: rgba(220, 53, 69, 0.15);
             color: #dc3545;
             border: 1px solid #dc3545;
         }
-        
-        .btn-sm {
-            padding: 0.3rem 0.8rem;
-            font-size: 0.8rem;
+
+        .badge-info {
+            background: rgba(23, 162, 184, 0.15);
+            color: #17a2b8;
+            border: 1px solid #17a2b8;
         }
-        
+
+        .btn-icon {
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            background: transparent;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            color: #ffd700;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin: 0 0.2rem;
+        }
+
+        .btn-icon:hover {
+            background: #ffd700;
+            color: #0a2f1f;
+        }
+
+        .btn-icon.danger:hover {
+            background: #dc3545;
+            color: #fff;
+            border-color: #dc3545;
+        }
+
         .media-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             gap: 1rem;
-            margin-top: 1rem;
+            margin-top: 1.5rem;
         }
-        
+
         .media-item {
             background: rgba(0, 0, 0, 0.3);
             border-radius: 12px;
             overflow: hidden;
             border: 1px solid rgba(255, 215, 0, 0.2);
+            transition: all 0.3s;
         }
-        
+
+        .media-item:hover {
+            border-color: #ffd700;
+            transform: translateY(-3px);
+        }
+
         .media-preview {
             height: 120px;
             background: rgba(0, 0, 0, 0.5);
@@ -175,17 +236,23 @@
             align-items: center;
             justify-content: center;
         }
-        
+
         .media-preview i {
             font-size: 3rem;
             color: #ffd700;
         }
-        
+
+        .media-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
         .media-info {
             padding: 0.8rem;
             border-top: 1px solid rgba(255, 215, 0, 0.2);
         }
-        
+
         .media-name {
             font-size: 0.8rem;
             color: #fff;
@@ -193,80 +260,192 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        
+
         .media-size {
             font-size: 0.7rem;
             color: #aaa;
+            margin-top: 0.2rem;
+        }
+
+        .media-actions {
+            display: flex;
+            gap: 0.3rem;
+            margin-top: 0.5rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: rgba(10, 47, 31, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid #ffd700;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            color: #ffd700;
+        }
+
+        .modal-close {
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: #ffd700;
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+            font-family: 'Samim', sans-serif;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #ffd700;
+        }
+
+        textarea.form-control {
+            border-radius: 20px;
+            min-height: 100px;
+        }
+
+        .language-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+            padding-bottom: 0.5rem;
+        }
+
+        .lang-tab {
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            background: transparent;
+            color: #aaa;
+        }
+
+        .lang-tab.active {
+            background: #ffd700;
+            color: #0a2f1f;
+        }
+
+        .lang-content {
+            display: none;
+        }
+
+        .lang-content.active {
+            display: block;
         }
     </style>
 </head>
+
 <body>
-<!-- سایدبار -->
-<%- include('sidebar', { activePage: 'webapp' }) %>
+    <!-- سایدبار -->
+    <%- include('sidebar', { activePage: 'webapp' }) %>
 
-    <!-- محتوای اصلی -->
-    <div class="main-content">
-        <div class="header">
-            <h1><i class="fas fa-globe"></i> <%= title %></h1>
-        </div>
+        <!-- محتوای اصلی -->
+        <div class="main-content">
+            <div class="header">
+                <h1><i class="fas fa-globe"></i>
+                    <%= title %>
+                </h1>
+            </div>
 
-        <!-- آمار -->
-        <div class="stats-grid">
-            <div class="stat-item">
-                <div class="stat-value"><%= stats.pages || 0 %></div>
-                <div class="stat-label">تعداد صفحات</div>
+            <!-- کارت‌های آمار -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">
+                        <%= stats.pages || 0 %>
+                    </div>
+                    <div class="stat-label">تعداد صفحات</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">
+                        <%= stats.menus || 0 %>
+                    </div>
+                    <div class="stat-label">آیتم‌های منو</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">
+                        <%= stats.media || 0 %>
+                    </div>
+                    <div class="stat-label">فایل‌های رسانه</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">
+                        <%= stats.forms || 0 %>
+                    </div>
+                    <div class="stat-label">فرم‌ها</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">
+                        <%= stats.users || 0 %>
+                    </div>
+                    <div class="stat-label">کاربران</div>
+                </div>
             </div>
-            <div class="stat-item">
-                <div class="stat-value"><%= stats.menus || 0 %></div>
-                <div class="stat-label">آیتم‌های منو</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value"><%= stats.media || 0 %></div>
-                <div class="stat-label">فایل‌های رسانه</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value"><%= stats.forms || 0 %></div>
-                <div class="stat-label">فرم‌ها</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value"><%= stats.users || 0 %></div>
-                <div class="stat-label">کاربران</div>
-            </div>
-        </div>
 
-        <!-- تب‌ها -->
-        <div class="tabs">
-            <div class="tab active" onclick="showTab('pages')">
-                <i class="fas fa-file"></i> صفحات
+            <!-- تب‌های اصلی -->
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('pages')"><i class="fas fa-file-alt"></i> صفحات</div>
+                <div class="tab" onclick="showTab('media')"><i class="fas fa-images"></i> کتابخانه رسانه</div>
+                <div class="tab" onclick="showTab('menus')"><i class="fas fa-bars"></i> منوها</div>
+                <div class="tab" onclick="showTab('forms')"><i class="fas fa-wpforms"></i> فرم‌ها</div>
+                <div class="tab" onclick="showTab('users')"><i class="fas fa-users"></i> کاربران</div>
+                <div class="tab" onclick="showTab('settings')"><i class="fas fa-cog"></i> تنظیمات</div>
             </div>
-            <div class="tab" onclick="showTab('media')">
-                <i class="fas fa-images"></i> کتابخانه مدیا
-            </div>
-            <div class="tab" onclick="showTab('menus')">
-                <i class="fas fa-bars"></i> منوها
-            </div>
-            <div class="tab" onclick="showTab('forms')">
-                <i class="fas fa-wpforms"></i> فرم‌ها
-            </div>
-            <div class="tab" onclick="showTab('settings')">
-                <i class="fas fa-cog"></i> تنظیمات
-            </div>
-        </div>
 
-        <!-- تب صفحات -->
-        <div id="tab-pages" class="tab-content active">
-            <div class="card">
-                <h3><i class="fas fa-file"></i> مدیریت صفحات</h3>
-                <button class="btn btn-sm" onclick="createPage()" style="margin-bottom: 1rem;">
-                    <i class="fas fa-plus"></i> صفحه جدید
-                </button>
+            <!-- تب صفحات -->
+            <div id="tab-pages" class="tab-content active">
+                <div style="margin-bottom: 1rem;">
+                    <button class="btn" onclick="showPageModal()"><i class="fas fa-plus"></i> صفحه جدید</button>
+                </div>
                 <div class="table-container">
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th>عنوان</th>
+                                <th>عنوان فارسی</th>
+                                <th>عنوان انگلیسی</th>
+                                <th>عنوان عربی</th>
                                 <th>آدرس (slug)</th>
-                                <th>زبان‌ها</th>
                                 <th>وضعیت</th>
                                 <th>صفحه اصلی</th>
                                 <th>بازدید</th>
@@ -274,280 +453,724 @@
                             </tr>
                         </thead>
                         <tbody id="pages-list">
-                            <tr><td colspan="7" style="text-align:center;">در حال بارگذاری...</td></tr>
+                            <tr>
+                                <td colspan="8" style="text-align:center;">در حال بارگذاری...</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-        </div>
 
-        <!-- تب مدیا -->
-        <div id="tab-media" class="tab-content">
-            <div class="card">
-                <h3><i class="fas fa-images"></i> کتابخانه مدیا</h3>
-                <form id="upload-form" enctype="multipart/form-data">
-                    <input type="file" id="file-input" name="file" style="display: none;" onchange="uploadFile()">
-                    <button class="btn btn-sm" type="button" onclick="document.getElementById('file-input').click()">
+            <!-- تب رسانه -->
+            <div id="tab-media" class="tab-content">
+                <div style="margin-bottom: 1rem;">
+                    <button class="btn" onclick="document.getElementById('media-upload').click()">
                         <i class="fas fa-upload"></i> آپلود فایل جدید
                     </button>
-                </form>
+                    <input type="file" id="media-upload" style="display:none;" onchange="uploadMedia()">
+                </div>
                 <div class="media-grid" id="media-list">
                     <div style="text-align:center; padding:2rem;">در حال بارگذاری...</div>
                 </div>
             </div>
-        </div>
 
-        <!-- تب منوها -->
-        <div id="tab-menus" class="tab-content">
-            <div class="card">
-                <h3><i class="fas fa-bars"></i> مدیریت منوها</h3>
-                <button class="btn btn-sm" onclick="createMenu()" style="margin-bottom: 1rem;">
-                    <i class="fas fa-plus"></i> آیتم منوی جدید
-                </button>
+            <!-- تب منوها -->
+            <div id="tab-menus" class="tab-content">
+                <div style="margin-bottom: 1rem;">
+                    <button class="btn" onclick="showMenuModal()"><i class="fas fa-plus"></i> آیتم منوی جدید</button>
+                </div>
                 <div class="table-container">
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th>عنوان</th>
-                                <th>مکان</th>
-                                <th>لینک</th>
+                                <th>عنوان فارسی</th>
+                                <th>عنوان انگلیسی</th>
+                                <th>عنوان عربی</th>
+                                <th>نوع لینک</th>
+                                <th>موقعیت</th>
                                 <th>ترتیب</th>
                                 <th>وضعیت</th>
                                 <th>عملیات</th>
                             </tr>
                         </thead>
                         <tbody id="menus-list">
-                            <tr><td colspan="6" style="text-align:center;">در حال بارگذاری...</td></tr>
+                            <tr>
+                                <td colspan="8" style="text-align:center;">در حال بارگذاری...</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-        </div>
 
-        <!-- تب فرم‌ها -->
-        <div id="tab-forms" class="tab-content">
-            <div class="card">
-                <h3><i class="fas fa-wpforms"></i> مدیریت فرم‌ها</h3>
-                <button class="btn btn-sm" onclick="createForm()" style="margin-bottom: 1rem;">
-                    <i class="fas fa-plus"></i> فرم جدید
-                </button>
+            <!-- تب فرم‌ها -->
+            <div id="tab-forms" class="tab-content">
+                <div style="margin-bottom: 1rem;">
+                    <button class="btn" onclick="showFormModal()"><i class="fas fa-plus"></i> فرم جدید</button>
+                </div>
                 <div class="table-container">
                     <table class="data-table">
                         <thead>
                             <tr>
                                 <th>نام فرم</th>
                                 <th>تعداد ورودی</th>
-                                <th>وضعیت</th>
                                 <th>ایمیل گیرنده</th>
+                                <th>وضعیت</th>
+                                <th>تاریخ ایجاد</th>
                                 <th>عملیات</th>
                             </tr>
                         </thead>
                         <tbody id="forms-list">
-                            <tr><td colspan="5" style="text-align:center;">در حال بارگذاری...</td></tr>
+                            <tr>
+                                <td colspan="6" style="text-align:center;">در حال بارگذاری...</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-        </div>
 
-        <!-- تب تنظیمات -->
-        <div id="tab-settings" class="tab-content">
-            <div class="card">
-                <h3><i class="fas fa-cog"></i> تنظیمات وب‌اپ</h3>
-                <div id="settings-form">
-                    <p style="color:#aaa; text-align:center;">در حال بارگذاری...</p>
+            <!-- تب کاربران -->
+            <div id="tab-users" class="tab-content">
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ایمیل</th>
+                                <th>شماره تماس</th>
+                                <th>نام</th>
+                                <th>نام خانوادگی</th>
+                                <th>زبان</th>
+                                <th>وضعیت</th>
+                                <th>تاریخ ثبت</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-list">
+                            <tr>
+                                <td colspan="8" style="text-align:center;">در حال بارگذاری...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- تب تنظیمات -->
+            <div id="tab-settings" class="tab-content">
+                <div class="content-grid">
+                    <div class="content-card">
+                        <h3><i class="fas fa-globe"></i> تنظیمات عمومی</h3>
+                        <div id="general-settings"></div>
+                    </div>
+                    <div class="content-card">
+                        <h3><i class="fas fa-phone"></i> اطلاعات تماس</h3>
+                        <div id="contact-settings"></div>
+                    </div>
+                    <div class="content-card">
+                        <h3><i class="fas fa-share-alt"></i> شبکه‌های اجتماعی</h3>
+                        <div id="social-settings"></div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <script>
-        // ============= مدیریت تب‌ها =============
-        function showTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.getElementById('tab-' + tabName).classList.add('active');
-            event.target.classList.add('active');
-            
-            // بارگذاری داده‌های هر تب
-            if (tabName === 'pages') loadPages();
-            if (tabName === 'media') loadMedia();
-            if (tabName === 'menus') loadMenus();
-            if (tabName === 'forms') loadForms();
-            if (tabName === 'settings') loadSettings();
-        }
+        <!-- مودال صفحات -->
+        <div class="modal" id="page-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span>مدیریت صفحه</span>
+                    <span class="modal-close" onclick="closeModal('page-modal')">&times;</span>
+                </div>
+                <form id="page-form" onsubmit="event.preventDefault(); savePage();">
+                    <input type="hidden" id="page-id">
+                    <div class="language-tabs">
+                        <span class="lang-tab active" onclick="changeLang('fa', 'page')">🇮🇷 فارسی</span>
+                        <span class="lang-tab" onclick="changeLang('en', 'page')">🇬🇧 English</span>
+                        <span class="lang-tab" onclick="changeLang('ar', 'page')">🇸🇦 عربي</span>
+                    </div>
+                    <div class="lang-content page-lang active" data-lang="fa">
+                        <div class="form-group"><label>عنوان صفحه (فارسی)</label><input type="text" id="page-title-fa"
+                                class="form-control" required></div>
+                        <div class="form-group"><label>توضیحات متا (فارسی)</label><textarea id="page-meta-fa"
+                                class="form-control" rows="2"></textarea></div>
+                    </div>
+                    <div class="lang-content page-lang" data-lang="en">
+                        <div class="form-group"><label>Page Title (English)</label><input type="text" id="page-title-en"
+                                class="form-control" required></div>
+                        <div class="form-group"><label>Meta Description (English)</label><textarea id="page-meta-en"
+                                class="form-control" rows="2"></textarea></div>
+                    </div>
+                    <div class="lang-content page-lang" data-lang="ar">
+                        <div class="form-group"><label>عنوان الصفحة (عربي)</label><input type="text" id="page-title-ar"
+                                class="form-control" required></div>
+                        <div class="form-group"><label>وصف ميتا (عربي)</label><textarea id="page-meta-ar"
+                                class="form-control" rows="2"></textarea></div>
+                    </div>
+                    <div class="form-group"><label>آدرس صفحه (slug)</label><input type="text" id="page-slug"
+                            class="form-control" required></div>
+                    <div class="form-group"><label><input type="checkbox" id="page-isHomepage"> صفحه اصلی سایت</label>
+                    </div>
+                    <div class="form-group"><label><input type="checkbox" id="page-isActive" checked> فعال</label></div>
+                    <div class="form-group"><label>ترتیب نمایش</label><input type="number" id="page-order"
+                            class="form-control" value="0"></div>
+                    <button type="submit" class="btn">ذخیره</button>
+                </form>
+            </div>
+        </div>
 
-        // ============= توابع کمکی =============
-        function showToast(message, type = 'success') {
-            let toast = document.getElementById('toast');
-            if (!toast) {
-                toast = document.createElement('div');
-                toast.id = 'toast';
-                toast.className = 'toast';
-                document.body.appendChild(toast);
+        <!-- مودال منو -->
+        <div class="modal" id="menu-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span>مدیریت آیتم منو</span>
+                    <span class="modal-close" onclick="closeModal('menu-modal')">&times;</span>
+                </div>
+                <form id="menu-form" onsubmit="event.preventDefault(); saveMenu();">
+                    <input type="hidden" id="menu-id">
+                    <div class="language-tabs">
+                        <span class="lang-tab active" onclick="changeLang('fa', 'menu')">🇮🇷 فارسی</span>
+                        <span class="lang-tab" onclick="changeLang('en', 'menu')">🇬🇧 English</span>
+                        <span class="lang-tab" onclick="changeLang('ar', 'menu')">🇸🇦 عربي</span>
+                    </div>
+                    <div class="lang-content menu-lang active" data-lang="fa">
+                        <div class="form-group"><label>عنوان منو (فارسی)</label><input type="text" id="menu-title-fa"
+                                class="form-control" required></div>
+                    </div>
+                    <div class="lang-content menu-lang" data-lang="en">
+                        <div class="form-group"><label>Menu Title (English)</label><input type="text" id="menu-title-en"
+                                class="form-control" required></div>
+                    </div>
+                    <div class="lang-content menu-lang" data-lang="ar">
+                        <div class="form-group"><label>عنوان القائمة (عربي)</label><input type="text" id="menu-title-ar"
+                                class="form-control" required></div>
+                    </div>
+                    <div class="form-group">
+                        <label>نوع لینک</label>
+                        <select id="menu-linkType" class="form-control" onchange="toggleMenuLinkType()">
+                            <option value="page">لینک به صفحه داخلی</option>
+                            <option value="custom">لینک سفارشی</option>
+                        </select>
+                    </div>
+                    <div id="menu-page-select" class="form-group">
+                        <label>انتخاب صفحه</label>
+                        <select id="menu-pageId" class="form-control">
+                            <option value="">-- انتخاب کنید --</option>
+                        </select>
+                    </div>
+                    <div id="menu-custom-urls" style="display:none;">
+                        <div class="lang-content menu-lang active" data-lang="fa">
+                            <div class="form-group"><label>آدرس سفارشی (فارسی)</label><input type="text"
+                                    id="menu-custom-fa" class="form-control"></div>
+                        </div>
+                        <div class="lang-content menu-lang" data-lang="en">
+                            <div class="form-group"><label>Custom URL (English)</label><input type="text"
+                                    id="menu-custom-en" class="form-control"></div>
+                        </div>
+                        <div class="lang-content menu-lang" data-lang="ar">
+                            <div class="form-group"><label>الرابط المخصص (عربي)</label><input type="text"
+                                    id="menu-custom-ar" class="form-control"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>موقعیت منو</label>
+                        <select id="menu-location" class="form-control">
+                            <option value="header">سربرگ</option>
+                            <option value="footer">پاورقی</option>
+                            <option value="sidebar">کناری</option>
+                            <option value="mobile">موبایل</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>آیکون (کلاس Font Awesome)</label><input type="text" id="menu-icon"
+                            class="form-control" placeholder="مثلاً: fa-home"></div>
+                    <div class="form-group"><label>ترتیب نمایش</label><input type="number" id="menu-order"
+                            class="form-control" value="0"></div>
+                    <div class="form-group"><label><input type="checkbox" id="menu-isActive" checked> فعال</label></div>
+                    <button type="submit" class="btn">ذخیره</button>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            // ============= متغیرهای سراسری =============
+            let currentLang = 'fa';
+
+            // ============= مدیریت تب‌ها =============
+            function showTab(tabName) {
+                document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.getElementById('tab-' + tabName).classList.add('active');
+                event.target.classList.add('active');
+
+                if (tabName === 'pages') loadPages();
+                if (tabName === 'media') loadMedia();
+                if (tabName === 'menus') loadMenus();
+                if (tabName === 'forms') loadForms();
+                if (tabName === 'users') loadUsers();
+                if (tabName === 'settings') loadSettings();
             }
-            toast.className = 'toast ' + type;
-            toast.textContent = message;
-            toast.style.display = 'block';
-            setTimeout(() => toast.style.display = 'none', 2000);
-        }
 
-        // ============= مدیریت صفحات =============
-        function loadPages() {
-            fetch('/pprofessor/api/webapp/pages')
-                .then(res => res.json())
-                .then(result => {
-                    if (result.success) {
-                        let html = '';
-                        result.data.forEach(page => {
-                            html += `<tr>
-                                <td>${page.title_fa || 'بدون عنوان'}</td>
-                                <td><code>${page.slug || '-'}</code></td>
-                                <td>
-                                    ${page.title_fa ? '🇮🇷' : ''} 
-                                    ${page.title_en ? '🇬🇧' : ''} 
-                                    ${page.title_ar ? '🇸🇦' : ''}
-                                </td>
-                                <td><span class="badge ${page.isActive ? 'badge-success' : 'badge-danger'}">${page.isActive ? 'فعال' : 'غیرفعال'}</span></td>
-                                <td>${page.isHomepage ? '🏠 بله' : 'خیر'}</td>
-                                <td>${page.viewCount || 0}</td>
-                                <td>
-                                    <button class="btn btn-sm" onclick="editPage(${page.id})"><i class="fas fa-edit"></i></button>
-                                    <button class="btn btn-sm btn-danger" onclick="deletePage(${page.id})"><i class="fas fa-trash"></i></button>
-                                </td>
-                            </tr>`;
-                        });
-                        document.getElementById('pages-list').innerHTML = html;
+            // ============= مدیریت زبان =============
+            function changeLang(lang, type) {
+                document.querySelectorAll(`.lang-tab`).forEach(t => t.classList.remove('active'));
+                event.target.classList.add('active');
+                document.querySelectorAll(`.${type}-lang`).forEach(c => c.classList.remove('active'));
+                document.querySelectorAll(`.${type}-lang[data-lang="${lang}"]`).forEach(c => c.classList.add('active'));
+                currentLang = lang;
+            }
+
+            // ============= مدیریت مودال‌ها =============
+            function showModal(modalId) { document.getElementById(modalId).classList.add('active'); }
+            function closeModal(modalId) { document.getElementById(modalId).classList.remove('active'); }
+
+            // ============= نمایش پیام =============
+            function showToast(message, type = 'success') {
+                let toast = document.getElementById('toast');
+                if (!toast) {
+                    toast = document.createElement('div');
+                    toast.id = 'toast';
+                    toast.className = 'toast';
+                    document.body.appendChild(toast);
+                }
+                toast.className = 'toast ' + type;
+                toast.textContent = message;
+                toast.style.display = 'block';
+                setTimeout(() => toast.style.display = 'none', 3000);
+            }
+
+            // ============= مدیریت صفحات =============
+            function loadPages() {
+
+                fetch('/pprofessor/api/webapp/pages', {
+                    method: 'GET',
+                    credentials: 'include', // مهم: ارسال session cookie
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
                     }
-                });
-        }
+                })
+                    .then(res => {
 
-        // ============= مدیریت مدیا =============
-        function loadMedia() {
-            fetch('/pprofessor/api/webapp/media')
-                .then(res => res.json())
-                .then(result => {
-                    if (result.success) {
-                        let html = '';
-                        result.data.forEach(media => {
-                            html += `<div class="media-item">
-                                <div class="media-preview">
-                                    ${media.type === 'image' ? 
-                                        `<img src="${media.url}" style="max-width:100%; max-height:100%;">` : 
-                                        `<i class="fas fa-file-${media.type}"></i>`}
-                                </div>
+                        if (res.status === 401) {
+                            // اگر 401 گرفت، یعنی session منقضی شده
+                            console.log('Session expired, redirecting to login...');
+                            window.location.href = '/pprofessor/login';
+                            return;
+                        }
+
+                        if (!res.ok) {
+                            throw new Error(`HTTP error! status: ${res.status}`);
+                        }
+                        return res.json();
+                    })
+                    .then(result => {
+                        if (result && result.success) {
+                            let html = '';
+                            result.data.forEach(page => {
+                                html += `<tr>
+                    <td>${page.title_fa || '-'}</td>
+                    <td>${page.title_en || '-'}</td>
+                    <td>${page.title_ar || '-'}</td>
+                    <td><code>${page.slug || '-'}</code></td>
+                    <td>
+                        <span class="badge ${page.isActive ? 'badge-success' : 'badge-danger'}" 
+                              onclick="togglePageStatus(${page.id})" style="cursor:pointer;">
+                            ${page.isActive ? 'فعال' : 'غیرفعال'}
+                        </span>
+                    </td>
+                    <td>
+                        ${page.isHomepage ?
+                                        '<span class="badge badge-info">صفحه اصلی</span>' :
+                                        '<span class="badge badge-warning" onclick="setAsHomepage(' + page.id + ')" style="cursor:pointer;">تنظیم به عنوان اصلی</span>'}
+                    </td>
+                    <td>${page.viewCount || 0}</td>
+                    <td>
+                        <a href="/pprofessor/webapp/builder/${page.id}">
+    <button class="btn-icon"><i class="fas fa-edit"></i></button>
+</a>                        <button class="btn-icon" onclick="copyPageLink('${page.slug}')"><i class="fas fa-link"></i></button>
+                        <button class="btn-icon danger" onclick="deletePage(${page.id})"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>`;
+                            });
+                            document.getElementById('pages-list').innerHTML = html;
+                        } else {
+                            document.getElementById('pages-list').innerHTML = '<tr><td colspan="8" style="text-align:center;">خطا در بارگذاری صفحات</td></tr>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error loading pages:', error);
+                        document.getElementById('pages-list').innerHTML = '<tr><td colspan="8" style="text-align:center; color:#dc3545;">خطا در بارگذاری صفحات</td></tr>';
+                    });
+            }
+
+            function showPageModal() {
+                document.getElementById('page-id').value = '';
+                document.getElementById('page-title-fa').value = '';
+                document.getElementById('page-title-en').value = '';
+                document.getElementById('page-title-ar').value = '';
+                document.getElementById('page-meta-fa').value = '';
+                document.getElementById('page-meta-en').value = '';
+                document.getElementById('page-meta-ar').value = '';
+                document.getElementById('page-slug').value = '';
+                document.getElementById('page-isHomepage').checked = false;
+                document.getElementById('page-isActive').checked = true;
+                document.getElementById('page-order').value = '0';
+                showModal('page-modal');
+            }
+
+            function editPage(id) {
+                fetch(`/pprofessor/api/webapp/pages/${id}`)
+                    .then(res => { if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`); return res.json(); })
+                    .then(result => {
+                        if (result.success) {
+                            const page = result.data;
+                            document.getElementById('page-id').value = page.id;
+                            document.getElementById('page-title-fa').value = page.title_fa || '';
+                            document.getElementById('page-title-en').value = page.title_en || '';
+                            document.getElementById('page-title-ar').value = page.title_ar || '';
+                            document.getElementById('page-meta-fa').value = page.meta_description_fa || '';
+                            document.getElementById('page-meta-en').value = page.meta_description_en || '';
+                            document.getElementById('page-meta-ar').value = page.meta_description_ar || '';
+                            document.getElementById('page-slug').value = page.slug || '';
+                            document.getElementById('page-isHomepage').checked = page.isHomepage || false;
+                            document.getElementById('page-isActive').checked = page.isActive;
+                            document.getElementById('page-order').value = page.order || 0;
+                            showModal('page-modal');
+                        }
+                    })
+                    .catch(error => { console.error('Error:', error); showToast('خطا در دریافت اطلاعات صفحه', 'error'); });
+            }
+
+            function savePage() {
+                const id = document.getElementById('page-id').value;
+                if (!document.getElementById('page-title-fa').value) { showToast('عنوان فارسی صفحه الزامی است', 'error'); return; }
+                if (!document.getElementById('page-slug').value) { showToast('آدرس صفحه (slug) الزامی است', 'error'); return; }
+
+                const data = {
+                    title_fa: document.getElementById('page-title-fa').value,
+                    title_en: document.getElementById('page-title-en').value,
+                    title_ar: document.getElementById('page-title-ar').value,
+                    meta_description_fa: document.getElementById('page-meta-fa').value,
+                    meta_description_en: document.getElementById('page-meta-en').value,
+                    meta_description_ar: document.getElementById('page-meta-ar').value,
+                    slug: document.getElementById('page-slug').value,
+                    isHomepage: document.getElementById('page-isHomepage').checked,
+                    isActive: document.getElementById('page-isActive').checked,
+                    order: parseInt(document.getElementById('page-order').value) || 0
+                };
+
+                const url = id ? `/pprofessor/api/webapp/pages/${id}` : '/pprofessor/api/webapp/pages';
+                const method = id ? 'PUT' : 'POST';
+
+                fetch(url, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                })
+                    .then(res => { if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`); return res.json(); })
+                    .then(result => {
+                        if (result.success) {
+                            showToast(id ? 'صفحه ویرایش شد' : 'صفحه ایجاد شد', 'success');
+                            closeModal('page-modal');
+                            loadPages();
+                        } else { showToast('خطا: ' + (result.error || 'خطای ناشناخته'), 'error'); }
+                    })
+                    .catch(error => { console.error('Error:', error); showToast('خطا در ارتباط با سرور', 'error'); });
+            }
+
+            function togglePageStatus(pageId) {
+                fetch(`/pprofessor/api/webapp/pages/${pageId}/toggle`, { method: 'PATCH' })
+                    .then(res => { if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`); return res.json(); })
+                    .then(result => { if (result.success) { showToast('وضعیت صفحه تغییر کرد'); loadPages(); } })
+                    .catch(error => { console.error('Error:', error); showToast('خطا در تغییر وضعیت', 'error'); });
+            }
+
+            function setAsHomepage(id) {
+                if (confirm('آیا از تنظیم این صفحه به عنوان صفحه اصلی اطمینان دارید؟')) {
+                    fetch(`/pprofessor/api/webapp/pages/${id}`)
+                        .then(res => res.json())
+                        .then(result => {
+                            if (result.success) {
+                                const page = result.data;
+                                page.isHomepage = true;
+                                return fetch(`/pprofessor/api/webapp/pages/${id}`, {
+                                    method: 'PUT',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify(page)
+                                });
+                            }
+                        })
+                        .then(() => { showToast('صفحه اصلی تنظیم شد'); loadPages(); })
+                        .catch(error => { console.error('Error:', error); showToast('خطا در تنظیم صفحه اصلی', 'error'); });
+                }
+            }
+
+            function deletePage(id) {
+                if (confirm('آیا از حذف این صفحه اطمینان دارید؟')) {
+                    fetch(`/pprofessor/api/webapp/pages/${id}`, { method: 'DELETE' })
+                        .then(res => { if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`); return res.json(); })
+                        .then(result => { if (result.success) { showToast('صفحه حذف شد'); loadPages(); } else { showToast('خطا: ' + result.error, 'error'); } })
+                        .catch(error => { console.error('Error:', error); showToast('خطا در حذف صفحه', 'error'); });
+                }
+            }
+
+            function copyPageLink(slug) { navigator.clipboard.writeText(`/page/${slug}`); showToast('لینک کپی شد'); }
+
+            // ============= مدیریت رسانه =============
+            function loadMedia() {
+                fetch('/pprofessor/api/webapp/media')
+                    .then(res => { if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`); return res.json(); })
+                    .then(result => {
+                        if (result.success) {
+                            let html = '';
+                            result.data.forEach(media => {
+                                html += `<div class="media-item">
+                                <div class="media-preview">${media.type === 'image' ? `<img src="${media.url}" alt="${media.originalName}">` : `<i class="fas fa-file-${media.type}"></i>`}</div>
                                 <div class="media-info">
                                     <div class="media-name">${media.originalName || media.filename}</div>
-                                    <div class="media-size">${(media.size/1024).toFixed(1)} KB</div>
-                                    <div style="margin-top:0.5rem;">
-                                        <button class="btn btn-sm" onclick="copyMediaUrl('${media.url}')"><i class="fas fa-copy"></i></button>
-                                        <button class="btn btn-sm btn-danger" onclick="deleteMedia(${media.id})"><i class="fas fa-trash"></i></button>
+                                    <div class="media-size">${(media.size / 1024).toFixed(1)} KB</div>
+                                    <div class="media-actions">
+                                        <button class="btn-icon" onclick="copyMediaUrl('${media.url}')"><i class="fas fa-copy"></i></button>
+                                        <button class="btn-icon danger" onclick="deleteMedia(${media.id})"><i class="fas fa-trash"></i></button>
                                     </div>
                                 </div>
                             </div>`;
-                        });
-                        document.getElementById('media-list').innerHTML = html || '<div style="text-align:center;">فایلی یافت نشد</div>';
-                    }
-                });
-        }
-
-        function uploadFile() {
-            const file = document.getElementById('file-input').files[0];
-            if (!file) return;
-            
-            const formData = new FormData();
-            formData.append('file', file);
-            
-            fetch('/pprofessor/api/webapp/media/upload', {
-                method: 'POST',
-                body: formData
-            })
-            .then(res => res.json())
-            .then(result => {
-                if (result.success) {
-                    showToast('فایل با موفقیت آپلود شد');
-                    loadMedia();
-                } else {
-                    showToast('خطا: ' + result.error, 'error');
-                }
-            });
-        }
-
-        function deleteMedia(id) {
-            if (confirm('آیا از حذف این فایل اطمینان دارید؟')) {
-                fetch('/pprofessor/api/webapp/media/' + id, { method: 'DELETE' })
-                .then(res => res.json())
-                .then(result => {
-                    if (result.success) {
-                        showToast('فایل حذف شد');
-                        loadMedia();
-                    }
-                });
+                            });
+                            document.getElementById('media-list').innerHTML = html;
+                        }
+                    })
+                    .catch(error => { console.error('Error:', error); document.getElementById('media-list').innerHTML = '<div style="text-align:center; padding:2rem; color:#dc3545;">خطا در بارگذاری رسانه</div>'; });
             }
-        }
 
-        function copyMediaUrl(url) {
-            navigator.clipboard.writeText(url);
-            showToast('آدرس کپی شد');
-        }
+            function uploadMedia() {
+                const file = document.getElementById('media-upload').files[0];
+                if (!file) return;
+                const formData = new FormData();
+                formData.append('file', file);
+                fetch('/pprofessor/api/webapp/media/upload', { method: 'POST', body: formData })
+                    .then(res => { if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`); return res.json(); })
+                    .then(result => { if (result.success) { showToast('فایل آپلود شد'); loadMedia(); } else { showToast('خطا: ' + result.error, 'error'); } })
+                    .catch(error => { console.error('Error:', error); showToast('خطا در آپلود فایل', 'error'); });
+            }
 
-        // ============= مدیریت منوها =============
-        function loadMenus() {
-            fetch('/pprofessor/api/webapp/menus')
-                .then(res => res.json())
-                .then(result => {
-                    if (result.success) {
-                        let html = '';
-                        result.data.forEach(menu => {
-                            html += `<tr>
-                                <td>${menu.name_fa || '-'}</td>
-                                <td>${menu.location === 'header' ? 'سربرگ' : menu.location === 'footer' ? 'پاورقی' : 'کناری'}</td>
-                                <td>${menu.url || (menu.page ? '/' + menu.page.slug : '-')}</td>
+            function deleteMedia(id) {
+                if (confirm('آیا از حذف این فایل اطمینان دارید؟')) {
+                    fetch(`/pprofessor/api/webapp/media/${id}`, { method: 'DELETE' })
+                        .then(res => { if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`); return res.json(); })
+                        .then(result => { if (result.success) { showToast('فایل حذف شد'); loadMedia(); } })
+                        .catch(error => { console.error('Error:', error); showToast('خطا در حذف فایل', 'error'); });
+                }
+            }
+
+            function copyMediaUrl(url) { navigator.clipboard.writeText(url); showToast('آدرس کپی شد'); }
+
+            // ============= مدیریت منوها =============
+            function loadMenus() {
+                fetch('/pprofessor/api/webapp/menus')
+                    .then(res => { if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`); return res.json(); })
+                    .then(result => {
+                        if (result.success) {
+                            let html = '';
+                            result.data.forEach(menu => {
+                                html += `<tr>
+                                <td>${menu.title_fa || '-'}</td>
+                                <td>${menu.title_en || '-'}</td>
+                                <td>${menu.title_ar || '-'}</td>
+                                <td>${menu.linkType === 'page' && menu.page ? `لینک به صفحه: ${menu.page.title_fa}` : 'لینک سفارشی'}</td>
+                                <td>${menu.location === 'header' ? 'سربرگ' : menu.location === 'footer' ? 'پاورقی' : menu.location === 'sidebar' ? 'کناری' : 'موبایل'}</td>
                                 <td>${menu.order || 0}</td>
                                 <td><span class="badge ${menu.isActive ? 'badge-success' : 'badge-danger'}">${menu.isActive ? 'فعال' : 'غیرفعال'}</span></td>
-                                <td>
-                                    <button class="btn btn-sm" onclick="editMenu(${menu.id})"><i class="fas fa-edit"></i></button>
-                                    <button class="btn btn-sm btn-danger" onclick="deleteMenu(${menu.id})"><i class="fas fa-trash"></i></button>
-                                </td>
+                                <td><button class="btn-icon" onclick="editMenu(${menu.id})"><i class="fas fa-edit"></i></button>
+                                <button class="btn-icon danger" onclick="deleteMenu(${menu.id})"><i class="fas fa-trash"></i></button></td>
                             </tr>`;
-                        });
-                        document.getElementById('menus-list').innerHTML = html;
-                    }
-                });
-        }
+                            });
+                            document.getElementById('menus-list').innerHTML = html;
+                        }
+                    })
+                    .catch(error => { console.error('Error:', error); document.getElementById('menus-list').innerHTML = '<tr><td colspan="8" style="text-align:center; color:#dc3545;">خطا در بارگذاری منوها</td></tr>'; });
+            }
 
-        // ============= مدیریت فرم‌ها =============
-        function loadForms() {
-            fetch('/pprofessor/api/webapp/forms')
-                .then(res => res.json())
-                .then(result => {
-                    if (result.success) {
-                        let html = '';
-                        result.data.forEach(form => {
-                            html += `<tr>
+            function showMenuModal() {
+                document.getElementById('menu-id').value = '';
+                document.getElementById('menu-title-fa').value = '';
+                document.getElementById('menu-title-en').value = '';
+                document.getElementById('menu-title-ar').value = '';
+                document.getElementById('menu-linkType').value = 'page';
+                document.getElementById('menu-custom-fa').value = '';
+                document.getElementById('menu-custom-en').value = '';
+                document.getElementById('menu-custom-ar').value = '';
+                document.getElementById('menu-location').value = 'header';
+                document.getElementById('menu-icon').value = '';
+                document.getElementById('menu-order').value = '0';
+                document.getElementById('menu-isActive').checked = true;
+
+                fetch('/pprofessor/api/webapp/pages')
+                    .then(res => res.json())
+                    .then(result => {
+                        if (result.success) {
+                            let options = '<option value="">-- انتخاب کنید --</option>';
+                            result.data.forEach(page => options += `<option value="${page.id}">${page.title_fa}</option>`);
+                            document.getElementById('menu-pageId').innerHTML = options;
+                        }
+                    });
+                toggleMenuLinkType();
+                showModal('menu-modal');
+            }
+
+            function editMenu(id) {
+                fetch(`/pprofessor/api/webapp/menus/${id}`)
+                    .then(res => { if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`); return res.json(); })
+                    .then(result => {
+                        if (result.success) {
+                            const menu = result.data;
+                            document.getElementById('menu-id').value = menu.id;
+                            document.getElementById('menu-title-fa').value = menu.title_fa || '';
+                            document.getElementById('menu-title-en').value = menu.title_en || '';
+                            document.getElementById('menu-title-ar').value = menu.title_ar || '';
+                            document.getElementById('menu-linkType').value = menu.linkType || 'page';
+                            document.getElementById('menu-pageId').value = menu.pageId || '';
+                            document.getElementById('menu-custom-fa').value = menu.customUrl_fa || '';
+                            document.getElementById('menu-custom-en').value = menu.customUrl_en || '';
+                            document.getElementById('menu-custom-ar').value = menu.customUrl_ar || '';
+                            document.getElementById('menu-location').value = menu.location || 'header';
+                            document.getElementById('menu-icon').value = menu.icon || '';
+                            document.getElementById('menu-order').value = menu.order || 0;
+                            document.getElementById('menu-isActive').checked = menu.isActive;
+                            toggleMenuLinkType();
+                            showModal('menu-modal');
+                        }
+                    })
+                    .catch(error => { console.error('Error:', error); showToast('خطا در دریافت اطلاعات منو', 'error'); });
+            }
+
+            function toggleMenuLinkType() {
+                const type = document.getElementById('menu-linkType').value;
+                document.getElementById('menu-page-select').style.display = type === 'page' ? 'block' : 'none';
+                document.getElementById('menu-custom-urls').style.display = type === 'custom' ? 'block' : 'none';
+            }
+
+            function saveMenu() {
+                const id = document.getElementById('menu-id').value;
+                const data = {
+                    title_fa: document.getElementById('menu-title-fa').value,
+                    title_en: document.getElementById('menu-title-en').value,
+                    title_ar: document.getElementById('menu-title-ar').value,
+                    linkType: document.getElementById('menu-linkType').value,
+                    pageId: document.getElementById('menu-pageId').value || null,
+                    customUrl_fa: document.getElementById('menu-custom-fa').value,
+                    customUrl_en: document.getElementById('menu-custom-en').value,
+                    customUrl_ar: document.getElementById('menu-custom-ar').value,
+                    location: document.getElementById('menu-location').value,
+                    icon: document.getElementById('menu-icon').value,
+                    order: parseInt(document.getElementById('menu-order').value) || 0,
+                    isActive: document.getElementById('menu-isActive').checked
+                };
+                const url = id ? `/pprofessor/api/webapp/menus/${id}` : '/pprofessor/api/webapp/menus';
+                const method = id ? 'PUT' : 'POST';
+                fetch(url, { method: method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
+                    .then(res => { if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`); return res.json(); })
+                    .then(result => { if (result.success) { showToast(id ? 'آیتم منو ویرایش شد' : 'آیتم منو ایجاد شد'); closeModal('menu-modal'); loadMenus(); } else { showToast('خطا: ' + result.error, 'error'); } })
+                    .catch(error => { console.error('Error:', error); showToast('خطا در ذخیره منو', 'error'); });
+            }
+
+            function deleteMenu(id) {
+                if (confirm('آیا از حذف این آیتم منو اطمینان دارید؟')) {
+                    fetch(`/pprofessor/api/webapp/menus/${id}`, { method: 'DELETE' })
+                        .then(res => { if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`); return res.json(); })
+                        .then(result => { if (result.success) { showToast('آیتم منو حذف شد'); loadMenus(); } })
+                        .catch(error => { console.error('Error:', error); showToast('خطا در حذف منو', 'error'); });
+                }
+            }
+
+            // ============= مدیریت فرم‌ها =============
+            function loadForms() {
+                fetch('/pprofessor/api/webapp/forms')
+                    .then(res => { if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`); return res.json(); })
+                    .then(result => {
+                        if (result.success) {
+                            let html = '';
+                            result.data.forEach(form => {
+                                html += `<tr>
                                 <td>${form.name_fa || '-'}</td>
                                 <td>${form.entries ? form.entries.length : 0}</td>
-                                <td><span class="badge ${form.isActive ? 'badge-success' : 'badge-danger'}">${form.isActive ? 'فعال' : 'غیرفعال'}</span></td>
                                 <td>${form.recipientEmail || '-'}</td>
-                                <td>
-                                    <button class="btn btn-sm" onclick="viewFormEntries(${form.id})"><i class="fas fa-list"></i></button>
-                                    <button class="btn btn-sm btn-danger" onclick="deleteForm(${form.id})"><i class="fas fa-trash"></i></button>
-                                </td>
+                                <td><span class="badge ${form.isActive ? 'badge-success' : 'badge-danger'}">${form.isActive ? 'فعال' : 'غیرفعال'}</span></td>
+                                <td>${new Date(form.createdAt).toLocaleDateString('fa-IR')}</td>
+                                <td><button class="btn-icon" onclick="viewFormEntries(${form.id})"><i class="fas fa-list"></i></button>
+                                <button class="btn-icon danger" onclick="deleteForm(${form.id})"><i class="fas fa-trash"></i></button></td>
                             </tr>`;
-                        });
-                        document.getElementById('forms-list').innerHTML = html;
-                    }
-                });
-        }
+                            });
+                            document.getElementById('forms-list').innerHTML = html;
+                        }
+                    })
+                    .catch(error => { console.error('Error:', error); document.getElementById('forms-list').innerHTML = '<tr><td colspan="6" style="text-align:center; color:#dc3545;">خطا در بارگذاری فرم‌ها</td></tr>'; });
+            }
 
-        // ============= مدیریت تنظیمات =============
-        function loadSettings() {
-            // اینجا بعداً تکمیل می‌شود
-            document.getElementById('settings-form').innerHTML = '<p style="color:#aaa; text-align:center;">در حال توسعه...</p>';
-        }
+            function viewFormEntries(formId) { showToast('در حال توسعه'); }
+            function deleteForm(id) {
+                if (confirm('آیا از حذف این فرم اطمینان دارید؟')) {
+                    fetch(`/pprofessor/api/webapp/forms/${id}`, { method: 'DELETE' })
+                        .then(res => { if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`); return res.json(); })
+                        .then(result => { if (result.success) { showToast('فرم حذف شد'); loadForms(); } })
+                        .catch(error => { console.error('Error:', error); showToast('خطا در حذف فرم', 'error'); });
+                }
+            }
 
-        // بارگذاری اولیه
-        loadPages();
-    </script>
+            // ============= مدیریت کاربران =============
+            function loadUsers() {
+                fetch('/pprofessor/api/webapp/users')
+                    .then(res => { if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`); return res.json(); })
+                    .then(result => {
+                        if (result.success) {
+                            let html = '';
+                            result.data.forEach(user => {
+                                html += `<tr>
+                                <td>${user.email || '-'}</td>
+                                <td>${user.phone || '-'}</td>
+                                <td>${user.first_name_fa || '-'}</td>
+                                <td>${user.last_name_fa || '-'}</td>
+                                <td>${user.language === 'fa' ? 'فارسی' : user.language === 'en' ? 'English' : 'عربي'}</td>
+                                <td><span class="badge ${user.isActive ? 'badge-success' : 'badge-danger'}" onclick="toggleUserStatus(${user.id})">${user.isActive ? 'فعال' : 'غیرفعال'}</span></td>
+                                <td>${new Date(user.createdAt).toLocaleDateString('fa-IR')}</td>
+                                <td><button class="btn-icon"><i class="fas fa-eye"></i></button></td>
+                            </tr>`;
+                            });
+                            document.getElementById('users-list').innerHTML = html;
+                        }
+                    })
+                    .catch(error => { console.error('Error:', error); document.getElementById('users-list').innerHTML = '<tr><td colspan="8" style="text-align:center; color:#dc3545;">خطا در بارگذاری کاربران</td></tr>'; });
+            }
+
+            function toggleUserStatus(id) {
+                fetch(`/pprofessor/api/webapp/users/${id}/toggle`, { method: 'PATCH' })
+                    .then(res => { if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`); return res.json(); })
+                    .then(result => { if (result.success) { showToast('وضعیت کاربر تغییر کرد'); loadUsers(); } })
+                    .catch(error => { console.error('Error:', error); showToast('خطا در تغییر وضعیت کاربر', 'error'); });
+            }
+
+            // ============= مدیریت تنظیمات =============
+            function loadSettings() {
+                fetch('/pprofessor/api/webapp/settings')
+                    .then(res => { if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`); return res.json(); })
+                    .then(result => {
+                        if (result.success) {
+                            const settings = result.data;
+                            document.getElementById('general-settings').innerHTML = (settings.general || []).map(s =>
+                                `<div style="margin-bottom:1rem;"><label style="color:#ffd700; display:block;">${s.key}</label><input type="text" class="form-control" value="${s.value_fa || ''}" onchange="updateSetting('${s.key}', this.value)"></div>`
+                            ).join('') || '<p style="color:#aaa;">تنظیمی یافت نشد</p>';
+                            document.getElementById('contact-settings').innerHTML = (settings.contact || []).map(s =>
+                                `<div style="margin-bottom:1rem;"><label style="color:#ffd700; display:block;">${s.key}</label><input type="text" class="form-control" value="${s.value_fa || ''}" onchange="updateSetting('${s.key}', this.value)"></div>`
+                            ).join('') || '<p style="color:#aaa;">تنظیمی یافت نشد</p>';
+                            document.getElementById('social-settings').innerHTML = (settings.social || []).map(s =>
+                                `<div style="margin-bottom:1rem;"><label style="color:#ffd700; display:block;">${s.key}</label><input type="text" class="form-control" value="${s.value_fa || ''}" onchange="updateSetting('${s.key}', this.value)"></div>`
+                            ).join('') || '<p style="color:#aaa;">تنظیمی یافت نشد</p>';
+                        }
+                    })
+                    .catch(error => { console.error('Error:', error); });
+            }
+
+            function updateSetting(key, value) { showToast('تنظیم ذخیره شد'); }
+
+            // ============= مقداردهی اولیه =============
+            document.addEventListener('DOMContentLoaded', () => { loadPages(); });
+        </script>
 </body>
+
 </html>

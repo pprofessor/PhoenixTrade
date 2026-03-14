@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ویرایشگر صفحه - PhoenixTrade</title>
+    <title>ویرایشگر صفحه - <%= pageTitle || 'صفحه جدید' %> - PhoenixTrade</title>
     <!-- فونت سمیم -->
     <link rel="stylesheet" href="/css/fonts.css">
     <!-- استایل سراسری پنل -->
@@ -13,501 +14,645 @@
     <!-- GridStack برای ویرایشگر گرافیکی -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gridstack/9.0.1/gridstack.min.css">
     <style>
-        /* استایل اختصاصی ویرایشگر */
-        body {
-            overflow: hidden;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        
+
+        body {
+            font-family: 'Samim', 'Vazir', 'Tahoma', sans-serif;
+            overflow: hidden;
+            background: #f5f5f5;
+        }
+
         .builder-container {
             display: flex;
             height: 100vh;
             width: 100%;
         }
-        
+
         /* سایدبار ابزارها */
         .builder-sidebar {
             width: 280px;
-            background: rgba(0, 30, 15, 0.95);
-            backdrop-filter: blur(10px);
+            background: #1a2f2a;
             border-left: 1px solid rgba(255, 215, 0, 0.3);
             padding: 1rem;
             overflow-y: auto;
-            z-index: 100;
+            color: #fff;
         }
-        
-        .builder-sidebar h3 {
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .sidebar-header h3 {
+            color: #ffd700;
+            font-size: 1.2rem;
+        }
+
+        .sidebar-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .sidebar-section h4 {
             color: #ffd700;
             font-size: 1rem;
-            margin: 1rem 0 0.5rem;
+            margin-bottom: 0.8rem;
         }
-        
-        .element-group {
+
+        .elements-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 0.5rem;
-            margin-bottom: 1rem;
         }
-        
+
         .element-item {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 215, 0, 0.2);
             border-radius: 8px;
-            padding: 0.8rem 0.5rem;
+            padding: 0.8rem 0.3rem;
             text-align: center;
             cursor: move;
             color: #fff;
             font-size: 0.8rem;
             transition: all 0.2s;
         }
-        
+
         .element-item:hover {
             border-color: #ffd700;
             background: rgba(255, 215, 0, 0.1);
         }
-        
+
         .element-item i {
             display: block;
             font-size: 1.5rem;
             color: #ffd700;
             margin-bottom: 0.3rem;
         }
-        
-        /* منطقه اصلی ویرایش */
-        .builder-main {
-            flex: 1;
-            background: #f0f2f5;
-            overflow-y: auto;
-            padding: 2rem;
-            position: relative;
-        }
-        
-        /* کادر ویرایش */
-        .builder-canvas {
-            background: white;
-            max-width: 1200px;
-            margin: 0 auto;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        
-        /* نوار ابزار بالا */
-        .builder-toolbar {
-            background: rgba(255, 255, 255, 0.95);
-            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
-            padding: 0.5rem 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .page-title {
-            font-size: 1.1rem;
-            color: #0a2f1f;
-        }
-        
-        .toolbar-buttons {
-            display: flex;
-            gap: 0.5rem;
-        }
-        
-        .preview-size {
+
+        .language-selector {
             display: flex;
             gap: 0.3rem;
-            margin-left: 1rem;
+            margin-bottom: 1rem;
         }
-        
-        .size-btn {
-            background: rgba(255, 215, 0, 0.1);
+
+        .lang-btn {
+            flex: 1;
+            padding: 0.4rem 0;
+            background: transparent;
             border: 1px solid rgba(255, 215, 0, 0.3);
-            color: #b8860b;
-            padding: 0.4rem 1rem;
+            color: #fff;
             border-radius: 20px;
             cursor: pointer;
             font-size: 0.8rem;
         }
-        
-        .size-btn.active {
+
+        .lang-btn.active {
             background: #ffd700;
-            color: #0a2f1f;
+            color: #1a2f2a;
+            border-color: #ffd700;
         }
-        
-        /* پنل تنظیمات المان */
-        .element-settings {
+
+        /* منطقه اصلی ویرایش */
+        .builder-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #e5e5e5;
+        }
+
+        .builder-toolbar {
+            background: #fff;
+            border-bottom: 1px solid #ddd;
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .page-info h2 {
+            font-size: 1.2rem;
+            color: #1a2f2a;
+        }
+
+        .page-info .badge {
+            background: #ffd700;
+            color: #1a2f2a;
+            padding: 0.2rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .toolbar-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .preview-controls {
+            display: flex;
+            gap: 0.3rem;
+            margin-left: 1rem;
+        }
+
+        .preview-btn {
+            padding: 0.4rem 1rem;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .preview-btn.active {
+            background: #ffd700;
+            border-color: #ffd700;
+        }
+
+        .builder-canvas {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+            background: #e5e5e5;
+        }
+
+        .canvas-container {
+            background: white;
+            max-width: 1200px;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: max-width 0.3s ease;
+        }
+
+        .grid-stack {
+            background: #f9f9f9;
+            min-height: 500px;
+        }
+
+        .grid-stack-item-content {
+            background: white;
+            border: 2px solid #ffd700;
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: move;
+            position: relative;
+        }
+
+        .grid-stack-item-content:hover {
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .element-actions {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            display: none;
+            gap: 0.2rem;
+            z-index: 10;
+        }
+
+        .grid-stack-item-content:hover .element-actions {
+            display: flex;
+        }
+
+        .element-action-btn {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #ffd700;
+            color: #1a2f2a;
+            border: none;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+
+        .element-action-btn.delete {
+            background: #dc3545;
+            color: white;
+        }
+
+        .settings-panel {
             position: fixed;
             right: -350px;
             top: 0;
             width: 350px;
             height: 100vh;
-            background: rgba(0, 30, 15, 0.95);
-            backdrop-filter: blur(20px);
+            background: #1a2f2a;
             border-left: 1px solid rgba(255, 215, 0, 0.3);
-            padding: 2rem 1rem;
+            padding: 1.5rem;
             transition: right 0.3s ease;
             z-index: 1000;
             overflow-y: auto;
+            color: #fff;
         }
-        
-        .element-settings.active {
+
+        .settings-panel.active {
             right: 0;
         }
-        
+
         .settings-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            color: #ffd700;
             margin-bottom: 1.5rem;
+            color: #ffd700;
         }
-        
+
         .settings-close {
             cursor: pointer;
+            font-size: 1.2rem;
         }
-        
-        .setting-group {
-            margin-bottom: 1.2rem;
+
+        .settings-section {
+            margin-bottom: 1.5rem;
         }
-        
-        .setting-group label {
-            display: block;
+
+        .settings-section h4 {
             color: #ffd700;
             font-size: 0.9rem;
-            margin-bottom: 0.3rem;
+            margin-bottom: 0.8rem;
         }
-        
-        .setting-group input,
-        .setting-group select,
-        .setting-group textarea {
-            width: 100%;
-            padding: 0.6rem;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 215, 0, 0.3);
+
+        .coordinate-info {
             background: rgba(0, 0, 0, 0.3);
-            color: #fff;
-        }
-        
-        .coordinates {
-            display: flex;
-            gap: 0.5rem;
-            color: #ffd700;
+            padding: 0.8rem;
+            border-radius: 8px;
             font-size: 0.9rem;
-            margin-top: 0.5rem;
+            color: #ffd700;
+            margin-bottom: 1rem;
+        }
+
+        .toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            color: #fff;
+            z-index: 9999;
+            display: none;
+            font-size: 0.95rem;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid #ffd700;
+        }
+
+        .toast.success {
+            background: rgba(40, 167, 69, 0.9);
+        }
+
+        .toast.error {
+            background: rgba(220, 53, 69, 0.9);
+        }
+
+        .toast.info {
+            background: rgba(23, 162, 184, 0.9);
         }
     </style>
 </head>
+
 <body>
     <div class="builder-container">
         <!-- سایدبار ابزارها -->
         <div class="builder-sidebar">
-            <h3><i class="fas fa-cubes"></i> المان‌ها</h3>
-            <div class="element-group">
-                <div class="element-item" draggable="true" data-type="text">
-                    <i class="fas fa-paragraph"></i>
-                    متن
-                </div>
-                <div class="element-item" draggable="true" data-type="image">
-                    <i class="fas fa-image"></i>
-                    تصویر
-                </div>
-                <div class="element-item" draggable="true" data-type="video">
-                    <i class="fas fa-video"></i>
-                    ویدئو
-                </div>
-                <div class="element-item" draggable="true" data-type="button">
-                    <i class="fas fa-square"></i>
-                    دکمه
-                </div>
-                <div class="element-item" draggable="true" data-type="gallery">
-                    <i class="fas fa-images"></i>
-                    گالری
-                </div>
-                <div class="element-item" draggable="true" data-type="slider">
-                    <i class="fas fa-sliders-h"></i>
-                    اسلایدر
-                </div>
-                <div class="element-item" draggable="true" data-type="form">
-                    <i class="fas fa-wpforms"></i>
-                    فرم
-                </div>
-                <div class="element-item" draggable="true" data-type="card">
-                    <i class="fas fa-credit-card"></i>
-                    کارت
+            <div class="sidebar-header">
+                <h3><i class="fas fa-paint-brush"></i> ویرایشگر صفحه</h3>
+                <a href="/pprofessor/webapp" style="color:#ffd700;">
+                    <i class="fas fa-times"></i>
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+                <h4><i class="fas fa-language"></i> زبان فعلی</h4>
+                <div class="language-selector">
+                    <button class="lang-btn active" onclick="setLanguage('fa')">🇮🇷 فارسی</button>
+                    <button class="lang-btn" onclick="setLanguage('en')">🇬🇧 English</button>
+                    <button class="lang-btn" onclick="setLanguage('ar')">🇸🇦 عربي</button>
                 </div>
             </div>
 
-            <h3><i class="fas fa-language"></i> زبان</h3>
-            <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
-                <button class="btn btn-sm" onclick="setLanguage('fa')">🇮🇷 فارسی</button>
-                <button class="btn btn-sm" onclick="setLanguage('en')">🇬🇧 English</button>
-                <button class="btn btn-sm" onclick="setLanguage('ar')">🇸🇦 عربي</button>
+            <div class="sidebar-section">
+                <h4><i class="fas fa-cubes"></i> المان‌ها</h4>
+                <div class="elements-grid">
+                    <div class="element-item" draggable="true" data-type="text"><i class="fas fa-paragraph"></i> متن
+                    </div>
+                    <div class="element-item" draggable="true" data-type="image"><i class="fas fa-image"></i> تصویر
+                    </div>
+                    <div class="element-item" draggable="true" data-type="video"><i class="fas fa-video"></i> ویدئو
+                    </div>
+                    <div class="element-item" draggable="true" data-type="gallery"><i class="fas fa-images"></i> گالری
+                    </div>
+                    <div class="element-item" draggable="true" data-type="slider"><i class="fas fa-sliders-h"></i>
+                        اسلایدر</div>
+                    <div class="element-item" draggable="true" data-type="button"><i class="fas fa-square"></i> دکمه
+                    </div>
+                    <div class="element-item" draggable="true" data-type="card"><i class="fas fa-credit-card"></i> کارت
+                    </div>
+                    <div class="element-item" draggable="true" data-type="hero"><i class="fas fa-star"></i> هیرو</div>
+                    <div class="element-item" draggable="true" data-type="feature"><i class="fas fa-cog"></i> ویژگی
+                    </div>
+                    <div class="element-item" draggable="true" data-type="contact"><i class="fas fa-phone"></i> تماس
+                    </div>
+                </div>
             </div>
 
-            <h3><i class="fas fa-paint-brush"></i> استایل‌ها</h3>
-            <div class="setting-group">
-                <label>فونت</label>
-                <select id="global-font">
-                    <option value="Samim">سمیم</option>
-                    <option value="Vazir">وزیر</option>
-                    <option value="Tahoma">تاهوما</option>
-                </select>
+            <div class="sidebar-section">
+                <h4><i class="fas fa-save"></i> عملیات</h4>
+                <button class="btn" style="width:100%; margin-bottom:0.5rem;" onclick="savePage()">
+                    <i class="fas fa-save"></i> ذخیره صفحه
+                </button>
+                <button class="btn" style="width:100%;" onclick="previewPage()">
+                    <i class="fas fa-eye"></i> پیش‌نمایش
+                </button>
             </div>
         </div>
 
         <!-- منطقه اصلی ویرایش -->
         <div class="builder-main">
             <div class="builder-toolbar">
-                <div class="page-title">
-                    <i class="fas fa-file"></i> ویرایش صفحه: <span id="page-name">صفحه اصلی</span>
+                <div class="page-info">
+                    <h2>
+                        <%= pageTitle || 'صفحه جدید' %>
+                    </h2>
+                    <span class="badge">در حال ویرایش</span>
                 </div>
-                <div style="display: flex; align-items: center;">
-                    <div class="preview-size">
-                        <button class="size-btn active" onclick="setPreviewSize('desktop')"><i class="fas fa-desktop"></i></button>
-                        <button class="size-btn" onclick="setPreviewSize('tablet')"><i class="fas fa-tablet-alt"></i></button>
-                        <button class="size-btn" onclick="setPreviewSize('mobile')"><i class="fas fa-mobile-alt"></i></button>
-                    </div>
-                    <div class="toolbar-buttons">
-                        <button class="btn btn-sm" onclick="savePage()"><i class="fas fa-save"></i> ذخیره</button>
-                        <button class="btn btn-sm" onclick="previewPage()"><i class="fas fa-eye"></i> پیش‌نمایش</button>
+                <div class="toolbar-actions">
+                    <div class="preview-controls">
+                        <button class="preview-btn active" onclick="setPreviewSize('desktop')"><i
+                                class="fas fa-desktop"></i></button>
+                        <button class="preview-btn" onclick="setPreviewSize('tablet')"><i
+                                class="fas fa-tablet-alt"></i></button>
+                        <button class="preview-btn" onclick="setPreviewSize('mobile')"><i
+                                class="fas fa-mobile-alt"></i></button>
                     </div>
                 </div>
             </div>
 
-            <!-- کانواس ویرایش (GridStack) -->
-            <div class="builder-canvas" id="builder-canvas">
-                <div class="grid-stack" id="grid-stack"></div>
+            <div class="builder-canvas">
+                <div class="canvas-container" id="canvas-container">
+                    <div class="grid-stack" id="grid-stack"></div>
+                </div>
             </div>
         </div>
 
         <!-- پنل تنظیمات المان -->
-        <div class="element-settings" id="element-settings">
+        <div class="settings-panel" id="settings-panel">
             <div class="settings-header">
                 <span><i class="fas fa-sliders-h"></i> تنظیمات المان</span>
-                <span class="settings-close" onclick="closeSettings()"><i class="fas fa-times"></i></span>
+                <span class="settings-close" onclick="closeSettings()">&times;</span>
             </div>
             <div id="settings-content"></div>
-            <div class="coordinates" id="element-coords"></div>
         </div>
     </div>
 
+    <div id="toast" class="toast"></div>
+
+    <!-- کتابخانه GridStack - نسخه پایدار -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gridstack/9.0.1/gridstack.min.js"></script>
+
+    <!-- کدهای ویرایشگر -->
     <script>
         // ============= متغیرهای سراسری =============
         let grid = null;
         let currentLanguage = 'fa';
-        let currentPageId = <%= pageId || 0 %>;
+        let currentPageId = <% - pageId || 0 %>;
         let currentElement = null;
+        let elements = [];
 
-        // ============= مقداردهی اولیه GridStack =============
+        function showToast(message, type = 'success') {
+            let toast = document.getElementById('toast');
+            toast.className = 'toast ' + type;
+            toast.textContent = message;
+            toast.style.display = 'block';
+            setTimeout(() => toast.style.display = 'none', 2000);
+        }
+
         function initGrid() {
             grid = GridStack.init({
-                cellHeight: 80,
+                cellHeight: 100,
                 minRow: 5,
                 margin: 10,
                 float: true,
-                acceptWidgets: true
+                acceptWidgets: true,
+                resizable: { handles: 'e, se, s, sw, w' }
             });
-            
-            // بارگذاری المان‌های ذخیره شده
+
             loadPageElements();
-        }
 
-        // ============= مدیریت المان‌ها =============
-        function addElement(type) {
-            const element = createElement(type);
-            grid.addWidget(element, {
-                x: 0,
-                y: 0,
-                width: 4,
-                height: 3
-            });
-        }
-
-        function createElement(type) {
-            const element = document.createElement('div');
-            element.className = 'grid-stack-item';
-            element.setAttribute('data-type', type);
-            
-            const content = document.createElement('div');
-            content.className = 'grid-stack-item-content';
-            content.style.cssText = 'background: white; border: 2px solid #ffd700; border-radius: 8px; padding: 1rem;';
-            
-            switch(type) {
-                case 'text':
-                    content.innerHTML = '<p contenteditable="true" style="margin:0;">متن خود را وارد کنید...</p>';
-                    break;
-                case 'image':
-                    content.innerHTML = '<div style="text-align:center;"><i class="fas fa-image" style="font-size:3rem; color:#aaa;"></i><br><small>تصویر</small></div>';
-                    break;
-                case 'button':
-                    content.innerHTML = '<button style="background:#ffd700; border:none; padding:0.5rem 1rem; border-radius:5px;">دکمه</button>';
-                    break;
-                default:
-                    content.innerHTML = `<div style="text-align:center;"><i class="fas fa-cube" style="font-size:3rem; color:#aaa;"></i><br><small>${type}</small></div>`;
-            }
-            
-            element.appendChild(content);
-            
-            // رویداد کلیک برای نمایش تنظیمات
-            element.addEventListener('click', (e) => {
-                e.stopPropagation();
-                showElementSettings(element);
-            });
-            
-            return element;
-        }
-
-        // ============= تنظیمات المان =============
-        function showElementSettings(element) {
-            currentElement = element;
-            document.getElementById('element-settings').classList.add('active');
-            
-            const type = element.getAttribute('data-type');
-            const coords = grid.getItemGridOptions(element);
-            
-            document.getElementById('element-coords').innerHTML = 
-                `x: ${coords.x}, y: ${coords.y}, عرض: ${coords.width}, ارتفاع: ${coords.height}`;
-            
-            let settingsHtml = '';
-            
-            switch(type) {
-                case 'text':
-                    settingsHtml = `
-                        <div class="setting-group">
-                            <label>متن (فارسی)</label>
-                            <textarea rows="3">متن نمونه</textarea>
-                        </div>
-                        <div class="setting-group">
-                            <label>متن (English)</label>
-                            <textarea rows="3">Sample text</textarea>
-                        </div>
-                        <div class="setting-group">
-                            <label>متن (عربي)</label>
-                            <textarea rows="3">نص عينة</textarea>
-                        </div>
-                        <div class="setting-group">
-                            <label>سایز فونت</label>
-                            <input type="number" value="16"> px
-                        </div>
-                        <div class="setting-group">
-                            <label>رنگ</label>
-                            <input type="color" value="#000000">
-                        </div>
-                    `;
-                    break;
-                case 'image':
-                    settingsHtml = `
-                        <div class="setting-group">
-                            <label>انتخاب تصویر</label>
-                            <button class="btn btn-sm" onclick="openMediaLibrary()">انتخاب از مدیا</button>
-                        </div>
-                        <div class="setting-group">
-                            <label>Alt (فارسی)</label>
-                            <input type="text">
-                        </div>
-                        <div class="setting-group">
-                            <label>Alt (English)</label>
-                            <input type="text">
-                        </div>
-                    `;
-                    break;
-                default:
-                    settingsHtml = '<p style="color:#aaa;">تنظیمات در حال توسعه</p>';
-            }
-            
-            document.getElementById('settings-content').innerHTML = settingsHtml;
-        }
-
-        function closeSettings() {
-            document.getElementById('element-settings').classList.remove('active');
-            currentElement = null;
-        }
-
-        // ============= پیش‌نمایش ریسپانسیو =============
-        function setPreviewSize(size) {
-            document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            const canvas = document.querySelector('.builder-canvas');
-            switch(size) {
-                case 'mobile':
-                    canvas.style.maxWidth = '375px';
-                    break;
-                case 'tablet':
-                    canvas.style.maxWidth = '768px';
-                    break;
-                default:
-                    canvas.style.maxWidth = '1200px';
-            }
-        }
-
-        // ============= تغییر زبان =============
-        function setLanguage(lang) {
-            currentLanguage = lang;
-            // TODO: به‌روزرسانی محتوای المان‌ها بر اساس زبان
-        }
-
-        // ============= ذخیره صفحه =============
-        function savePage() {
-            const elements = [];
-            grid.engine.nodes.forEach(node => {
-                elements.push({
-                    type: node.el.getAttribute('data-type'),
-                    x: node.x,
-                    y: node.y,
-                    width: node.width,
-                    height: node.height,
-                    content: node.el.querySelector('.grid-stack-item-content').innerHTML
-                });
-            });
-            
-            fetch(`/pprofessor/api/webapp/pages/${currentPageId}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    content_fa: currentLanguage === 'fa' ? JSON.stringify(elements) : undefined,
-                    content_en: currentLanguage === 'en' ? JSON.stringify(elements) : undefined,
-                    content_ar: currentLanguage === 'ar' ? JSON.stringify(elements) : undefined
-                })
-            })
-            .then(res => res.json())
-            .then(result => {
-                if (result.success) {
-                    showToast('صفحه با موفقیت ذخیره شد');
+            grid.on('change', function (event, items) {
+                if (items && items.length) {
+                    items.forEach(item => {
+                        const el = item.el;
+                        const id = el.getAttribute('data-id');
+                        if (id) {
+                            updateElementPosition(id, item);
+                        }
+                    });
                 }
             });
         }
 
-        // ============= بارگذاری المان‌های صفحه =============
-        function loadPageElements() {
-            // TODO: دریافت داده‌های صفحه از سرور
-        }
+        function createElement(type) {
+            const id = 'el_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            const element = document.createElement('div');
+            element.className = 'grid-stack-item';
+            element.setAttribute('data-id', id);
+            element.setAttribute('data-type', type);
 
-        // ============= نمایش پیام =============
-        function showToast(message, type = 'success') {
-            // استفاده از تابع showToast موجود
-        }
+            const content = document.createElement('div');
+            content.className = 'grid-stack-item-content';
 
-        // ============= مقداردهی اولیه =============
-        document.addEventListener('DOMContentLoaded', initGrid);
+            const actions = document.createElement('div');
+            actions.className = 'element-actions';
+            actions.innerHTML = `
+                <button class="element-action-btn" onclick="editElement('${id}')"><i class="fas fa-edit"></i></button>
+                <button class="element-action-btn delete" onclick="deleteElement('${id}')"><i class="fas fa-trash"></i></button>
+            `;
+            content.appendChild(actions);
 
-        // ============= رویداد Drag & Drop =============
-        document.querySelectorAll('.element-item').forEach(item => {
-            item.addEventListener('dragstart', (e) => {
-                e.dataTransfer.setData('text/plain', e.target.dataset.type);
+            switch (type) {
+                case 'text':
+                    content.innerHTML += '<p contenteditable="true" style="margin:0;">متن خود را وارد کنید...</p>';
+                    break;
+                case 'image':
+                    content.innerHTML += '<div style="text-align:center;"><i class="fas fa-image" style="font-size:3rem; color:#aaa;"></i><br><small>تصویر را انتخاب کنید</small></div>';
+                    break;
+                case 'button':
+                    content.innerHTML += '<div style="text-align:center;"><button style="background:#ffd700; border:none; padding:0.5rem 2rem; border-radius:25px;">دکمه</button></div>';
+                    break;
+                default:
+                    content.innerHTML += `<div style="text-align:center; padding:1rem;"><i class="fas fa-cube" style="font-size:2rem; color:#aaa;"></i><br><small>${type}</small></div>`;
+            }
+
+            element.appendChild(content);
+
+            elements.push({
+                id: id,
+                type: type,
+                x: 0,
+                y: 0,
+                width: 4,
+                height: 3,
+                content: content.innerHTML
             });
+
+            return element;
+        }
+
+        function addElement(type) {
+            const element = createElement(type);
+            grid.addWidget(element, { x: 0, y: 0, width: 4, height: 3 });
+        }
+
+        function editElement(id) {
+            const element = document.querySelector(`[data-id="${id}"]`);
+            if (!element) return;
+
+            currentElement = element;
+            const node = grid.engine.nodes.find(n => n.el === element);
+
+            if (node) {
+                document.getElementById('settings-panel').classList.add('active');
+                document.getElementById('settings-content').innerHTML = `
+                    <div class="coordinate-info">
+                        موقعیت: x=${node.x}, y=${node.y} | اندازه: ${node.width} x ${node.height}
+                    </div>
+                    <div class="settings-section">
+                        <h4>تنظیمات در حال توسعه</h4>
+                        <p style="color:#aaa;">پنل ویرایش کامل به زودی اضافه می‌شود</p>
+                    </div>
+                `;
+            }
+        }
+
+        function deleteElement(id) {
+            if (confirm('آیا از حذف این المان اطمینان دارید؟')) {
+                const element = document.querySelector(`[data-id="${id}"]`);
+                if (element) {
+                    grid.removeWidget(element);
+                    elements = elements.filter(el => el.id !== id);
+                }
+            }
+        }
+
+        function updateElementPosition(id, node) {
+            const index = elements.findIndex(el => el.id === id);
+            if (index !== -1) {
+                elements[index].x = node.x;
+                elements[index].y = node.y;
+                elements[index].width = node.width;
+                elements[index].height = node.height;
+            }
+        }
+
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function setPreviewSize(size) {
+            document.querySelectorAll('.preview-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            const container = document.getElementById('canvas-container');
+            if (size === 'mobile') container.style.maxWidth = '375px';
+            else if (size === 'tablet') container.style.maxWidth = '768px';
+            else container.style.maxWidth = '1200px';
+        }
+
+        function closeSettings() {
+            document.getElementById('settings-panel').classList.remove('active');
+            currentElement = null;
+        }
+
+        function savePage() {
+            const pageData = {};
+            pageData[`content_${currentLanguage}`] = JSON.stringify(elements);
+
+            fetch(`/pprofessor/api/webapp/pages/${currentPageId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(pageData),
+                credentials: 'include'
+            })
+                .then(res => res.json())
+                .then(result => {
+                    if (result.success) {
+                        showToast('صفحه با موفقیت ذخیره شد');
+                    } else {
+                        showToast('خطا: ' + result.error, 'error');
+                    }
+                })
+                .catch(() => showToast('خطا در ارتباط با سرور', 'error'));
+        }
+
+        function loadPageElements() {
+            if (!currentPageId) return;
+
+            fetch(`/pprofessor/api/webapp/pages/${currentPageId}`, {
+                credentials: 'include'
+            })
+                .then(res => res.json())
+                .then(result => {
+                    if (result.success) {
+                        const page = result.data;
+                        let savedElements = [];
+
+                        if (currentLanguage === 'fa' && page.content_fa) savedElements = JSON.parse(page.content_fa);
+                        else if (currentLanguage === 'en' && page.content_en) savedElements = JSON.parse(page.content_en);
+                        else if (currentLanguage === 'ar' && page.content_ar) savedElements = JSON.parse(page.content_ar);
+
+                        savedElements.forEach(elData => {
+                            const element = document.createElement('div');
+                            element.className = 'grid-stack-item';
+                            element.setAttribute('data-id', elData.id);
+                            element.setAttribute('data-type', elData.type);
+
+                            const content = document.createElement('div');
+                            content.className = 'grid-stack-item-content';
+                            content.innerHTML = elData.content;
+                            element.appendChild(content);
+
+                            grid.addWidget(element, { x: elData.x, y: elData.y, width: elData.width, height: elData.height });
+                            elements.push(elData);
+                        });
+                    }
+                });
+        }
+
+        function previewPage() {
+            window.open(`/page/${currentPageId}`, '_blank');
+        }
+
+        document.querySelectorAll('.element-item').forEach(item => {
+            item.addEventListener('dragstart', (e) => e.dataTransfer.setData('text/plain', e.target.dataset.type));
         });
 
         document.getElementById('grid-stack').addEventListener('drop', (e) => {
             e.preventDefault();
             const type = e.dataTransfer.getData('text/plain');
-            if (type) {
-                addElement(type);
-            }
+            if (type) addElement(type);
         });
 
-        document.getElementById('grid-stack').addEventListener('dragover', (e) => {
-            e.preventDefault();
-        });
+        document.getElementById('grid-stack').addEventListener('dragover', (e) => e.preventDefault());
+
+        document.addEventListener('DOMContentLoaded', initGrid);
     </script>
 </body>
+
 </html>

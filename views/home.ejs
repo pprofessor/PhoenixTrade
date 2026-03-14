@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ققنوس - آموزش فارکس، مقایسه بروکرها و تحلیل بازار</title>
+    <!-- فونت سمیم -->
+    <link rel="stylesheet" href="/css/fonts.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- متا تگ‌های سئو -->
+    <meta name="description"
+        content="ققنوس - مرجع تخصصی آموزش فارکس، مقایسه و معرفی بروکرهای معتبر با رتبه‌بندی دقیق، تحلیل لحظه‌ای شاخص‌های بازار جهانی">
+    <meta name="keywords" content="فارکس, بروکر, مقایسه بروکرها, آموزش فارکس, تحلیل بازار, طلا, نفت, شاخص‌های بورس">
+    <meta name="author" content="PhoenixTrade">
+    <meta property="og:title" content="ققنوس - آموزش و مقایسه بروکرها">
+    <meta property="og:description" content="با ققنوس، بهترین بروکر را انتخاب کنید و حرفه‌ای معامله کنید">
+    <meta property="og:type" content="website">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Samim', 'Vazir', 'Tahoma', sans-serif;
+            background: linear-gradient(165deg, #0a3825 0%, #1a4f33 30%, #2e6b49 60%, #1a4f33 100%);
+            min-height: 100vh;
+            color: #ffffff;
+            line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* افکت درخشش یشمی قوی‌تر با حالت شیشه‌ای */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -40%;
+            left: -40%;
+            width: 180%;
+            height: 180%;
+            background: radial-gradient(circle at 40% 40%,
+                    rgba(255, 255, 255, 0.35) 0%,
+                    rgba(100, 230, 170, 0.25) 25%,
+                    rgba(40, 120, 80, 0.15) 50%,
+                    transparent 80%);
+            animation: jadeShimmer 18s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes jadeShimmer {
+            0% {
+                transform: rotate(0deg) scale(1);
+                opacity: 0.4;
+            }
+
+            25% {
+                transform: rotate(3deg) scale(1.05);
+                opacity: 0.8;
+            }
+
+            50% {
+                transform: rotate(0deg) scale(1.1);
+                opacity: 0.5;
+            }
+
+            75% {
+                transform: rotate(-3deg) scale(1.05);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: rotate(0deg) scale(1);
+                opacity: 0.4;
+            }
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 30px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* ===== هدر شیشه‌ای با شفافیت بالا و سایه ===== */
+        .header {
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+            background: rgba(10, 40, 25, 0.25);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-radius: 60px;
+            margin: 20px auto;
+            padding: 12px 35px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.2),
+                0 0 30px rgba(100, 255, 170, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #ffd700, #b8860b);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            color: #0a3825;
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
+        }
+
+        .logo-text {
+            font-size: 1.7rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #ffd700, #ffe68f);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: #ffffff;
+            font-weight: 500;
+            transition: all 0.3s;
+            padding: 8px 18px;
+            border-radius: 40px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(5px);
+            font-size: 0.95rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-menu a:hover {
+            background: rgba(255, 215, 0, 0.25);
+            color: #ffd700;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .lang-selector {
+            display: flex;
+            gap: 5px;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 4px;
+            border-radius: 40px;
+            backdrop-filter: blur(5px);
+        }
+
+        .lang-btn {
+            padding: 5px 12px;
+            border: none;
+            background: transparent;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+            color: #ffffff;
+        }
+
+        .lang-btn.active {
+            background: #ffd700;
+            color: #0a3825;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+
+        .telegram-link {
+            background: linear-gradient(135deg, #27a7e7, #0f7bc0);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 8px 20px rgba(39, 167, 231, 0.3);
+        }
+
+        .telegram-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(39, 167, 231, 0.5);
+        }
+
+        /* ===== اسلایدشو (کاروسل) ===== */
+        .hero-slider {
+            position: relative;
+            margin: 40px 0 80px;
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        .slider-container {
+            position: relative;
+            width: 100%;
+            height: 500px;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        .slide-content {
+            text-align: center;
+            background: rgba(10, 40, 25, 0.4);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 50px;
+            border-radius: 40px;
+            max-width: 800px;
+            margin: 0 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .slide-title {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #ffd700, #ffffff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .slide-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        .slider-dots {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 20;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dot.active {
+            background: #ffd700;
+            transform: scale(1.3);
+            box-shadow: 0 0 15px #ffd700;
+        }
+
+        .slider-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background: rgba(10, 40, 25, 0.4);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 20;
+            color: #ffd700;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .slider-arrow:hover {
+            background: rgba(255, 215, 0, 0.3);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .slider-arrow.prev {
+            left: 20px;
+        }
+
+        .slider-arrow.next {
+            right: 20px;
+        }
+
+        /* ===== بخش‌های اصلی با تیتر وسط‌چین ===== */
+        section {
+            margin: 100px 0;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            color: #ffd700;
+            text-shadow: 0 2px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #ffd700, #ffffff, #ffd700, transparent);
+            margin: 20px auto 0;
+            border-radius: 2px;
+        }
+
+        /* ===== بلوک بروکرها با کارت‌های شیشه‌ای ===== */
+        #brokers-block {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .broker-card {
+            background: rgba(10, 40, 25, 0.25);
+            backdrop-filter: blur(15px) saturate(180%);
+            -webkit-backdrop-filter: blur(15px) saturate(180%);
+            border-radius: 30px;
+            padding: 35px 25px;
+            transition: all 0.4s;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .broker-card:hover {
+            transform: translateY(-15px);
+            border-color: rgba(255, 215, 0, 0.4);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4),
+                0 0 30px rgba(255, 215, 0, 0.2);
+        }
+
+        .broker-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #ffd700, #ffffff, #ffd700, transparent);
+        }
+
+        .broker-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .broker-logo {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #ffd700, #b8860b);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #0a3825;
+            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.3);
+        }
+
+        .broker-info h3 {
+            font-size: 1.8rem;
+            color: #ffd700;
+            margin-bottom: 8px;
+        }
+
+        .broker-rating {
+            display: flex;
+            gap: 3px;
+            color: #ffd700;
+            font-size: 1.1rem;
+        }
+
+        .broker-rating i {
+            text-shadow: 0 0 10px #ffd700;
+        }
+
+        .broker-details {
+            margin: 20px 0;
+            padding: 15px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .broker-detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 12px 0;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .broker-detail-label {
+            color: rgba(255, 215, 0, 0.8);
+        }
+
+        .regulators {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .regulator-badge {
+            background: rgba(255, 215, 0, 0.15);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #ffd700;
+        }
+
+        .broker-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #ffd700, #b8860b);
+            color: #0a3825;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 40px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 25px;
+            transition: all 0.3s;
+            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.3);
+        }
+
+        .broker-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255, 215, 0, 0.5);
+        }
+
+        /* ===== بلوک آموزش ===== */
+        #education-block {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .education-card {
+            background: rgba(10, 40, 25, 0.25);
+            backdrop-filter: blur(15px) saturate(180%);
+            border-radius: 30px;
+            padding: 35px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
+        }
+
+        .education-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 215, 0, 0.3);
+        }
+
+        .education-card h3 {
+            font-size: 2rem;
+            color: #ffd700;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .education-list {
+            list-style: none;
+        }
+
+        .education-list li {
+            margin: 20px 0;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            transition: all 0.3s;
+        }
+
+        .education-list li:hover {
+            background: rgba(255, 215, 0, 0.1);
+            transform: translateX(-5px);
+        }
+
+        .education-list i {
+            color: #ffd700;
+            margin-left: 15px;
+            font-size: 1.1rem;
+        }
+
+        /* ===== بلوک قیمت لحظه‌ای شاخص‌ها ===== */
+        #market-prices {
+            background: rgba(10, 40, 25, 0.25);
+            backdrop-filter: blur(15px) saturate(180%);
+            border-radius: 40px;
+            padding: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        .market-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .market-item {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 25px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .market-item:hover {
+            transform: translateY(-5px);
+            background: rgba(0, 0, 0, 0.3);
+            border-color: #ffd700;
+        }
+
+        .market-symbol {
+            font-size: 1.3rem;
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+
+        .market-price {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        .market-change {
+            font-size: 1rem;
+        }
+
+        .market-change.positive {
+            color: #4caf50;
+        }
+
+        .market-change.negative {
+            color: #f44336;
+        }
+
+        .view-more-btn {
+            display: inline-block;
+            padding: 12px 35px;
+            background: linear-gradient(135deg, #ffd700, #b8860b);
+            color: #0a3825;
+            text-decoration: none;
+            border-radius: 40px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .tradingview-btn {
+            display: inline-block;
+            padding: 10px 25px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* ===== فوتر ===== */
+        .footer {
+            background: rgba(0, 20, 10, 0.35);
+            backdrop-filter: blur(20px) saturate(180%);
+            padding: 70px 0 30px;
+            margin-top: 120px;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 -20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 50px;
+        }
+
+        .footer-section h3 {
+            color: #ffd700;
+            margin-bottom: 25px;
+            font-size: 1.3rem;
+        }
+
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 12px;
+            transition: all 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: #ffd700;
+            transform: translateX(-5px);
+        }
+
+        .footer-section p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 12px;
+        }
+
+        .footer-section i {
+            margin-left: 8px;
+            color: #ffd700;
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* ===== ساختار جدید برای کادر تیترها ===== */
+        .section-wrapper {
+            margin: 100px 0;
+        }
+
+        .section-title-box {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .section-title-box::after {
+            content: '';
+            display: block;
+            width: 150px;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #ffd700, #ffffff, #ffd700, transparent);
+            margin: 25px auto 0;
+            border-radius: 2px;
+        }
+
+        .section-content {
+            position: relative;
+            z-index: 2;
+        }
+
+
+        /* ===== ریسپانسیو ===== */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .slide-title {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .container {
+                padding: 0 20px;
+            }
+
+            .slider-arrow {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- ===== هدر ===== -->
+        <header class="header" id="header-block">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">🦅</div>
+                    <span class="logo-text" id="site-logo" data-fa="ققنوس" data-en="Phoenix"
+                        data-ar="العنقاء">ققنوس</span>
+                </div>
+
+                <ul class="nav-menu" id="main-menu">
+                    <li><a href="/" data-fa="صفحه اصلی" data-en="Home" data-ar="الرئيسية">صفحه اصلی</a></li>
+                    <li><a href="/brokers" data-fa="بروکرها" data-en="Brokers" data-ar="الوسطاء">بروکرها</a></li>
+                    <li><a href="/education" data-fa="آموزش" data-en="Education" data-ar="التعليم">آموزش</a></li>
+                    <li><a href="/market" data-fa="بازارها" data-en="Markets" data-ar="الأسواق">بازارها</a></li>
+                    <li><a href="/contact" data-fa="ارتباط با ما" data-en="Contact" data-ar="اتصل بنا">ارتباط با ما</a>
+                    </li>
+                </ul>
+
+                <div class="header-actions">
+                    <div class="lang-selector" id="language-selector">
+                        <button class="lang-btn active" data-lang="fa">FA</button>
+                        <button class="lang-btn" data-lang="en">EN</button>
+                        <button class="lang-btn" data-lang="ar">AR</button>
+                    </div>
+
+                    <a href="https://t.me/PhoenixTradeBot" class="telegram-link" id="telegram-link" target="_blank">
+                        <i class="fab fa-telegram-plane"></i>
+                        <span data-fa="کانال تلگرام" data-en="Telegram" data-ar="تيليجرام">کانال تلگرام</span>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- ===== اسلایدشو ===== -->
+        <div class="hero-slider" id="hero-slider">
+            <div class="slider-container" id="slider-container">
+                <!-- اسلاید ۱ -->
+                <div class="slide active"
+                    style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');">
+                    <div class="slide-content">
+                        <h2 class="slide-title" data-fa="به ققنوس خوش آمدید" data-en="Welcome to Phoenix"
+                            data-ar="مرحباً بكم في العنقاء">به ققنوس خوش آمدید</h2>
+                        <p class="slide-subtitle" data-fa="مسیر موفقیت در معاملات"
+                            data-en="Your Path to Trading Success" data-ar="طريقك إلى النجاح في التداول">مسیر موفقیت در
+                            معاملات</p>
+                        <a href="/brokers" class="btn btn-primary"
+                            style="display:inline-block; padding:12px 35px; background:linear-gradient(135deg, #ffd700, #b8860b); color:#0a3825; border-radius:40px; text-decoration:none; font-weight:bold;"
+                            data-fa="شروع کنید" data-en="Get Started" data-ar="ابدأ">شروع کنید</a>
+                    </div>
+                </div>
+                <!-- اسلاید ۲ -->
+                <div class="slide"
+                    style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1642790551116-18e150f248e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');">
+                    <div class="slide-content">
+                        <h2 class="slide-title" data-fa="مقایسه و انتخاب بروکر" data-en="Compare & Choose Brokers"
+                            data-ar="مقارنة واختيار الوسيط">مقایسه و انتخاب بروکر</h2>
+                        <p class="slide-subtitle" data-fa="بهترین بروکرها با رتبه‌بندی دقیق"
+                            data-en="Top Brokers with Accurate Ratings" data-ar="أفضل الوسطاء بتقييمات دقيقة">بهترین
+                            بروکرها با رتبه‌بندی دقیق</p>
+                        <a href="/brokers" class="btn btn-primary"
+                            style="display:inline-block; padding:12px 35px; background:linear-gradient(135deg, #ffd700, #b8860b); color:#0a3825; border-radius:40px; text-decoration:none; font-weight:bold;"
+                            data-fa="مشاهده بروکرها" data-en="View Brokers" data-ar="عرض الوسطاء">مشاهده بروکرها</a>
+                    </div>
+                </div>
+                <!-- اسلاید ۳ -->
+                <div class="slide"
+                    style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1642790109470-24b3d1d6d2e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');">
+                    <div class="slide-content">
+                        <h2 class="slide-title" data-fa="آموزش حرفه‌ای فارکس" data-en="Professional Forex Education"
+                            data-ar="تعليم فوركس احترافي">آموزش حرفه‌ای فارکس</h2>
+                        <p class="slide-subtitle" data-fa="از مبتدی تا پیشرفته" data-en="From Beginner to Advanced"
+                            data-ar="من المبتدئ إلى المتقدم">از مبتدی تا پیشرفته</p>
+                        <a href="/education" class="btn btn-primary"
+                            style="display:inline-block; padding:12px 35px; background:linear-gradient(135deg, #ffd700, #b8860b); color:#0a3825; border-radius:40px; text-decoration:none; font-weight:bold;"
+                            data-fa="دوره‌های آموزشی" data-en="Courses" data-ar="الدورات">دوره‌های آموزشی</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slider-dots" id="slider-dots">
+                <span class="dot active" onclick="goToSlide(0)"></span>
+                <span class="dot" onclick="goToSlide(1)"></span>
+                <span class="dot" onclick="goToSlide(2)"></span>
+            </div>
+
+            <div class="slider-arrow prev" onclick="changeSlide(-1)">❮</div>
+            <div class="slider-arrow next" onclick="changeSlide(1)">❯</div>
+        </div>
+
+        <!-- ===== بلوک بروکرهای معتبر ===== -->
+        <div class="section-wrapper">
+            <div class="section-title-box">
+                <h2 class="section-title" data-fa="بروکرهای معتبر" data-en="Trusted Brokers" data-ar="وسطاء موثوقون">
+                    بروکرهای معتبر</h2>
+                <p class="section-subtitle" data-fa="مقایسه و انتخاب بهترین بروکر بر اساس رتبه‌بندی دقیق"
+                    data-en="Compare and choose the best broker based on accurate ratings"
+                    data-ar="قارن واختر أفضل وسيط بناءً على تقييمات دقيقة">مقایسه و انتخاب بهترین بروکر بر اساس
+                    رتبه‌بندی دقیق</p>
+            </div>
+
+            <div class="section-content" id="brokers-block">
+                <div class="broker-card">
+                    <div class="broker-header">
+                        <div class="broker-logo">📊</div>
+                        <div class="broker-info">
+                            <h3>TIOmarkets</h3>
+                            <div class="broker-rating">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                    class="fas fa-star"></i><i class="fas fa-star"></i>
+                                <span style="margin-right:5px; color:white;">(۵.۰)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="broker-details">
+                        <div class="broker-detail-item">
+                            <span class="broker-detail-label" data-fa="سابقه:" data-en="Founded:"
+                                data-ar="تأسست:">سابقه:</span>
+                            <span>۲۰۱۴</span>
+                        </div>
+                        <div class="broker-detail-item">
+                            <span class="broker-detail-label" data-fa="کاربران:" data-en="Users:"
+                                data-ar="المستخدمون:">کاربران:</span>
+                            <span>+۵۰۰٬۰۰۰</span>
+                        </div>
+                        <div class="broker-detail-item">
+                            <span class="broker-detail-label" data-fa="رگوله:" data-en="Regulation:"
+                                data-ar="الترخيص:">رگوله:</span>
+                            <div class="regulators">
+                                <span class="regulator-badge">FCA (UK)</span>
+                                <span class="regulator-badge">CySEC (EU)</span>
+                                <span class="regulator-badge">SVG</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="#" class="broker-btn" data-fa="مقایسه و ثبت‌نام" data-en="Compare & Register"
+                        data-ar="قارن وسجل">مقایسه و ثبت‌نام</a>
+                </div>
+
+                <div class="broker-card">
+                    <!-- محتوای کارت دوم به همین شکل -->
+                </div>
+
+                <div class="broker-card">
+                    <!-- محتوای کارت سوم به همین شکل -->
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== بلوک آموزش ===== -->
+        <div class="section-wrapper">
+            <div class="section-title-box">
+                <h2 class="section-title" data-fa="آموزش" data-en="Education" data-ar="التعليم">آموزش</h2>
+                <p class="section-subtitle" data-fa="از مفاهیم پایه تا استراتژی‌های پیشرفته"
+                    data-en="From Basic Concepts to Advanced Strategies"
+                    data-ar="من المفاهيم الأساسية إلى الاستراتيجيات المتقدمة">از مفاهیم پایه تا استراتژی‌های پیشرفته</p>
+            </div>
+
+            <div class="section-content" id="education-block">
+                <div class="education-card">
+                    <h3 data-fa="مفاهیم پایه" data-en="Basic Concepts" data-ar="المفاهيم الأساسية">مفاهیم پایه</h3>
+                    <ul class="education-list">
+                        <li><i class="fas fa-play-circle"></i> <span data-fa="فارکس چیست؟" data-en="What is Forex?"
+                                data-ar="ما هو الفوركس؟">فارکس چیست؟</span></li>
+                        <li><i class="fas fa-play-circle"></i> <span data-fa="استاک مارکت چیست؟"
+                                data-en="What is Stock Market?" data-ar="ما هو سوق الأسهم؟">استاک مارکت چیست؟</span>
+                        </li>
+                        <li><i class="fas fa-play-circle"></i> <span data-fa="تفاوت کریپتو و فارکس"
+                                data-en="Crypto vs Forex" data-ar="الفرق بين الكريبتو والفوركس">تفاوت کریپتو و
+                                فارکس</span></li>
+                        <li><i class="fas fa-play-circle"></i> <span data-fa="انواع تحلیل بازار"
+                                data-en="Market Analysis Types" data-ar="أنواع تحليل السوق">انواع تحلیل بازار</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="education-card">
+                    <h3 data-fa="استراتژی‌های معاملاتی" data-en="Trading Strategies" data-ar="استراتيجيات التداول">
+                        استراتژی‌های معاملاتی</h3>
+                    <ul class="education-list">
+                        <li><i class="fas fa-play-circle"></i> <span data-fa="استراتژی پرایس اکشن"
+                                data-en="Price Action Strategy" data-ar="استراتيجية برايس أكشن">استراتژی پرایس
+                                اکشن</span></li>
+                        <li><i class="fas fa-play-circle"></i> <span data-fa="معاملات روندی" data-en="Trend Trading"
+                                data-ar="تداول الاتجاه">معاملات روندی</span></li>
+                        <li><i class="fas fa-play-circle"></i> <span data-fa="استراتژی اسکالپینگ"
+                                data-en="Scalping Strategy" data-ar="استراتيجية سكالبينج">استراتژی اسکالپینگ</span></li>
+                        <li><i class="fas fa-play-circle"></i> <span data-fa="معاملات نوسانی" data-en="Swing Trading"
+                                data-ar="تداول متأرجح">معاملات نوسانی</span></li>
+                    </ul>
+                </div>
+
+                <div class="education-card">
+                    <h3 data-fa="تحلیل تکنیکال" data-en="Technical Analysis" data-ar="التحليل الفني">تحلیل تکنیکال</h3>
+                    <ul class="education-list">
+                        <li><i class="fas fa-play-circle"></i> <span data-fa="الگوهای شمعی ژاپنی"
+                                data-en="Candlestick Patterns" data-ar="أنماط الشموع اليابانية">الگوهای شمعی
+                                ژاپنی</span></li>
+                        <li><i class="fas fa-play-circle"></i> <span data-fa="خطوط حمایت و مقاومت"
+                                data-en="Support & Resistance" data-ar="دعم ومقاومة">خطوط حمایت و مقاومت</span></li>
+                        <li><i class="fas fa-play-circle"></i> <span data-fa="اندیکاتورهای پرکاربرد"
+                                data-en="Popular Indicators" data-ar="المؤشرات الشائعة">اندیکاتورهای پرکاربرد</span>
+                        </li>
+                        <li><i class="fas fa-play-circle"></i> <span data-fa="الگوهای هارمونیک"
+                                data-en="Harmonic Patterns" data-ar="الأنماط التوافقية">الگوهای هارمونیک</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== بلوک قیمت لحظه‌ای شاخص‌ها ===== -->
+        <div class="section-wrapper">
+            <div class="section-title-box">
+                <h2 class="section-title" data-fa="قیمت لحظه‌ای شاخص‌های بازار" data-en="Live Market Indicators"
+                    data-ar="مؤشرات السوق المباشرة">قیمت لحظه‌ای شاخص‌های بازار</h2>
+                <p class="section-subtitle" data-fa="آخرین قیمت‌ها از بازارهای جهانی"
+                    data-en="Latest prices from global markets" data-ar="آخر الأسعار من الأسواق العالمية">آخرین قیمت‌ها
+                    از بازارهای جهانی</p>
+            </div>
+
+            <div class="section-content" id="market-prices">
+                <div class="market-grid">
+                    <div class="market-item">
+                        <div class="market-symbol">XAU/USD</div>
+                        <div class="market-price">$۲٬۹۳۴٫۵۰</div>
+                        <div class="market-change positive">+۰.۸٪</div>
+                        <a href="https://www.tradingview.com/symbols/XAUUSD/" target="_blank" class="tradingview-btn"><i
+                                class="fas fa-chart-line"></i> چارت</a>
+                    </div>
+                    <!-- بقیه آیتم‌های بازار به همین شکل -->
+                </div>
+
+                <div style="text-align: center; margin-top: 40px;">
+                    <a href="/markets" class="view-more-btn" data-fa="مشاهده همه شاخص‌ها" data-en="View All Indicators"
+                        data-ar="عرض جميع المؤشرات">مشاهده همه شاخص‌ها</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== بلوک تماس سریع ===== -->
+        <div class="section-wrapper">
+            <div class="section-title-box">
+                <h2 class="section-title" data-fa="ارتباط با ما" data-en="Contact Us" data-ar="اتصل بنا">ارتباط با ما
+                </h2>
+                <p class="section-subtitle" data-fa="راه‌های ارتباطی با تیم پشتیبانی ققنوس"
+                    data-en="Ways to contact the Phoenix support team" data-ar="طرق الاتصال بفريق دعم العنقاء">راه‌های
+                    ارتباطی با تیم پشتیبانی ققنوس</p>
+            </div>
+
+            <div class="section-content" id="quick-contact">
+                <div class="contact-links" style="display:flex; gap:20px; justify-content:center; flex-wrap:wrap;">
+                    <a href="https://t.me/PhoenixTradeBot" class="contact-link" target="_blank"
+                        style="display:flex; align-items:center; gap:12px; padding:18px 35px; background:rgba(255,255,255,0.1); backdrop-filter:blur(10px); border-radius:60px; text-decoration:none; color:white; transition:all 0.3s; border:1px solid rgba(255,255,255,0.1); box-shadow:0 10px 20px rgba(0,0,0,0.2);">
+                        <i class="fab fa-telegram" style="color:#ffd700; font-size:1.4rem;"></i>
+                        <span style="font-size:1.1rem;" data-fa="تلگرام" data-en="Telegram"
+                            data-ar="تيليجرام">تلگرام</span>
+                    </a>
+
+                    <a href="mailto:info@phoenixtrade.info" class="contact-link"
+                        style="display:flex; align-items:center; gap:12px; padding:18px 35px; background:rgba(255,255,255,0.1); backdrop-filter:blur(10px); border-radius:60px; text-decoration:none; color:white; transition:all 0.3s; border:1px solid rgba(255,255,255,0.1); box-shadow:0 10px 20px rgba(0,0,0,0.2);">
+                        <i class="fas fa-envelope" style="color:#ffd700; font-size:1.4rem;"></i>
+                        <span style="font-size:1.1rem;" data-fa="ایمیل" data-en="Email"
+                            data-ar="بريد إلكتروني">ایمیل</span>
+                    </a>
+
+                    <a href="#" class="contact-link"
+                        style="display:flex; align-items:center; gap:12px; padding:18px 35px; background:rgba(255,255,255,0.1); backdrop-filter:blur(10px); border-radius:60px; text-decoration:none; color:white; transition:all 0.3s; border:1px solid rgba(255,255,255,0.1); box-shadow:0 10px 20px rgba(0,0,0,0.2);">
+                        <i class="fas fa-headset" style="color:#ffd700; font-size:1.4rem;"></i>
+                        <span style="font-size:1.1rem;" data-fa="پشتیبانی آنلاین" data-en="Live Support"
+                            data-ar="دعم مباشر">پشتیبانی آنلاین</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== فوتر ===== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 data-fa="دسترسی سریع" data-en="Quick Access" data-ar="وصول سريع">دسترسی سریع</h3>
+                    <a href="/" data-fa="صفحه اصلی" data-en="Home" data-ar="الرئيسية">صفحه اصلی</a>
+                    <a href="/brokers" data-fa="بروکرها" data-en="Brokers" data-ar="الوسطاء">بروکرها</a>
+                    <a href="/education" data-fa="آموزش" data-en="Education" data-ar="التعليم">آموزش</a>
+                    <a href="/markets" data-fa="بازارها" data-en="Markets" data-ar="الأسواق">بازارها</a>
+                </div>
+                <div class="footer-section">
+                    <h3 data-fa="تماس با ما" data-en="Contact Info" data-ar="معلومات الاتصال">تماس با ما</h3>
+                    <p><i class="fas fa-envelope"></i> info@phoenixtrade.info</p>
+                    <p><i class="fas fa-phone"></i> ۰۲۱-۱۲۳۴۵۶۷۸</p>
+                    <p><i class="fab fa-telegram"></i> @PhoenixTradeBot</p>
+                </div>
+                <div class="footer-section">
+                    <h3 data-fa="شبکه‌های اجتماعی" data-en="Social Media" data-ar="وسائل التواصل">شبکه‌های اجتماعی</h3>
+                    <a href="#"><i class="fab fa-telegram"></i> <span data-fa="تلگرام" data-en="Telegram"
+                            data-ar="تيليجرام">تلگرام</span></a>
+                    <a href="#"><i class="fab fa-instagram"></i> <span data-fa="اینستاگرام" data-en="Instagram"
+                            data-ar="انستغرام">اینستاگرام</span></a>
+                    <a href="#"><i class="fab fa-twitter"></i> <span data-fa="توییتر" data-en="Twitter"
+                            data-ar="تويتر">توییتر</span></a>
+                    <a href="#"><i class="fab fa-youtube"></i> <span data-fa="یوتیوب" data-en="YouTube"
+                            data-ar="يوتيوب">یوتیوب</span></a>
+                </div>
+            </div>
+            <div class="copyright">
+                <p data-fa="© ۲۰۲۶ تمامی حقوق برای ققنوس محفوظ است" data-en="© 2026 All rights reserved for Phoenix"
+                    data-ar="© ٢٠٢٦ جميع الحقوق محفوظة للعنقاء">© ۲۰۲۶ تمامی حقوق برای ققنوس محفوظ است</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ============= متغیرهای اسلایدشو =============
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.dot');
+
+        function showSlide(index) {
+            if (index < 0) index = slides.length - 1;
+            if (index >= slides.length) index = 0;
+
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+
+            slides[index].classList.add('active');
+            dots[index].classList.add('active');
+            currentSlide = index;
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        function goToSlide(index) {
+            showSlide(index);
+        }
+
+        // اسلایدشو خودکار
+        setInterval(() => {
+            changeSlide(1);
+        }, 5000);
+
+        // ============= تغییر زبان =============
+        function changeLanguage(lang) {
+            document.querySelectorAll('[data-' + lang + ']').forEach(element => {
+                const translation = element.getAttribute('data-' + lang);
+                if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                    element.placeholder = translation;
+                } else {
+                    element.textContent = translation;
+                }
+            });
+
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.lang-btn[data-lang="${lang}"]`).classList.add('active');
+        }
+
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                changeLanguage(this.dataset.lang);
+            });
+        });
+
+        // ============= بارگذاری اولیه =============
+        document.addEventListener('DOMContentLoaded', () => {
+            changeLanguage('fa');
+        });
+    </script>
+</body>
+
+</html>

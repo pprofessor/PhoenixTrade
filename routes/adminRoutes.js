@@ -6,8 +6,8 @@ const { isAuthenticated } = require('../middleware/auth');
 const botController = require('../controllers/botController');
 const databaseController = require('../controllers/databaseController');
 const apiController = require('../controllers/apiController');
-const webappController = require('../controllers/webappController'); // انتقال به بالا
-const { BotMenu, BotMessage, BotUser, BotUserMessage, WebappPage } = require('../models'); // اضافه شدن WebappPage
+const webappController = require('../controllers/webappController');
+const { BotMenu, BotMessage, BotUser, BotUserMessage, WebappPage } = require('../models');
 const { checkBotStatus } = require('../services/telegramBot');
 
 // ============= تنظیمات آپلود فایل =============
@@ -38,7 +38,7 @@ const upload = multer({
 
 // ============= مسیرهای اصلی مدیریت =============
 router.get('/dashboard', isAuthenticated, (req, res) => {
-  res.render('dashboard', { 
+  res.render('dashboard', {
     title: 'داشبورد مدیریت',
     user: req.session.adminUsername,
     activePage: 'dashboard'
@@ -46,7 +46,7 @@ router.get('/dashboard', isAuthenticated, (req, res) => {
 });
 
 router.get('/backup', isAuthenticated, (req, res) => {
-  res.render('backup', { 
+  res.render('backup', {
     title: 'مدیریت بکاپ',
     user: req.session.adminUsername,
     activePage: 'backup'
@@ -67,7 +67,7 @@ router.get('/api/bot/menus', isAuthenticated, botController.getMenus);
 router.post('/api/bot/menus', isAuthenticated, upload.single('media'), async (req, res) => {
   try {
     console.log('📝 ایجاد منوی جدید با فایل:', req.file ? 'دارد' : 'ندارد');
-    
+
     const menuData = {
       text: req.body.text,
       emoji: req.body.emoji || null,
@@ -76,19 +76,19 @@ router.post('/api/bot/menus', isAuthenticated, upload.single('media'), async (re
       order: parseInt(req.body.order) || 0,
       isActive: true
     };
-    
+
     if (req.file) {
       menuData.media_url = '/uploads/' + req.file.filename;
       menuData.media_type = req.file.mimetype.split('/')[0];
       console.log('📁 فایل آپلود شد:', menuData.media_url);
     }
-    
+
     const menu = await BotMenu.create(menuData);
-    
+
     const newMenu = await BotMenu.findByPk(menu.id, {
       include: [{ model: BotMenu, as: 'children' }]
     });
-    
+
     res.status(201).json(newMenu);
   } catch (error) {
     console.error('❌ خطا در ایجاد منو:', error);
@@ -99,12 +99,12 @@ router.post('/api/bot/menus', isAuthenticated, upload.single('media'), async (re
 router.put('/api/bot/menus/:id', isAuthenticated, upload.single('media'), async (req, res) => {
   try {
     console.log('📝 ویرایش منو ID:', req.params.id, 'فایل:', req.file ? 'دارد' : 'ندارد');
-    
+
     const menu = await BotMenu.findByPk(req.params.id);
     if (!menu) {
       return res.status(404).json({ error: 'منو یافت نشد' });
     }
-    
+
     const menuData = {
       text: req.body.text,
       emoji: req.body.emoji || null,
@@ -113,19 +113,19 @@ router.put('/api/bot/menus/:id', isAuthenticated, upload.single('media'), async 
       order: parseInt(req.body.order) || 0,
       isActive: req.body.isActive !== undefined ? req.body.isActive : menu.isActive
     };
-    
+
     if (req.file) {
       menuData.media_url = '/uploads/' + req.file.filename;
       menuData.media_type = req.file.mimetype.split('/')[0];
       console.log('📁 فایل جدید آپلود شد:', menuData.media_url);
     }
-    
+
     await menu.update(menuData);
-    
+
     const updatedMenu = await BotMenu.findByPk(menu.id, {
       include: [{ model: BotMenu, as: 'children' }]
     });
-    
+
     res.json(updatedMenu);
   } catch (error) {
     console.error('❌ خطا در ویرایش منو:', error);
@@ -137,12 +137,12 @@ router.delete('/api/bot/menus/:id', isAuthenticated, async (req, res) => {
   try {
     const menu = await BotMenu.findByPk(req.params.id);
     if (!menu) return res.status(404).json({ error: 'منو یافت نشد' });
-    
+
     const children = await BotMenu.findAll({ where: { parentId: menu.id } });
     if (children.length > 0) {
       return res.status(400).json({ error: 'این منو زیرمنو دارد. ابتدا زیرمنوها را حذف کنید.' });
     }
-    
+
     await menu.destroy();
     res.json({ success: true });
   } catch (error) {
@@ -196,48 +196,182 @@ router.post('/api/logs/clear', isAuthenticated, apiController.clearLogs);
 router.get('/api/stats', isAuthenticated, apiController.getStats);
 
 // ============= مدیریت وب‌اپ =============
-// صفحه اصلی مدیریت وب‌اپ (مسیر یکتا)
+// صفحه اصلی مدیریت وب‌اپ
 router.get('/webapp', isAuthenticated, webappController.webappIndex);
 
-// ویرایشگر صفحه
-router.get('/webapp/builder/:id', isAuthenticated, async (req, res) => {
-    try {
-        const page = await WebappPage.findByPk(req.params.id);
-        if (!page) {
-            return res.status(404).send('صفحه یافت نشد');
-        }
-        res.render('webapp-builder', {
-            pageId: page.id,
-            pageTitle: page.title_fa,
-            user: req.session.adminUsername,
-            activePage: 'webapp'
-        });
-    } catch (error) {
-        console.error('❌ خطا در ویرایشگر صفحه:', error);
-        res.status(500).send('خطا');
-    }
-});
-
-// ============= API وب‌اپ =============
+// ============= API صفحات وب‌اپ =============
 router.get('/api/webapp/pages', isAuthenticated, webappController.getPages);
+router.get('/api/webapp/pages/:id', isAuthenticated, webappController.getPageById);
 router.post('/api/webapp/pages', isAuthenticated, webappController.createPage);
 router.put('/api/webapp/pages/:id', isAuthenticated, webappController.updatePage);
 router.delete('/api/webapp/pages/:id', isAuthenticated, webappController.deletePage);
+router.patch('/api/webapp/pages/:id/toggle', isAuthenticated, webappController.togglePageStatus);
 
+// ============= API مدیا =============
 router.get('/api/webapp/media', isAuthenticated, webappController.getMedia);
 router.post('/api/webapp/media/upload', isAuthenticated, upload.single('file'), webappController.uploadMedia);
 router.delete('/api/webapp/media/:id', isAuthenticated, webappController.deleteMedia);
+router.put('/api/webapp/media/:id', isAuthenticated, webappController.updateMediaInfo);
 
+// ============= API منوها =============
 router.get('/api/webapp/menus', isAuthenticated, webappController.getMenus);
+router.get('/api/webapp/menus/:id', isAuthenticated, webappController.getMenuItem);
 router.post('/api/webapp/menus', isAuthenticated, webappController.createMenu);
 router.put('/api/webapp/menus/:id', isAuthenticated, webappController.updateMenu);
 router.delete('/api/webapp/menus/:id', isAuthenticated, webappController.deleteMenu);
+router.post('/api/webapp/menus/reorder', isAuthenticated, webappController.reorderMenus);
 
+// ============= API فرم‌ها =============
 router.get('/api/webapp/forms', isAuthenticated, webappController.getForms);
+router.get('/api/webapp/forms/:id', isAuthenticated, webappController.getForm);
 router.post('/api/webapp/forms', isAuthenticated, webappController.createForm);
+router.put('/api/webapp/forms/:id', isAuthenticated, webappController.updateForm);
+router.delete('/api/webapp/forms/:id', isAuthenticated, webappController.deleteForm);
 router.get('/api/webapp/forms/:id/entries', isAuthenticated, webappController.getFormEntries);
+router.delete('/api/webapp/forms/:formId/entries/:entryId', isAuthenticated, webappController.deleteFormEntry);
 
+// ============= API تنظیمات =============
 router.get('/api/webapp/settings', isAuthenticated, webappController.getSettings);
 router.post('/api/webapp/settings', isAuthenticated, webappController.updateSettings);
+router.get('/api/webapp/settings/:key', isAuthenticated, webappController.getSettingByKey);
+
+// ============= API المان‌ها =============
+router.get('/api/webapp/elements', isAuthenticated, webappController.getElements);
+router.post('/api/webapp/elements', isAuthenticated, webappController.createElement);
+router.put('/api/webapp/elements/:id', isAuthenticated, webappController.updateElement);
+router.delete('/api/webapp/elements/:id', isAuthenticated, webappController.deleteElement);
+
+// ============= API کاربران وب‌اپ =============
+router.get('/api/webapp/users', isAuthenticated, webappController.getUsers);
+router.get('/api/webapp/users/:id', isAuthenticated, webappController.getUser);
+router.patch('/api/webapp/users/:id/toggle', isAuthenticated, webappController.toggleUserStatus);
+
+// ============= مدیریت بروکرها =============
+const { Broker } = require('../models');
+
+// صفحه لیست بروکرها
+router.get('/brokers', isAuthenticated, async (req, res) => {
+  try {
+    const brokers = await Broker.findAll({
+      order: [['order', 'ASC']]
+    });
+
+    res.render('admin/brokers', {
+      title: 'مدیریت بروکرها',
+      user: req.session.adminUsername,
+      activePage: 'brokers',
+      brokers: brokers
+    });
+  } catch (error) {
+    console.error('❌ Error:', error);
+    res.status(500).send('خطا');
+  }
+});
+
+// API دریافت لیست بروکرها
+router.get('/api/brokers', isAuthenticated, async (req, res) => {
+  try {
+    const brokers = await Broker.findAll({
+      order: [['order', 'ASC']]
+    });
+    res.json({ success: true, data: brokers });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// API ایجاد بروکر جدید
+router.post('/api/brokers', isAuthenticated, async (req, res) => {
+  try {
+    const brokerData = {
+      name: req.body.name,
+      slug: req.body.slug,
+      foundedYear: req.body.foundedYear,
+      usersCount: req.body.usersCount,
+      rating: req.body.rating || 0,
+      regulations: JSON.stringify(req.body.regulations || []),
+      spread: req.body.spread,
+      leverage: req.body.leverage,
+      minDeposit: req.body.minDeposit,
+      registerLink: req.body.registerLink,
+      isActive: req.body.isActive !== 'false',
+      isFeatured: req.body.isFeatured === 'true',
+      order: req.body.order || 0
+    };
+
+    const broker = await Broker.create(brokerData);
+    res.status(201).json({ success: true, data: broker });
+  } catch (error) {
+    console.error('❌ Error:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// API ویرایش بروکر
+router.put('/api/brokers/:id', isAuthenticated, async (req, res) => {
+  try {
+    const broker = await Broker.findByPk(req.params.id);
+    if (!broker) {
+      return res.status(404).json({ success: false, error: 'بروکر یافت نشد' });
+    }
+
+    const updateData = {
+      name: req.body.name,
+      slug: req.body.slug,
+      foundedYear: req.body.foundedYear,
+      usersCount: req.body.usersCount,
+      rating: req.body.rating,
+      regulations: JSON.stringify(req.body.regulations || []),
+      spread: req.body.spread,
+      leverage: req.body.leverage,
+      minDeposit: req.body.minDeposit,
+      registerLink: req.body.registerLink,
+      isActive: req.body.isActive !== 'false',
+      isFeatured: req.body.isFeatured === 'true',
+      order: req.body.order
+    };
+
+    await broker.update(updateData);
+    res.json({ success: true, data: broker });
+  } catch (error) {
+    console.error('❌ Error:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// API حذف بروکر
+router.delete('/api/brokers/:id', isAuthenticated, async (req, res) => {
+  try {
+    const broker = await Broker.findByPk(req.params.id);
+    if (!broker) {
+      return res.status(404).json({ success: false, error: 'بروکر یافت نشد' });
+    }
+
+    await broker.destroy();
+    res.json({ success: true });
+  } catch (error) {
+    console.error('❌ Error:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// ویرایشگر صفحه
+router.get('/webapp/builder/:id', isAuthenticated, async (req, res) => {
+  try {
+    const { WebappPage } = require('../models');
+    const page = await WebappPage.findByPk(req.params.id);
+    if (!page) {
+      return res.status(404).send('صفحه یافت نشد');
+    }
+    res.render('webapp-builder', {
+      pageId: page.id,
+      pageTitle: page.title_fa,
+      user: req.session.adminUsername
+    });
+  } catch (error) {
+    console.error('❌ خطا در ویرایشگر صفحه:', error);
+    res.status(500).send('خطا');
+  }
+});
 
 module.exports = router;
