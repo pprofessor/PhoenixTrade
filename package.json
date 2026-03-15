@@ -11,6 +11,8 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@ch99q/twc": "^0.1.4",
+    "axios": "^1.13.6",
     "bcryptjs": "^3.0.3",
     "dotenv": "^17.3.1",
     "ejs": "^4.0.1",
@@ -19,7 +21,8 @@
     "multer": "^2.1.1",
     "node-telegram-bot-api": "^0.67.0",
     "sequelize": "^6.37.7",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "ws": "^8.19.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"

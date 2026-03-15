@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لیست بروکرها - PhoenixTrade</title>
+    <title>
+        <%= title %> - PhoenixTrade
+    </title>
     <!-- فونت سمیم -->
     <link rel="stylesheet" href="/css/fonts.css">
     <!-- Font Awesome -->
@@ -71,7 +73,7 @@
         }
 
         .container {
-            max-width: 1300px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
             position: relative;
@@ -195,65 +197,32 @@
             gap: 8px;
         }
 
+        /* عنوان صفحه */
         .page-title {
             text-align: center;
             font-size: 2.5rem;
             color: #ffd700;
-            margin: 50px 0 20px;
+            margin: 50px 0 30px;
         }
 
-        .page-subtitle {
-            text-align: center;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 50px;
-            font-size: 1.1rem;
-        }
-
-        .filter-section {
-            background: rgba(10, 40, 25, 0.25);
-            backdrop-filter: blur(15px) saturate(180%);
-            border-radius: 30px;
-            padding: 30px;
-            margin: 40px 0;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-        }
-
-        .search-box {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .search-input {
-            flex: 1;
-            padding: 12px 20px;
-            border-radius: 40px;
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            background: rgba(0, 0, 0, 0.3);
-            color: #fff;
-            font-size: 1rem;
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: #ffd700;
-        }
-
-        .filter-buttons {
+        /* فیلتر دسته‌بندی */
+        .category-filter {
             display: flex;
             gap: 10px;
-            flex-wrap: wrap;
             justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
         }
 
         .filter-btn {
-            padding: 8px 20px;
+            padding: 10px 25px;
             border: 1px solid rgba(255, 215, 0, 0.3);
             background: rgba(255, 255, 255, 0.05);
             border-radius: 40px;
             color: #fff;
             cursor: pointer;
             transition: all 0.3s;
+            font-size: 0.95rem;
         }
 
         .filter-btn:hover,
@@ -263,14 +232,15 @@
             border-color: #ffd700;
         }
 
-        .brokers-grid {
+        /* گرید آموزش‌ها */
+        .education-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             gap: 30px;
             margin: 40px 0;
         }
 
-        .broker-card {
+        .education-card {
             background: rgba(10, 40, 25, 0.25);
             backdrop-filter: blur(15px) saturate(180%);
             border-radius: 30px;
@@ -280,140 +250,76 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
 
-        .broker-card:hover {
+        .education-card:hover {
             transform: translateY(-10px);
             border-color: rgba(255, 215, 0, 0.4);
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
         }
 
-        .broker-header {
-            display: flex;
-            align-items: center;
-            gap: 20px;
+        .card-header {
             margin-bottom: 20px;
         }
 
-        .broker-logo {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, #ffd700, #b8860b);
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            color: #0a3825;
-            overflow: hidden;
-        }
-
-        .broker-logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .broker-info {
-            flex: 1;
-        }
-
-        .broker-info h3 {
+        .card-title {
+            font-size: 1.5rem;
             color: #ffd700;
-            font-size: 1.3rem;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
         }
 
-        .broker-rating {
+        .card-meta {
             display: flex;
-            gap: 5px;
-            align-items: center;
+            gap: 15px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
         }
 
-        .stars {
+        .card-meta i {
             color: #ffd700;
+            margin-left: 5px;
         }
 
-        .broker-features {
+        .category-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            background: rgba(255, 215, 0, 0.15);
+            color: #ffd700;
+            border: 1px solid #ffd700;
+        }
+
+        .card-excerpt {
+            color: rgba(255, 255, 255, 0.8);
             margin: 20px 0;
-            padding: 15px 0;
-            border-top: 1px solid rgba(255, 215, 0, 0.1);
-            border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+            line-height: 1.8;
         }
 
-        .broker-feature {
+        .card-footer {
             display: flex;
             justify-content: space-between;
-            margin: 8px 0;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .feature-label {
-            color: #ffd700;
-        }
-
-        .broker-actions {
-            display: flex;
-            gap: 10px;
+            align-items: center;
             margin-top: 20px;
         }
 
-        .btn {
-            flex: 1;
-            padding: 10px 0;
-            border: none;
-            border-radius: 40px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
+        .read-more {
+            display: inline-block;
+            padding: 10px 25px;
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid #ffd700;
+            color: #ffd700;
             text-decoration: none;
+            border-radius: 30px;
+            transition: all 0.3s;
         }
 
-        .btn-primary {
+        .read-more:hover {
             background: #ffd700;
             color: #0a3825;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.3);
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-3px);
-        }
-
-        .compare-checkbox {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            margin-top: 10px;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .compare-checkbox input[type="checkbox"] {
-            accent-color: #ffd700;
-        }
-
-        .compare-bar {
-            position: sticky;
-            bottom: 20px;
-            background: rgba(10, 40, 25, 0.9);
-            backdrop-filter: blur(20px);
-            border-radius: 60px;
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid #ffd700;
-            margin-top: 40px;
+        .view-count {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
         }
 
         .loading {
@@ -430,6 +336,35 @@
             text-align: center;
             padding: 100px;
             color: #dc3545;
+        }
+
+        .no-content {
+            text-align: center;
+            padding: 100px;
+            color: #aaa;
+        }
+
+        .pagination {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 50px 0;
+        }
+
+        .page-btn {
+            padding: 8px 15px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 30px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .page-btn:hover,
+        .page-btn.active {
+            background: #ffd700;
+            color: #0a3825;
         }
 
         .footer {
@@ -468,6 +403,21 @@
             padding-top: 20px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             color: rgba(255, 255, 255, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .education-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -508,37 +458,27 @@
         </header>
 
         <!-- عنوان صفحه -->
-        <h1 class="page-title">بروکرهای معتبر</h1>
-        <p class="page-subtitle">مقایسه و انتخاب بهترین بروکر برای معاملات شما</p>
+        <h1 class="page-title">آموزش‌های فارکس</h1>
 
-        <!-- بخش فیلتر -->
-        <div class="filter-section">
-            <div class="search-box">
-                <input type="text" id="search-input" class="search-input" placeholder="جستجوی بروکر...">
-                <button class="btn btn-primary" onclick="searchBrokers()">جستجو</button>
-            </div>
-
-            <div class="filter-buttons">
-                <button class="filter-btn active" onclick="filterBrokers('all')">همه</button>
-                <button class="filter-btn" onclick="filterBrokers('featured')">بروکرهای ویژه</button>
-                <button class="filter-btn" onclick="sortBrokers('rating')">بالاترین امتیاز</button>
-                <button class="filter-btn" onclick="sortBrokers('order')">پیش‌فرض</button>
-            </div>
+        <!-- فیلتر دسته‌بندی -->
+        <div class="category-filter" id="category-filter">
+            <button class="filter-btn active" data-category="all">همه</button>
+            <button class="filter-btn" data-category="basic">مبتدی</button>
+            <button class="filter-btn" data-category="strategy">استراتژی</button>
+            <button class="filter-btn" data-category="technical">تحلیل تکنیکال</button>
+            <button class="filter-btn" data-category="fundamental">تحلیل بنیادی</button>
         </div>
 
-        <!-- لیست بروکرها -->
-        <div id="brokers-container">
+        <!-- گرید آموزش‌ها -->
+        <div id="education-container">
             <div class="loading">
                 <i class="fas fa-spinner fa-spin"></i>
-                <p style="margin-top: 20px;">در حال بارگذاری بروکرها...</p>
+                <p style="margin-top: 20px;">در حال بارگذاری...</p>
             </div>
         </div>
 
-        <!-- نوار مقایسه -->
-        <div class="compare-bar" id="compare-bar" style="display: none;">
-            <span id="compare-count">۰ بروکر انتخاب شده</span>
-            <a href="#" id="compare-link" class="btn btn-primary">مقایسه</a>
-        </div>
+        <!-- صفحه‌بندی -->
+        <div class="pagination" id="pagination"></div>
     </div>
 
     <!-- فوتر -->
@@ -572,87 +512,81 @@
     </footer>
 
     <script>
-        let allBrokers = [];
-        let selectedBrokers = [];
+        let currentPage = 1;
+        let currentCategory = 'all';
+        const itemsPerPage = 9;
 
-        function loadBrokers() {
-            fetch('/api/brokers')
-                .then(res => res.json())
-                .then(result => {
-                    if (result.success) {
-                        allBrokers = result.data;
-                        displayBrokers(allBrokers);
-                    } else {
-                        showError();
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
+        // بارگذاری محتوا
+        async function loadContents(page = 1, category = 'all') {
+            try {
+                let url = `/api/education?limit=${itemsPerPage}&page=${page}`;
+                if (category !== 'all') {
+                    url += `&category=${category}`;
+                }
+
+                const response = await fetch(url);
+                const result = await response.json();
+
+                if (result.success) {
+                    displayContents(result.data);
+                    setupPagination(result.pagination);
+                } else {
                     showError();
-                });
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showError();
+            }
         }
 
-        function displayBrokers(brokers) {
-            const container = document.getElementById('brokers-container');
+        // نمایش محتوا
+        function displayContents(contents) {
+            const container = document.getElementById('education-container');
 
-            if (brokers.length === 0) {
+            if (contents.length === 0) {
                 container.innerHTML = `
-                    <div class="error-message">
-                        <i class="fas fa-info-circle" style="font-size: 3rem;"></i>
-                        <p style="margin-top: 20px;">هیچ بروکری یافت نشد</p>
+                    <div class="no-content">
+                        <i class="fas fa-book-open" style="font-size: 3rem; color: #ffd700;"></i>
+                        <p style="margin-top: 20px;">هیچ محتوای آموزشی یافت نشد</p>
                     </div>
                 `;
                 return;
             }
 
-            let html = '<div class="brokers-grid">';
+            let html = '<div class="education-grid">';
 
-            brokers.forEach(broker => {
-                const stars = '★'.repeat(Math.floor(broker.rating)) + '☆'.repeat(5 - Math.floor(broker.rating));
-                const regulations = JSON.parse(broker.regulations || '[]');
+            contents.forEach(item => {
+                let categoryText = '';
+                switch (item.category) {
+                    case 'basic': categoryText = 'مبتدی'; break;
+                    case 'strategy': categoryText = 'استراتژی'; break;
+                    case 'technical': categoryText = 'تحلیل تکنیکال'; break;
+                    case 'fundamental': categoryText = 'تحلیل بنیادی'; break;
+                    default: categoryText = item.category;
+                }
+
+                const date = new Date(item.createdAt).toLocaleDateString('fa-IR');
 
                 html += `
-                    <div class="broker-card">
-                        <div class="broker-header">
-                            <div class="broker-logo">
-                                ${broker.logo ? `<img src="${broker.logo}">` : '📊'}
+                    <div class="education-card">
+                        <div class="card-header">
+                            <h2 class="card-title">${item.title_fa}</h2>
+                            <div class="card-meta">
+                                <span><i class="fas fa-calendar"></i> ${date}</span>
+                                <span><i class="fas fa-eye"></i> ${item.viewCount || 0}</span>
                             </div>
-                            <div class="broker-info">
-                                <h3>${broker.display_name_fa || broker.name}</h3>
-                                <div class="broker-rating">
-                                    <span class="stars">${stars}</span>
-                                    <span>(${broker.rating})</span>
-                                </div>
+                            <div style="margin-top: 10px;">
+                                <span class="category-badge">${categoryText}</span>
                             </div>
                         </div>
-                        
-                        <div class="broker-features">
-                            <div class="broker-feature">
-                                <span class="feature-label">سال تأسیس:</span>
-                                <span>${broker.foundedYear || '-'}</span>
-                            </div>
-                            <div class="broker-feature">
-                                <span class="feature-label">کاربران:</span>
-                                <span>${broker.usersCount || '۰'}</span>
-                            </div>
-                            <div class="broker-feature">
-                                <span class="feature-label">اسپرد:</span>
-                                <span>${broker.spread || '-'}</span>
-                            </div>
-                            <div class="broker-feature">
-                                <span class="feature-label">اهرم:</span>
-                                <span>${broker.leverage || '-'}</span>
-                            </div>
+                        <div class="card-excerpt">
+                            ${item.excerpt_fa || item.content_fa.substring(0, 150) + '...' || 'برای مشاهده محتوا کلیک کنید'}
                         </div>
-                        
-                        <div class="broker-actions">
-                            <a href="/brokers/${broker.slug}" class="btn btn-secondary">جزئیات</a>
-                            <a href="${broker.registerLink || '#'}" class="btn btn-primary" target="_blank">ثبت‌نام</a>
-                        </div>
-                        
-                        <div class="compare-checkbox">
-                            <input type="checkbox" value="${broker.id}" onchange="toggleCompare(${broker.id}, this.checked)">
-                            <label>انتخاب برای مقایسه</label>
+                        <div class="card-footer">
+                            <a href="/education/${item.slug}" class="read-more">
+                                ادامه مطلب <i class="fas fa-arrow-left"></i>
+                            </a>
+                            <span class="view-count">${item.viewCount || 0} بازدید</span>
                         </div>
                     </div>
                 `;
@@ -662,81 +596,62 @@
             container.innerHTML = html;
         }
 
-        function toggleCompare(id, checked) {
-            if (checked) {
-                if (selectedBrokers.length < 4) {
-                    selectedBrokers.push(id);
-                } else {
-                    alert('حداکثر می‌توانید ۴ بروکر را مقایسه کنید');
-                    event.target.checked = false;
-                    return;
-                }
-            } else {
-                selectedBrokers = selectedBrokers.filter(b => b !== id);
+        // صفحه‌بندی
+        function setupPagination(pagination) {
+            const paginationContainer = document.getElementById('pagination');
+            if (!pagination || pagination.totalPages <= 1) {
+                paginationContainer.innerHTML = '';
+                return;
             }
 
-            updateCompareBar();
-        }
-
-        function updateCompareBar() {
-            const bar = document.getElementById('compare-bar');
-            const countSpan = document.getElementById('compare-count');
-            const link = document.getElementById('compare-link');
-
-            if (selectedBrokers.length > 0) {
-                countSpan.textContent = `${selectedBrokers.length} بروکر انتخاب شده`;
-                link.href = `/compare?ids=${selectedBrokers.join(',')}`;
-                bar.style.display = 'flex';
-            } else {
-                bar.style.display = 'none';
+            let html = '';
+            for (let i = 1; i <= pagination.totalPages; i++) {
+                html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
             }
+            paginationContainer.innerHTML = html;
         }
 
-        function searchBrokers() {
-            const query = document.getElementById('search-input').value.toLowerCase();
-            const filtered = allBrokers.filter(b =>
-                (b.display_name_fa || b.name).toLowerCase().includes(query) ||
-                b.name.toLowerCase().includes(query)
-            );
-            displayBrokers(filtered);
+        // تغییر صفحه
+        function changePage(page) {
+            currentPage = page;
+            loadContents(currentPage, currentCategory);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function filterBrokers(type) {
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+        // تغییر دسته‌بندی
+        function changeCategory(category) {
+            currentCategory = category;
+            currentPage = 1;
 
-            if (type === 'all') {
-                displayBrokers(allBrokers);
-            } else if (type === 'featured') {
-                const filtered = allBrokers.filter(b => b.isFeatured);
-                displayBrokers(filtered);
-            }
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-category="${category}"]`).classList.add('active');
+
+            loadContents(currentPage, currentCategory);
         }
 
-        function sortBrokers(type) {
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-
-            let sorted = [...allBrokers];
-            if (type === 'rating') {
-                sorted.sort((a, b) => b.rating - a.rating);
-            } else if (type === 'order') {
-                sorted.sort((a, b) => (a.order || 0) - (b.order || 0));
-            }
-
-            displayBrokers(sorted);
-        }
-
+        // نمایش خطا
         function showError() {
-            document.getElementById('brokers-container').innerHTML = `
+            document.getElementById('education-container').innerHTML = `
                 <div class="error-message">
                     <i class="fas fa-exclamation-triangle" style="font-size: 3rem;"></i>
-                    <p style="margin-top: 20px;">خطا در بارگذاری بروکرها</p>
+                    <p style="margin-top: 20px;">خطا در بارگذاری محتوا</p>
                 </div>
             `;
         }
 
-        document.addEventListener('DOMContentLoaded', loadBrokers);
+        // رویداد کلیک فیلترها
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                changeCategory(this.dataset.category);
+            });
+        });
+
+        // بارگذاری اولیه
+        document.addEventListener('DOMContentLoaded', () => {
+            loadContents(currentPage, currentCategory);
+        });
     </script>
 </body>
 

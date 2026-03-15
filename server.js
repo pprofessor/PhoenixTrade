@@ -5,10 +5,11 @@ require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const { getMarketPrices } = require('./services/marketPriceService');
 
 // ============= Middleware =============
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // ============= فایل‌های استاتیک =============
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -32,10 +33,10 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 // ============= Database =============
-const { syncDatabase, WebappSetting, WebappPage } = require('./models');
+const { syncDatabase, WebappSetting, WebappPage, Broker } = require('./models');
 
 syncDatabase().then(() => {
-  console.log('✅ Database synced For Running Telegram Bot');
+  console.log('✅ Database synced');
 
   try {
     require('./services/telegramBot');
@@ -99,37 +100,145 @@ app.get('/api/webapp/home', async (req, res) => {
   }
 });
 
+// ============= API دریافت قیمت‌های لحظه‌ای بازار =============
+app.get('/api/market-prices', async (req, res) => {
+  try {
+    console.log('📊 Fetching live market prices from FCS API...');
+
+    const prices = await getMarketPrices();
+
+    res.json({
+      success: true,
+      data: prices,
+      timestamp: new Date().toISOString()
+    });
+
+  } catch (error) {
+    console.error('❌ Error fetching market prices:', error);
+
+    const defaultPrices = {
+      'XAUUSD': { price: '۲٬۳۴۵٫۵۰', change: '۰.۸', changePercent: '۰.۸' },
+      'XAGUSD': { price: '۳۰٫۲۵', change: '۱.۲', changePercent: '۱.۲' },
+      'WTI': { price: '۷۸٫۳۲', change: '-۰.۳', changePercent: '-۰.۳' },
+      'NG': { price: '۲٫۱۵', change: '۲.۵', changePercent: '۲.۵' },
+      'CORN': { price: '۴۴۵٫۷۵', change: '-۰.۵', changePercent: '-۰.۵' },
+      'BTCUSD': { price: '۵۶٬۲۳۰', change: '۲.۱', changePercent: '۲.۱' }
+    };
+
+    res.json({
+      success: true,
+      data: defaultPrices,
+      timestamp: new Date().toISOString(),
+      fallback: true
+    });
+  }
+});
+
 // ============= Routes =============
 const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const apiRoutes = require('./routes/apiRoutes');
 
-// *** ترتیب صحیح مسیرها - بسیار مهم ***
-// 1. اول مسیرهای عمومی API (با /api)
 app.use('/api', apiRoutes);
-
-// 2. بعد مسیرهای پنل مدیریت (با /pprofessor)
 app.use('/pprofessor', authRoutes);
 app.use('/pprofessor', adminRoutes);
-
-// 3. بعد مسیرهای API پنل مدیریت (با /pprofessor/api)
-// این مسیر برای APIهایی که نیاز به احراز هویت دارند
 app.use('/pprofessor/api', apiRoutes);
 
-// صفحه اصلی سایت
+// ============= صفحات عمومی سایت =============
 app.get('/', async (req, res) => {
   try {
     const lang = req.query.lang || 'fa';
     console.log('🏠 Home page requested, lang:', lang);
-
-    res.render('home', {
-      title: 'خانه',
-      lang: lang,
-      user: null
-    });
+    res.render('home', { title: 'خانه', lang, user: null });
   } catch (error) {
     console.error('❌ Error loading home page:', error);
     res.status(500).send('خطا در بارگذاری صفحه اصلی');
+  }
+});
+
+app.get('/brokers', async (req, res) => {
+  try {
+    const lang = req.query.lang || 'fa';
+    console.log('🏢 Brokers list page requested, lang:', lang);
+    res.render('brokers', { title: 'بروکرهای معتبر', lang, user: null });
+  } catch (error) {
+    console.error('❌ Error loading brokers list page:', error);
+    res.status(500).send('خطا در بارگذاری صفحه بروکرها');
+  }
+});
+
+app.get('/education', async (req, res) => {
+  try {
+    const lang = req.query.lang || 'fa';
+    console.log('📚 Education list page requested, lang:', lang);
+    res.render('education-list', { title: 'آموزش‌ها', lang, user: null });
+  } catch (error) {
+    console.error('❌ Error loading education list page:', error);
+    res.status(500).send('خطا در بارگذاری صفحه آموزش‌ها');
+  }
+});
+
+app.get('/education/:slug', async (req, res) => {
+  try {
+    const { slug } = req.params;
+    const lang = req.query.lang || 'fa';
+    console.log(`📖 Education page requested, slug: ${slug}, lang: ${lang}`);
+    res.render('education', { title: 'محتوای آموزشی', lang, user: null, slug });
+  } catch (error) {
+    console.error('❌ Error loading education page:', error);
+    res.status(500).send('خطا در بارگذاری صفحه آموزشی');
+  }
+});
+
+app.get('/brokers/:slug', async (req, res) => {
+  try {
+    const { slug } = req.params;
+    const lang = req.query.lang || 'fa';
+    console.log(`🏢 Broker details page requested, slug: ${slug}, lang: ${lang}`);
+
+    const broker = await Broker.findOne({
+      where: { slug, isActive: true }
+    });
+
+    if (!broker) {
+      return res.status(404).render('error', {
+        title: 'خطا',
+        message: 'بروکر مورد نظر یافت نشد',
+        user: null
+      });
+    }
+
+    res.render('broker-detail', {
+      title: broker.display_name_fa || broker.name,
+      lang,
+      user: null,
+      broker
+    });
+  } catch (error) {
+    console.error('❌ Error loading broker details page:', error);
+    res.status(500).send('خطا در بارگذاری صفحه بروکر');
+  }
+});
+
+app.get('/markets', async (req, res) => {
+  try {
+    const lang = req.query.lang || 'fa';
+    console.log('📊 Markets page requested, lang:', lang);
+    res.render('markets', { title: 'بازارهای مالی', lang, user: null });
+  } catch (error) {
+    console.error('❌ Error loading markets page:', error);
+    res.status(500).send('خطا در بارگذاری صفحه بازارها');
+  }
+});
+
+app.get('/compare', async (req, res) => {
+  try {
+    const lang = req.query.lang || 'fa';
+    console.log('⚖️ Compare page requested, lang:', lang);
+    res.render('compare', { title: 'مقایسه بروکرها', lang, user: null });
+  } catch (error) {
+    console.error('❌ Error loading compare page:', error);
+    res.status(500).send('خطا در بارگذاری صفحه مقایسه');
   }
 });
 

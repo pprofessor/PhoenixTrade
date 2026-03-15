@@ -7,7 +7,19 @@ const botController = require('../controllers/botController');
 const databaseController = require('../controllers/databaseController');
 const apiController = require('../controllers/apiController');
 const webappController = require('../controllers/webappController');
-const { BotMenu, BotMessage, BotUser, BotUserMessage, WebappPage, Broker } = require('../models');
+const {
+  BotMenu,
+  BotMessage,
+  BotUser,
+  BotUserMessage,
+  WebappPage,
+  Broker,
+  EducationalContent,
+  MarketIndex,
+  BrokerFeature,
+  BrokerFeatureValue,
+  HomeSlide
+} = require('../models');
 const { checkBotStatus } = require('../services/telegramBot');
 
 // ============= تنظیمات آپلود فایل =============
@@ -26,7 +38,7 @@ const upload = multer({
   storage: storage,
   limits: { fileSize: 50 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
-    const allowedTypes = /jpeg|jpg|png|gif|mp4|mp3|pdf|doc|docx/;
+    const allowedTypes = /jpeg|jpg|png|gif|mp4|mp3|pdf|doc|docx|svg/;
     const ext = path.extname(file.originalname).toLowerCase().substring(1);
     if (allowedTypes.test(ext)) {
       cb(null, true);
@@ -211,7 +223,6 @@ router.post('/api/logs/clear', isAuthenticated, apiController.clearLogs);
 router.get('/api/stats', isAuthenticated, apiController.getStats);
 
 // ============= مدیریت وب‌اپ =============
-// صفحه اصلی مدیریت وب‌اپ
 router.get('/webapp', isAuthenticated, webappController.webappIndex);
 
 // ============= API صفحات وب‌اپ =============
@@ -317,20 +328,14 @@ router.post('/api/brokers', isAuthenticated, async (req, res) => {
     console.log('📝 Creating broker with data:', req.body);
 
     const brokerData = {
-      // اطلاعات پایه
       name: req.body.name,
       slug: req.body.slug,
-
-      // فیلدهای سه‌زبانه
       display_name_fa: req.body.display_name_fa || '',
       display_name_en: req.body.display_name_en || '',
       display_name_ar: req.body.display_name_ar || '',
-
       description_fa: req.body.description_fa || '',
       description_en: req.body.description_en || '',
       description_ar: req.body.description_ar || '',
-
-      // سایر اطلاعات
       logo: req.body.logo || '',
       foundedYear: req.body.foundedYear,
       usersCount: req.body.usersCount,
@@ -382,16 +387,12 @@ router.put('/api/brokers/:id', isAuthenticated, async (req, res) => {
     const updateData = {
       name: req.body.name,
       slug: req.body.slug,
-
-      // فیلدهای سه‌زبانه
       display_name_fa: req.body.display_name_fa || '',
       display_name_en: req.body.display_name_en || '',
       display_name_ar: req.body.display_name_ar || '',
-
       description_fa: req.body.description_fa || '',
       description_en: req.body.description_en || '',
       description_ar: req.body.description_ar || '',
-
       logo: req.body.logo || '',
       foundedYear: req.body.foundedYear,
       usersCount: req.body.usersCount,
@@ -445,7 +446,7 @@ router.delete('/api/brokers/:id', isAuthenticated, async (req, res) => {
   }
 });
 
-// ============= دریافت اطلاعات یک بروکر برای ویرایش =============
+// دریافت اطلاعات یک بروکر برای ویرایش
 router.get('/api/brokers/:id', isAuthenticated, async (req, res) => {
   try {
     const broker = await Broker.findByPk(req.params.id);
@@ -453,6 +454,520 @@ router.get('/api/brokers/:id', isAuthenticated, async (req, res) => {
       return res.status(404).json({ success: false, error: 'بروکر یافت نشد' });
     }
     res.json({ success: true, data: broker });
+  } catch (error) {
+    console.error('❌ Error:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// ============= مدیریت محتوای آموزشی =============
+// صفحه لیست محتوای آموزشی
+router.get('/education', isAuthenticated, async (req, res) => {
+  try {
+    const contents = await EducationalContent.findAll({
+      order: [['category', 'ASC'], ['order', 'ASC']]
+    });
+
+    res.render('admin/education', {
+      title: 'مدیریت محتوای آموزشی',
+      user: req.session.adminUsername,
+      activePage: 'education',
+      contents: contents
+    });
+  } catch (error) {
+    console.error('❌ Error:', error);
+    res.status(500).send('خطا');
+  }
+});
+
+// ============= API محتوای آموزشی =============
+router.get('/api/education', isAuthenticated, async (req, res) => {
+  try {
+    const contents = await EducationalContent.findAll({
+      order: [['category', 'ASC'], ['order', 'ASC']]
+    });
+    res.json({ success: true, data: contents });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+router.get('/api/education/:id', isAuthenticated, async (req, res) => {
+  try {
+    const content = await EducationalContent.findByPk(req.params.id);
+    if (!content) {
+      return res.status(404).json({ success: false, error: 'محتوا یافت نشد' });
+    }
+    res.json({ success: true, data: content });
+  } catch (error) {
+    console.error('❌ Error:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+router.post('/api/education', isAuthenticated, async (req, res) => {
+  try {
+    console.log('📝 Creating educational content with data:', req.body);
+
+    const contentData = {
+      title_fa: req.body.title_fa,
+      title_en: req.body.title_en,
+      title_ar: req.body.title_ar,
+      slug: req.body.slug,
+      category: req.body.category,
+      content_fa: req.body.content_fa || '',
+      content_en: req.body.content_en || '',
+      content_ar: req.body.content_ar || '',
+      excerpt_fa: req.body.excerpt_fa || '',
+      excerpt_en: req.body.excerpt_en || '',
+      excerpt_ar: req.body.excerpt_ar || '',
+      featuredImage: req.body.featuredImage || '',
+      order: req.body.order || 0,
+      isActive: req.body.isActive !== undefined ? req.body.isActive : true
+    };
+
+    const content = await EducationalContent.create(contentData);
+    console.log('✅ Educational content created successfully:', content.id);
+    res.status(201).json({ success: true, data: content });
+
+  } catch (error) {
+    console.error('❌ Error creating educational content:', error);
+
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      const field = error.errors?.[0]?.path || 'slug';
+      const value = error.errors?.[0]?.value || '';
+
+      return res.status(400).json({
+        success: false,
+        error: `مقدار "${value}" برای فیلد "${field}" تکراری است. لطفاً یک مقدار یکتا وارد کنید.`
+      });
+    }
+
+    res.status(500).json({
+      success: false,
+      error: error.message || 'خطا در ایجاد محتوا'
+    });
+  }
+});
+
+router.put('/api/education/:id', isAuthenticated, async (req, res) => {
+  try {
+    console.log('📝 Updating educational content ID:', req.params.id, 'with data:', req.body);
+
+    const content = await EducationalContent.findByPk(req.params.id);
+    if (!content) {
+      return res.status(404).json({ success: false, error: 'محتوا یافت نشد' });
+    }
+
+    const updateData = {
+      title_fa: req.body.title_fa,
+      title_en: req.body.title_en,
+      title_ar: req.body.title_ar,
+      slug: req.body.slug,
+      category: req.body.category,
+      content_fa: req.body.content_fa || '',
+      content_en: req.body.content_en || '',
+      content_ar: req.body.content_ar || '',
+      excerpt_fa: req.body.excerpt_fa || '',
+      excerpt_en: req.body.excerpt_en || '',
+      excerpt_ar: req.body.excerpt_ar || '',
+      featuredImage: req.body.featuredImage || '',
+      order: req.body.order || 0,
+      isActive: req.body.isActive !== undefined ? req.body.isActive : true
+    };
+
+    await content.update(updateData);
+    console.log('✅ Educational content updated successfully');
+    res.json({ success: true, data: content });
+
+  } catch (error) {
+    console.error('❌ Error updating educational content:', error);
+
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      const field = error.errors?.[0]?.path || 'slug';
+      const value = error.errors?.[0]?.value || '';
+
+      return res.status(400).json({
+        success: false,
+        error: `مقدار "${value}" برای فیلد "${field}" تکراری است. لطفاً یک مقدار یکتا وارد کنید.`
+      });
+    }
+
+    res.status(500).json({
+      success: false,
+      error: error.message || 'خطا در ویرایش محتوا'
+    });
+  }
+});
+
+router.delete('/api/education/:id', isAuthenticated, async (req, res) => {
+  try {
+    const content = await EducationalContent.findByPk(req.params.id);
+    if (!content) {
+      return res.status(404).json({ success: false, error: 'محتوا یافت نشد' });
+    }
+
+    await content.destroy();
+    res.json({ success: true });
+  } catch (error) {
+    console.error('❌ Error:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+router.patch('/api/education/:id/toggle', isAuthenticated, async (req, res) => {
+  try {
+    const content = await EducationalContent.findByPk(req.params.id);
+    if (!content) {
+      return res.status(404).json({ success: false, error: 'محتوا یافت نشد' });
+    }
+
+    content.isActive = !content.isActive;
+    await content.save();
+    res.json({ success: true, isActive: content.isActive });
+  } catch (error) {
+    console.error('❌ Error:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+
+// ============= مدیریت ویژگی‌های بروکر =============
+router.get('/broker-features', isAuthenticated, async (req, res) => {
+  try {
+    const features = await BrokerFeature.findAll({
+      order: [['category', 'ASC'], ['displayOrder', 'ASC']]
+    });
+
+    res.render('admin/broker-features', {
+      title: 'مدیریت ویژگی‌های بروکر',
+      user: req.session.adminUsername,
+      activePage: 'broker-features',
+      features: features
+    });
+  } catch (error) {
+    console.error('❌ Error:', error);
+    res.status(500).send('خطا');
+  }
+});
+
+// ============= API ویژگی‌ها =============
+router.get('/api/broker-features', isAuthenticated, async (req, res) => {
+  try {
+    const features = await BrokerFeature.findAll({
+      order: [['category', 'ASC'], ['displayOrder', 'ASC']]
+    });
+    res.json({ success: true, data: features });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+router.post('/api/broker-features', isAuthenticated, async (req, res) => {
+  try {
+    const featureData = {
+      key: req.body.key,
+      title_fa: req.body.title_fa,
+      title_en: req.body.title_en,
+      title_ar: req.body.title_ar,
+      dataType: req.body.dataType,
+      unit: req.body.unit || '',
+      category: req.body.category,
+      displayOrder: req.body.displayOrder || 0,
+      showInComparison: req.body.showInComparison === 'true',
+      filterable: req.body.filterable === 'true'
+    };
+
+    const feature = await BrokerFeature.create(featureData);
+    res.status(201).json({ success: true, data: feature });
+
+  } catch (error) {
+    console.error('❌ Error:', error);
+
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      return res.status(400).json({
+        success: false,
+        error: 'کلید ویژگی تکراری است'
+      });
+    }
+
+    res.status(500).json({
+      success: false,
+      error: error.message || 'خطا در ایجاد ویژگی'
+    });
+  }
+});
+
+router.put('/api/broker-features/:id', isAuthenticated, async (req, res) => {
+  try {
+    const feature = await BrokerFeature.findByPk(req.params.id);
+    if (!feature) {
+      return res.status(404).json({ success: false, error: 'ویژگی یافت نشد' });
+    }
+
+    await feature.update({
+      key: req.body.key,
+      title_fa: req.body.title_fa,
+      title_en: req.body.title_en,
+      title_ar: req.body.title_ar,
+      dataType: req.body.dataType,
+      unit: req.body.unit || '',
+      category: req.body.category,
+      displayOrder: req.body.displayOrder || 0,
+      showInComparison: req.body.showInComparison === 'true',
+      filterable: req.body.filterable === 'true'
+    });
+
+    res.json({ success: true, data: feature });
+
+  } catch (error) {
+    console.error('❌ Error:', error);
+
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      return res.status(400).json({
+        success: false,
+        error: 'کلید ویژگی تکراری است'
+      });
+    }
+
+    res.status(500).json({
+      success: false,
+      error: error.message || 'خطا در ویرایش ویژگی'
+    });
+  }
+});
+
+router.delete('/api/broker-features/:id', isAuthenticated, async (req, res) => {
+  try {
+    const feature = await BrokerFeature.findByPk(req.params.id);
+    if (!feature) {
+      return res.status(404).json({ success: false, error: 'ویژگی یافت نشد' });
+    }
+
+    await BrokerFeatureValue.destroy({ where: { featureId: feature.id } });
+    await feature.destroy();
+
+    res.json({ success: true });
+
+  } catch (error) {
+    console.error('❌ Error:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// ============= API مقادیر ویژگی‌های بروکر =============
+router.get('/api/brokers/:brokerId/features', isAuthenticated, async (req, res) => {
+  try {
+    const values = await BrokerFeatureValue.findAll({
+      where: { brokerId: req.params.brokerId },
+      include: [{ model: BrokerFeature, as: 'feature' }]
+    });
+
+    res.json({ success: true, data: values });
+
+  } catch (error) {
+    console.error('❌ Error:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+router.post('/api/brokers/:brokerId/features', isAuthenticated, async (req, res) => {
+  try {
+    const { brokerId } = req.params;
+    const { features } = req.body;
+
+    await BrokerFeatureValue.destroy({ where: { brokerId } });
+
+    const values = await Promise.all(
+      features.map(f => BrokerFeatureValue.create({
+        brokerId,
+        featureId: f.featureId,
+        value: f.value
+      }))
+    );
+
+    res.json({ success: true, data: values });
+
+  } catch (error) {
+    console.error('❌ Error:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+router.get('/brokers/:id/features', isAuthenticated, async (req, res) => {
+  try {
+    const broker = await Broker.findByPk(req.params.id);
+    if (!broker) {
+      return res.status(404).send('بروکر یافت نشد');
+    }
+
+    const features = await BrokerFeature.findAll({
+      order: [['category', 'ASC'], ['displayOrder', 'ASC']]
+    });
+
+    const featureValues = await BrokerFeatureValue.findAll({
+      where: { brokerId: broker.id }
+    });
+
+    const valuesMap = {};
+    featureValues.forEach(v => {
+      valuesMap[v.featureId] = v.value;
+    });
+
+    res.render('admin/broker-feature-values', {
+      title: 'تنظیم ویژگی‌ها',
+      user: req.session.adminUsername,
+      activePage: 'brokers',
+      broker: broker,
+      features: features,
+      featureValues: valuesMap
+    });
+  } catch (error) {
+    console.error('❌ Error:', error);
+    res.status(500).send('خطا');
+  }
+});
+
+// ============= مدیریت اسلایدهای صفحه اصلی =============
+router.get('/home-slides', isAuthenticated, async (req, res) => {
+  try {
+    const slides = await HomeSlide.findAll({
+      order: [['order', 'ASC'], ['createdAt', 'DESC']]
+    });
+
+    res.render('admin/home-slides', {
+      title: 'مدیریت اسلایدهای صفحه اصلی',
+      user: req.session.adminUsername,
+      activePage: 'home-slides',
+      slides: slides
+    });
+  } catch (error) {
+    console.error('❌ Error:', error);
+    res.status(500).send('خطا');
+  }
+});
+
+// ============= API اسلایدها =============
+router.get('/api/home-slides', isAuthenticated, async (req, res) => {
+  try {
+    const slides = await HomeSlide.findAll({
+      order: [['order', 'ASC'], ['createdAt', 'DESC']]
+    });
+    res.json({ success: true, data: slides });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+router.get('/api/home-slides/:id', isAuthenticated, async (req, res) => {
+  try {
+    const slide = await HomeSlide.findByPk(req.params.id);
+    if (!slide) {
+      return res.status(404).json({ success: false, error: 'اسلاید یافت نشد' });
+    }
+    res.json({ success: true, data: slide });
+  } catch (error) {
+    console.error('❌ Error:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+router.post('/api/home-slides', isAuthenticated, async (req, res) => {
+  try {
+    console.log('📝 Creating home slide with data:', req.body);
+
+    const slideData = {
+      image: req.body.image,
+      title_fa: req.body.title_fa,
+      title_en: req.body.title_en,
+      title_ar: req.body.title_ar,
+      subtitle_fa: req.body.subtitle_fa,
+      subtitle_en: req.body.subtitle_en,
+      subtitle_ar: req.body.subtitle_ar,
+      button_fa: req.body.button_fa,
+      button_en: req.body.button_en,
+      button_ar: req.body.button_ar,
+      button_link: req.body.button_link,
+      order: req.body.order || 0,
+      isActive: req.body.isActive !== undefined ? req.body.isActive : true
+    };
+
+    const slide = await HomeSlide.create(slideData);
+    console.log('✅ Home slide created successfully:', slide.id);
+    res.status(201).json({ success: true, data: slide });
+
+  } catch (error) {
+    console.error('❌ Error creating home slide:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'خطا در ایجاد اسلاید'
+    });
+  }
+});
+
+router.put('/api/home-slides/:id', isAuthenticated, async (req, res) => {
+  try {
+    console.log('📝 Updating home slide ID:', req.params.id, 'with data:', req.body);
+
+    const slide = await HomeSlide.findByPk(req.params.id);
+    if (!slide) {
+      return res.status(404).json({ success: false, error: 'اسلاید یافت نشد' });
+    }
+
+    const updateData = {
+      image: req.body.image,
+      title_fa: req.body.title_fa,
+      title_en: req.body.title_en,
+      title_ar: req.body.title_ar,
+      subtitle_fa: req.body.subtitle_fa,
+      subtitle_en: req.body.subtitle_en,
+      subtitle_ar: req.body.subtitle_ar,
+      button_fa: req.body.button_fa,
+      button_en: req.body.button_en,
+      button_ar: req.body.button_ar,
+      button_link: req.body.button_link,
+      order: req.body.order || 0,
+      isActive: req.body.isActive !== undefined ? req.body.isActive : true
+    };
+
+    await slide.update(updateData);
+    console.log('✅ Home slide updated successfully');
+    res.json({ success: true, data: slide });
+
+  } catch (error) {
+    console.error('❌ Error updating home slide:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'خطا در ویرایش اسلاید'
+    });
+  }
+});
+
+router.delete('/api/home-slides/:id', isAuthenticated, async (req, res) => {
+  try {
+    const slide = await HomeSlide.findByPk(req.params.id);
+    if (!slide) {
+      return res.status(404).json({ success: false, error: 'اسلاید یافت نشد' });
+    }
+
+    await slide.destroy();
+    res.json({ success: true });
+  } catch (error) {
+    console.error('❌ Error:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+router.patch('/api/home-slides/:id/toggle', isAuthenticated, async (req, res) => {
+  try {
+    const slide = await HomeSlide.findByPk(req.params.id);
+    if (!slide) {
+      return res.status(404).json({ success: false, error: 'اسلاید یافت نشد' });
+    }
+
+    slide.isActive = !slide.isActive;
+    await slide.save();
+    res.json({ success: true, isActive: slide.isActive });
   } catch (error) {
     console.error('❌ Error:', error);
     res.status(500).json({ success: false, error: error.message });

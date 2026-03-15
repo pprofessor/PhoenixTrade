@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %> - PhoenixTrade
+    </title>
+    <!-- فونت سمیم -->
+    <link rel="stylesheet" href="/css/fonts.css">
+    <!-- استایل سراسری پنل -->
+    <link rel="stylesheet" href="/css/admin.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .slide-preview {
+            width: 100px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid #ffd700;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        .status-active {
+            background: rgba(40, 167, 69, 0.15);
+            color: #28a745;
+            border: 1px solid #28a745;
+        }
+
+        .status-inactive {
+            background: rgba(220, 53, 69, 0.15);
+            color: #dc3545;
+            border: 1px solid #dc3545;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #1a2f2a;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            border: 1px solid #ffd700;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            color: #ffd700;
+            font-size: 1.3rem;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .modal-close {
+            cursor: pointer;
+            font-size: 1.8rem;
+        }
+
+        .modal-close:hover {
+            color: #fff;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #ffd700;
+            margin-bottom: 5px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #ffd700;
+        }
+
+        .btn-icon {
+            padding: 5px 10px;
+            border-radius: 5px;
+            background: transparent;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            color: #ffd700;
+            cursor: pointer;
+            margin: 0 3px;
+        }
+
+        .btn-icon:hover {
+            background: #ffd700;
+            color: #0a2f1f;
+        }
+
+        .btn-icon.danger:hover {
+            background: #dc3545;
+            color: white;
+            border-color: #dc3545;
+        }
+
+        .language-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .language-title {
+            color: #ffd700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .image-preview {
+            width: 200px;
+            height: 120px;
+            border-radius: 10px;
+            border: 2px dashed #ffd700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.3);
+            margin-top: 10px;
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* استایل‌های اضافی برای هماهنگی با پنل */
+        .table-container {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 5px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            background: rgba(255, 215, 0, 0.1);
+            color: #ffd700;
+            padding: 12px;
+            text-align: right;
+            font-weight: 500;
+        }
+
+        .data-table td {
+            padding: 10px;
+            color: #fff;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+            vertical-align: middle;
+        }
+
+        .data-table tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('../sidebar', { activePage: 'home-slides' }) %>
+
+        <div class="main-content">
+            <div class="header">
+                <h1><i class="fas fa-images"></i>
+                    <%= title %>
+                </h1>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <button class="btn" onclick="showSlideModal()">
+                    <i class="fas fa-plus"></i> اسلاید جدید
+                </button>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>تصویر</th>
+                            <th>عنوان فارسی</th>
+                            <th>لینک</th>
+                            <th>ترتیب</th>
+                            <th>وضعیت</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="slides-list">
+                        <tr>
+                            <td colspan="6" style="text-align:center; padding: 30px;">در حال بارگذاری...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- مودال ایجاد/ویرایش اسلاید -->
+        <div class="modal" id="slide-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span id="modal-title">ایجاد اسلاید جدید</span>
+                    <span class="modal-close" onclick="closeModal()">&times;</span>
+                </div>
+
+                <form id="slide-form" onsubmit="event.preventDefault(); saveSlide();">
+                    <input type="hidden" id="slide-id">
+
+                    <!-- تصویر -->
+                    <div class="form-group">
+                        <label>تصویر اسلاید</label>
+                        <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                            <input type="file" id="slide-image" accept="image/*" style="display: none;"
+                                onchange="previewImage()">
+                            <button type="button" class="btn btn-sm"
+                                onclick="document.getElementById('slide-image').click()">
+                                <i class="fas fa-upload"></i> انتخاب تصویر
+                            </button>
+                            <div class="image-preview" id="image-preview">
+                                <i class="fas fa-image" style="color: #ffd700; font-size: 2rem;"></i>
+                            </div>
+                            <input type="hidden" id="slide-image-url">
+                        </div>
+                        <small style="color:#aaa;">تصویر با کیفیت، حداقل عرض 1200 پیکسل</small>
+                    </div>
+
+                    <!-- اطلاعات فارسی -->
+                    <div class="language-section">
+                        <div class="language-title"><i class="fas fa-flag"></i> اطلاعات فارسی</div>
+                        <div class="form-group">
+                            <label>عنوان فارسی</label>
+                            <input type="text" id="slide-title-fa" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>زیرعنوان فارسی</label>
+                            <textarea id="slide-subtitle-fa" class="form-control" rows="2" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>متن دکمه (فارسی)</label>
+                            <input type="text" id="slide-button-fa" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <!-- اطلاعات انگلیسی -->
+                    <div class="language-section">
+                        <div class="language-title"><i class="fas fa-flag"></i> English Information</div>
+                        <div class="form-group">
+                            <label>English Title</label>
+                            <input type="text" id="slide-title-en" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>English Subtitle</label>
+                            <textarea id="slide-subtitle-en" class="form-control" rows="2" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Button Text (English)</label>
+                            <input type="text" id="slide-button-en" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <!-- اطلاعات عربی -->
+                    <div class="language-section">
+                        <div class="language-title"><i class="fas fa-flag"></i> المعلومات العربية</div>
+                        <div class="form-group">
+                            <label>العنوان (عربي)</label>
+                            <input type="text" id="slide-title-ar" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>العنوان الفرعي (عربي)</label>
+                            <textarea id="slide-subtitle-ar" class="form-control" rows="2" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>نص الزر (عربي)</label>
+                            <input type="text" id="slide-button-ar" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <!-- لینک و تنظیمات -->
+                    <div class="row">
+                        <div class="form-group">
+                            <label>لینک دکمه</label>
+                            <input type="text" id="slide-link" class="form-control" placeholder="/brokers">
+                        </div>
+                        <div class="form-group">
+                            <label>ترتیب نمایش</label>
+                            <input type="number" id="slide-order" class="form-control" value="0" min="0">
+                        </div>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <label style="color:white;">
+                            <input type="checkbox" id="slide-isActive" checked> فعال
+                        </label>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; margin-top: 20px;">
+                        <button type="submit" class="btn">ذخیره</button>
+                        <button type="button" class="btn btn-danger" onclick="closeModal()">انصراف</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            function loadSlides() {
+                fetch('/pprofessor/api/home-slides')
+                    .then(res => res.json())
+                    .then(result => {
+                        if (result.success) {
+                            let html = '';
+                            result.data.forEach(slide => {
+                                html += `<tr>
+                                <td><img src="${slide.image}" class="slide-preview"></td>
+                                <td>${slide.title_fa}</td>
+                                <td><code>${slide.button_link}</code></td>
+                                <td style="text-align: center;">${slide.order || 0}</td>
+                                <td>
+                                    <span class="status-badge ${slide.isActive ? 'status-active' : 'status-inactive'}" 
+                                          onclick="toggleSlideStatus(${slide.id})" style="cursor:pointer;">
+                                        ${slide.isActive ? 'فعال' : 'غیرفعال'}
+                                    </span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <button class="btn-icon" onclick="editSlide(${slide.id})" title="ویرایش">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-icon danger" onclick="deleteSlide(${slide.id})" title="حذف">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>`;
+                            });
+                            document.getElementById('slides-list').innerHTML = html;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        document.getElementById('slides-list').innerHTML =
+                            '<tr><td colspan="6" style="text-align:center; color:#dc3545; padding:30px;">خطا در بارگذاری</td></tr>';
+                    });
+            }
+
+            function previewImage() {
+                const file = document.getElementById('slide-image').files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const preview = document.getElementById('image-preview');
+                        preview.innerHTML = `<img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover;">`;
+                        document.getElementById('slide-image-url').value = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+
+            function showSlideModal() {
+                document.getElementById('modal-title').textContent = 'ایجاد اسلاید جدید';
+                document.getElementById('slide-id').value = '';
+                document.getElementById('slide-title-fa').value = '';
+                document.getElementById('slide-title-en').value = '';
+                document.getElementById('slide-title-ar').value = '';
+                document.getElementById('slide-subtitle-fa').value = '';
+                document.getElementById('slide-subtitle-en').value = '';
+                document.getElementById('slide-subtitle-ar').value = '';
+                document.getElementById('slide-button-fa').value = '';
+                document.getElementById('slide-button-en').value = '';
+                document.getElementById('slide-button-ar').value = '';
+                document.getElementById('slide-link').value = '';
+                document.getElementById('slide-order').value = '0';
+                document.getElementById('slide-isActive').checked = true;
+                document.getElementById('image-preview').innerHTML = '<i class="fas fa-image" style="color: #ffd700; font-size: 2rem;"></i>';
+                document.getElementById('slide-image-url').value = '';
+                document.getElementById('slide-modal').classList.add('active');
+            }
+
+            function editSlide(id) {
+                fetch(`/pprofessor/api/home-slides/${id}`)
+                    .then(res => res.json())
+                    .then(result => {
+                        if (result.success) {
+                            const slide = result.data;
+                            document.getElementById('modal-title').textContent = 'ویرایش اسلاید';
+                            document.getElementById('slide-id').value = slide.id;
+                            document.getElementById('slide-title-fa').value = slide.title_fa || '';
+                            document.getElementById('slide-title-en').value = slide.title_en || '';
+                            document.getElementById('slide-title-ar').value = slide.title_ar || '';
+                            document.getElementById('slide-subtitle-fa').value = slide.subtitle_fa || '';
+                            document.getElementById('slide-subtitle-en').value = slide.subtitle_en || '';
+                            document.getElementById('slide-subtitle-ar').value = slide.subtitle_ar || '';
+                            document.getElementById('slide-button-fa').value = slide.button_fa || '';
+                            document.getElementById('slide-button-en').value = slide.button_en || '';
+                            document.getElementById('slide-button-ar').value = slide.button_ar || '';
+                            document.getElementById('slide-link').value = slide.button_link || '';
+                            document.getElementById('slide-order').value = slide.order || '0';
+                            document.getElementById('slide-isActive').checked = slide.isActive;
+
+                            if (slide.image) {
+                                document.getElementById('image-preview').innerHTML = `<img src="${slide.image}" style="width:100%; height:100%; object-fit:cover;">`;
+                                document.getElementById('slide-image-url').value = slide.image;
+                            }
+
+                            document.getElementById('slide-modal').classList.add('active');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('خطا در دریافت اطلاعات اسلاید');
+                    });
+            }
+
+            function saveSlide() {
+                // اعتبارسنجی
+                if (!document.getElementById('slide-image-url').value) {
+                    alert('لطفاً یک تصویر انتخاب کنید');
+                    return;
+                }
+
+                const data = {
+                    image: document.getElementById('slide-image-url').value,
+                    title_fa: document.getElementById('slide-title-fa').value,
+                    title_en: document.getElementById('slide-title-en').value,
+                    title_ar: document.getElementById('slide-title-ar').value,
+                    subtitle_fa: document.getElementById('slide-subtitle-fa').value,
+                    subtitle_en: document.getElementById('slide-subtitle-en').value,
+                    subtitle_ar: document.getElementById('slide-subtitle-ar').value,
+                    button_fa: document.getElementById('slide-button-fa').value,
+                    button_en: document.getElementById('slide-button-en').value,
+                    button_ar: document.getElementById('slide-button-ar').value,
+                    button_link: document.getElementById('slide-link').value,
+                    order: parseInt(document.getElementById('slide-order').value) || 0,
+                    isActive: document.getElementById('slide-isActive').checked
+                };
+
+                const id = document.getElementById('slide-id').value;
+                const url = id ? `/pprofessor/api/home-slides/${id}` : '/pprofessor/api/home-slides';
+                const method = id ? 'PUT' : 'POST';
+
+                fetch(url, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                })
+                    .then(res => {
+                        if (!res.ok) {
+                            return res.text().then(text => {
+                                throw new Error(text);
+                            });
+                        }
+                        return res.json();
+                    })
+                    .then(result => {
+                        if (result.success) {
+                            alert(id ? 'اسلاید ویرایش شد' : 'اسلاید ایجاد شد');
+                            closeModal();
+                            loadSlides();
+                        } else {
+                            alert('خطا: ' + (result.error || 'خطای ناشناخته'));
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('خطا در ارتباط با سرور: ' + error.message);
+                    });
+            }
+            function toggleSlideStatus(id) {
+                fetch(`/pprofessor/api/home-slides/${id}/toggle`, { method: 'PATCH' })
+                    .then(res => res.json())
+                    .then(result => {
+                        if (result.success) {
+                            loadSlides();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('خطا در تغییر وضعیت');
+                    });
+            }
+
+            function deleteSlide(id) {
+                if (confirm('آیا از حذف این اسلاید اطمینان دارید؟')) {
+                    fetch(`/pprofessor/api/home-slides/${id}`, { method: 'DELETE' })
+                        .then(res => res.json())
+                        .then(result => {
+                            if (result.success) {
+                                loadSlides();
+                            } else {
+                                alert('خطا: ' + result.error);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('خطا در ارتباط با سرور');
+                        });
+                }
+            }
+
+            function closeModal() {
+                document.getElementById('slide-modal').classList.remove('active');
+            }
+
+            document.addEventListener('DOMContentLoaded', loadSlides);
+        </script>
+</body>
+
+</html>

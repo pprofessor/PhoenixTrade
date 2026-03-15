@@ -3,7 +3,9 @@ const router = express.Router();
 const { Op } = require('sequelize');
 const {
   BotMessage, WebappPage, Lesson, Broker, BotUser, Event,
-  BotMenu, ApiKey, ApiLog, ApiEndpoint, BotUserMessage
+  BotMenu, ApiKey, ApiLog, ApiEndpoint, BotUserMessage,
+  EducationalContent, MarketIndex, HomeSlide,
+  BrokerFeature, BrokerFeatureValue
 } = require('../models');
 const { isAuthenticated } = require('../middleware/auth');
 
@@ -75,6 +77,309 @@ router.get('/brokers', async (req, res) => {
     res.json({ success: true, data: brokers });
   } catch (error) {
     console.error('❌ Error fetching brokers:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
+ * @route   GET /api/broker-features
+ * @desc    دریافت لیست همه ویژگی‌ها
+ * @access  Public
+ */
+router.get('/broker-features', async (req, res) => {
+  try {
+    const features = await BrokerFeature.findAll({
+      where: { showInComparison: true },
+      order: [['category', 'ASC'], ['displayOrder', 'ASC']]
+    });
+
+    res.json({ success: true, data: features });
+  } catch (error) {
+    console.error('❌ Error fetching broker features:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
+ * @route   GET /api/brokers/:slug/features
+ * @desc    دریافت ویژگی‌های یک بروکر
+ * @access  Public
+ */
+router.get('/brokers/:slug/features', async (req, res) => {
+  try {
+    const broker = await Broker.findOne({
+      where: { slug: req.params.slug, isActive: true }
+    });
+
+    if (!broker) {
+      return res.status(404).json({ success: false, error: 'بروکر یافت نشد' });
+    }
+
+    const featureValues = await BrokerFeatureValue.findAll({
+      where: { brokerId: broker.id },
+      include: [{ model: BrokerFeature, as: 'feature' }]
+    });
+
+    const formattedFeatures = featureValues.map(fv => ({
+      key: fv.feature.key,
+      title: {
+        fa: fv.feature.title_fa,
+        en: fv.feature.title_en,
+        ar: fv.feature.title_ar
+      },
+      value: fv.value,
+      dataType: fv.feature.dataType,
+      unit: fv.feature.unit,
+      category: fv.feature.category
+    }));
+
+    res.json({
+      success: true,
+      data: {
+        broker: {
+          id: broker.id,
+          name: broker.name,
+          display_name: {
+            fa: broker.display_name_fa,
+            en: broker.display_name_en,
+            ar: broker.display_name_ar
+          },
+          logo: broker.logo,
+          rating: broker.rating
+        },
+        features: formattedFeatures
+      }
+    });
+  } catch (error) {
+    console.error('❌ Error fetching broker features:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
+ * @route   GET /api/brokers/compare
+ * @desc    مقایسه چند بروکر
+ * @access  Public
+ */
+router.get('/brokers/compare', async (req, res) => {
+  try {
+    const { ids } = req.query; // آرایه‌ای از idها
+    const brokerIds = ids.split(',').map(id => parseInt(id));
+
+    const brokers = await Broker.findAll({
+      where: { id: brokerIds, isActive: true }
+    });
+
+    const features = await BrokerFeature.findAll({
+      where: { showInComparison: true },
+      order: [['category', 'ASC'], ['displayOrder', 'ASC']]
+    });
+
+    const featureValues = await BrokerFeatureValue.findAll({
+      where: { brokerId: brokerIds }
+    });
+
+    // ساختاردهی داده‌ها برای مقایسه
+    const comparisonData = {
+      brokers: brokers.map(b => ({
+        id: b.id,
+        name: b.name,
+        display_name: {
+          fa: b.display_name_fa,
+          en: b.display_name_en,
+          ar: b.display_name_ar
+        },
+        logo: b.logo,
+        rating: b.rating
+      })),
+      features: features.map(f => ({
+        id: f.id,
+        key: f.key,
+        title: {
+          fa: f.title_fa,
+          en: f.title_en,
+          ar: f.title_ar
+        },
+        dataType: f.dataType,
+        unit: f.unit,
+        category: f.category
+      })),
+      values: featureValues.map(v => ({
+        brokerId: v.brokerId,
+        featureId: v.featureId,
+        value: v.value
+      }))
+    };
+
+    res.json({ success: true, data: comparisonData });
+  } catch (error) {
+    console.error('❌ Error comparing brokers:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
+ * @route   GET /api/education
+ * @desc    دریافت لیست محتوای آموزشی با قابلیت صفحه‌بندی و فیلتر
+ * @access  Public
+ */
+router.get('/education', async (req, res) => {
+  try {
+    const { category, limit = 9, page = 1 } = req.query;
+    const offset = (parseInt(page) - 1) * parseInt(limit);
+
+    const where = { isActive: true };
+    if (category && category !== 'all') {
+      where.category = category;
+    }
+
+    const { count, rows } = await EducationalContent.findAndCountAll({
+      where,
+      order: [['order', 'ASC'], ['createdAt', 'DESC']],
+      limit: parseInt(limit),
+      offset: parseInt(offset)
+    });
+
+    res.json({
+      success: true,
+      data: rows,
+      pagination: {
+        page: parseInt(page),
+        limit: parseInt(limit),
+        total: count,
+        totalPages: Math.ceil(count / parseInt(limit))
+      }
+    });
+  } catch (error) {
+    console.error('❌ Error fetching educational content:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
+ * @route   GET /api/market-indices
+ * @desc    دریافت لیست شاخص‌های بازار
+ * @access  Public
+ */
+router.get('/market-indices', async (req, res) => {
+  try {
+    const { type, featured, limit = 20 } = req.query;
+
+    const where = { isActive: true };
+    if (type) {
+      where.type = type;
+    }
+    if (featured === 'true') {
+      where.isFeatured = true;
+    }
+
+    const indices = await MarketIndex.findAll({
+      where,
+      order: [['type', 'ASC'], ['order', 'ASC']],
+      limit: parseInt(limit)
+    });
+
+    const formattedIndices = indices.map(index => ({
+      id: index.id,
+      symbol: index.symbol,
+      name_fa: index.name_fa,
+      name_en: index.name_en,
+      name_ar: index.name_ar,
+      type: index.type,
+      price: index.price,
+      previousPrice: index.previousPrice,
+      change: index.change,
+      tradingViewUrl: index.tradingViewUrl,
+      image: index.image,
+      isFeatured: index.isFeatured
+    }));
+
+    res.json({ success: true, data: formattedIndices });
+  } catch (error) {
+    console.error('❌ Error fetching market indices:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
+ * @route   GET /api/market-indices/:symbol
+ * @desc    دریافت اطلاعات یک شاخص با نماد
+ * @access  Public
+ */
+router.get('/market-indices/:symbol', async (req, res) => {
+  try {
+    const index = await MarketIndex.findOne({
+      where: { symbol: req.params.symbol, isActive: true }
+    });
+
+    if (!index) {
+      return res.status(404).json({
+        success: false,
+        error: 'شاخص مورد نظر یافت نشد'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: {
+        id: index.id,
+        symbol: index.symbol,
+        name: {
+          fa: index.name_fa,
+          en: index.name_en,
+          ar: index.name_ar
+        },
+        type: index.type,
+        price: index.price,
+        previousPrice: index.previousPrice,
+        change: index.change,
+        tradingViewUrl: index.tradingViewUrl,
+        isFeatured: index.isFeatured
+      }
+    });
+  } catch (error) {
+    console.error('❌ Error fetching market index:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
+ * @route   GET /api/webapp/slides
+ * @desc    دریافت لیست اسلایدهای صفحه اصلی
+ * @access  Public
+ */
+router.get('/webapp/slides', async (req, res) => {
+  try {
+    const slides = await HomeSlide.findAll({
+      where: { isActive: true },
+      order: [['order', 'ASC'], ['createdAt', 'DESC']]
+    });
+
+    const formattedSlides = slides.map(slide => ({
+      id: slide.id,
+      image: slide.image,
+      title: {
+        fa: slide.title_fa,
+        en: slide.title_en,
+        ar: slide.title_ar
+      },
+      subtitle: {
+        fa: slide.subtitle_fa,
+        en: slide.subtitle_en,
+        ar: slide.subtitle_ar
+      },
+      button: {
+        fa: slide.button_fa,
+        en: slide.button_en,
+        ar: slide.button_ar
+      },
+      link: slide.button_link,
+      order: slide.order
+    }));
+
+    res.json({ success: true, data: formattedSlides });
+  } catch (error) {
+    console.error('❌ Error fetching slides:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
@@ -249,6 +554,34 @@ router.get('/brokers/:slug', async (req, res) => {
     res.json({ success: true, data: broker });
   } catch (error) {
     console.error('❌ Error fetching broker:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
+ * @route   GET /api/education/:slug
+ * @desc    دریافت اطلاعات یک محتوای آموزشی با slug
+ * @access  Public
+ */
+router.get('/education/:slug', async (req, res) => {
+  try {
+    const content = await EducationalContent.findOne({
+      where: { slug: req.params.slug, isActive: true }
+    });
+
+    if (!content) {
+      return res.status(404).json({
+        success: false,
+        error: 'محتوای آموزشی مورد نظر یافت نشد'
+      });
+    }
+
+    // افزایش بازدید
+    await content.increment('viewCount');
+
+    res.json({ success: true, data: content });
+  } catch (error) {
+    console.error('❌ Error fetching educational content:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });

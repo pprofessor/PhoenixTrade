@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title || 'محتوای آموزشی' %> - PhoenixTrade
+    </title>
+    <!-- فونت سمیم -->
+    <link rel="stylesheet" href="/css/fonts.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Samim', 'Vazir', 'Tahoma', sans-serif;
+            background: linear-gradient(165deg, #0a3825 0%, #1a4f33 30%, #2e6b49 60%, #1a4f33 100%);
+            min-height: 100vh;
+            color: #ffffff;
+            line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -40%;
+            left: -40%;
+            width: 180%;
+            height: 180%;
+            background: radial-gradient(circle at 40% 40%,
+                    rgba(255, 255, 255, 0.35) 0%,
+                    rgba(100, 230, 170, 0.25) 25%,
+                    rgba(40, 120, 80, 0.15) 50%,
+                    transparent 80%);
+            animation: jadeShimmer 18s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes jadeShimmer {
+            0% {
+                transform: rotate(0deg) scale(1);
+                opacity: 0.4;
+            }
+
+            25% {
+                transform: rotate(3deg) scale(1.05);
+                opacity: 0.8;
+            }
+
+            50% {
+                transform: rotate(0deg) scale(1.1);
+                opacity: 0.5;
+            }
+
+            75% {
+                transform: rotate(-3deg) scale(1.05);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: rotate(0deg) scale(1);
+                opacity: 0.4;
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .header {
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+            background: rgba(10, 40, 25, 0.25);
+            backdrop-filter: blur(20px) saturate(180%);
+            border-radius: 60px;
+            margin: 20px auto;
+            padding: 12px 35px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #ffd700, #b8860b);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            color: #0a3825;
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
+        }
+
+        .logo-text {
+            font-size: 1.7rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #ffd700, #ffe68f);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: #ffffff;
+            font-weight: 500;
+            transition: all 0.3s;
+            padding: 8px 18px;
+            border-radius: 40px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(5px);
+            font-size: 0.95rem;
+        }
+
+        .nav-menu a:hover {
+            background: rgba(255, 215, 0, 0.25);
+            color: #ffd700;
+            transform: translateY(-3px);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .lang-selector {
+            display: flex;
+            gap: 5px;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 4px;
+            border-radius: 40px;
+        }
+
+        .lang-btn {
+            padding: 5px 12px;
+            border: none;
+            background: transparent;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+            color: #ffffff;
+        }
+
+        .lang-btn.active {
+            background: #ffd700;
+            color: #0a3825;
+        }
+
+        .telegram-link {
+            background: linear-gradient(135deg, #27a7e7, #0f7bc0);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* محتوای اصلی */
+        .content-wrapper {
+            background: rgba(10, 40, 25, 0.25);
+            backdrop-filter: blur(15px) saturate(180%);
+            border-radius: 40px;
+            padding: 50px;
+            margin: 40px 0;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .content-header {
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+            padding-bottom: 20px;
+        }
+
+        .content-title {
+            font-size: 2.5rem;
+            color: #ffd700;
+            margin-bottom: 15px;
+        }
+
+        .content-meta {
+            display: flex;
+            gap: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .content-meta i {
+            color: #ffd700;
+            margin-left: 5px;
+        }
+
+        .category-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            background: rgba(255, 215, 0, 0.15);
+            color: #ffd700;
+            border: 1px solid #ffd700;
+        }
+
+        .featured-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 20px;
+            margin: 30px 0;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .content-body {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .content-body h2 {
+            color: #ffd700;
+            margin: 30px 0 15px;
+        }
+
+        .content-body p {
+            margin-bottom: 20px;
+        }
+
+        .content-body ul,
+        .content-body ol {
+            margin: 20px 0;
+            padding-right: 40px;
+        }
+
+        .content-body li {
+            margin-bottom: 10px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #ffd700;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .back-link i {
+            margin-left: 5px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 100px;
+        }
+
+        .loading i {
+            font-size: 3rem;
+            color: #ffd700;
+        }
+
+        .error-message {
+            text-align: center;
+            padding: 100px;
+            color: #dc3545;
+        }
+
+        .footer {
+            background: rgba(0, 20, 10, 0.35);
+            backdrop-filter: blur(20px) saturate(180%);
+            padding: 60px 0 30px;
+            margin-top: 100px;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+
+        .footer-section h3 {
+            color: #ffd700;
+            margin-bottom: 20px;
+        }
+
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .footer-section a:hover {
+            color: #ffd700;
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .content-title {
+                font-size: 1.8rem;
+            }
+
+            .content-wrapper {
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- هدر -->
+        <header class="header">
+            <div class="header-content">
+                <a href="/" style="text-decoration: none;">
+                    <div class="logo">
+                        <div class="logo-icon">🦅</div>
+                        <span class="logo-text">ققنوس</span>
+                    </div>
+                </a>
+
+                <ul class="nav-menu">
+                    <li><a href="/">صفحه اصلی</a></li>
+                    <li><a href="/brokers">بروکرها</a></li>
+                    <li><a href="/education">آموزش</a></li>
+                    <li><a href="/markets">بازارها</a></li>
+                    <li><a href="/contact">ارتباط با ما</a></li>
+                </ul>
+
+                <div class="header-actions">
+                    <div class="lang-selector">
+                        <button class="lang-btn active" data-lang="fa">FA</button>
+                        <button class="lang-btn" data-lang="en">EN</button>
+                        <button class="lang-btn" data-lang="ar">AR</button>
+                    </div>
+
+                    <a href="https://t.me/PhoenixTradeBot" class="telegram-link" target="_blank">
+                        <i class="fab fa-telegram-plane"></i>
+                        کانال تلگرام
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- محتوای اصلی -->
+        <div class="content-wrapper" id="content-container">
+            <div class="loading">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p style="margin-top: 20px;">در حال بارگذاری...</p>
+            </div>
+        </div>
+
+        <!-- دکمه بازگشت -->
+        <a href="/education" class="back-link">
+            <i class="fas fa-arrow-right"></i> بازگشت به لیست آموزش‌ها
+        </a>
+    </div>
+
+    <!-- فوتر -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>دسترسی سریع</h3>
+                    <a href="/">صفحه اصلی</a>
+                    <a href="/brokers">بروکرها</a>
+                    <a href="/education">آموزش</a>
+                    <a href="/markets">بازارها</a>
+                </div>
+                <div class="footer-section">
+                    <h3>تماس با ما</h3>
+                    <p><i class="fas fa-envelope"></i> info@phoenixtrade.info</p>
+                    <p><i class="fas fa-phone"></i> ۰۲۱-۱۲۳۴۵۶۷۸</p>
+                    <p><i class="fab fa-telegram"></i> @PhoenixTradeBot</p>
+                </div>
+                <div class="footer-section">
+                    <h3>شبکه‌های اجتماعی</h3>
+                    <a href="#"><i class="fab fa-telegram"></i> تلگرام</a>
+                    <a href="#"><i class="fab fa-instagram"></i> اینستاگرام</a>
+                    <a href="#"><i class="fab fa-twitter"></i> توییتر</a>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>© ۲۰۲۶ تمامی حقوق برای ققنوس محفوظ است</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // دریافت slug از URL
+        const pathParts = window.location.pathname.split('/');
+        const slug = pathParts[pathParts.length - 1];
+
+        // بارگذاری محتوا
+        async function loadContent() {
+            try {
+                const response = await fetch(`/api/education/${slug}`);
+                const result = await response.json();
+
+                if (result.success) {
+                    const content = result.data;
+                    const container = document.getElementById('content-container');
+
+                    let categoryText = '';
+                    switch (content.category) {
+                        case 'basic': categoryText = 'مبتدی'; break;
+                        case 'strategy': categoryText = 'استراتژی'; break;
+                        case 'technical': categoryText = 'تحلیل تکنیکال'; break;
+                        case 'fundamental': categoryText = 'تحلیل بنیادی'; break;
+                        default: categoryText = content.category;
+                    }
+
+                    const date = new Date(content.createdAt).toLocaleDateString('fa-IR');
+
+                    container.innerHTML = `
+                        <div class="content-header">
+                            <h1 class="content-title">${content.title_fa}</h1>
+                            <div class="content-meta">
+                                <span><i class="fas fa-calendar"></i> ${date}</span>
+                                <span><i class="fas fa-eye"></i> ${content.viewCount || 0} بازدید</span>
+                                <span><i class="fas fa-tag"></i> <span class="category-badge">${categoryText}</span></span>
+                            </div>
+                        </div>
+                        
+                        ${content.featuredImage ?
+                            `<img src="${content.featuredImage}" alt="${content.title_fa}" class="featured-image">` :
+                            ''}
+                        
+                        <div class="content-body">
+                            ${content.content_fa || 'محتوایی وجود ندارد'}
+                        </div>
+                    `;
+                } else {
+                    showError();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showError();
+            }
+        }
+
+        function showError() {
+            document.getElementById('content-container').innerHTML = `
+                <div class="error-message">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 3rem;"></i>
+                    <p style="margin-top: 20px;">محتوا یافت نشد</p>
+                    <a href="/education" style="
+                        display: inline-block;
+                        margin-top: 20px;
+                        padding: 10px 30px;
+                        background: #ffd700;
+                        color: #0a3825;
+                        text-decoration: none;
+                        border-radius: 30px;
+                    ">بازگشت به لیست آموزش‌ها</a>
+                </div>
+            `;
+        }
+
+        document.addEventListener('DOMContentLoaded', loadContent);
+    </script>
+</body>
+
+</html>

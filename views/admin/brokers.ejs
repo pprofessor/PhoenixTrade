@@ -448,9 +448,10 @@
                                     </td>
                                     <td>${broker.order || 0}</td>
                                     <td>
-                                        <button class="btn-icon" onclick="editBroker(${broker.id})"><i class="fas fa-edit"></i></button>
-                                        <button class="btn-icon danger" onclick="deleteBroker(${broker.id})"><i class="fas fa-trash"></i></button>
-                                    </td>
+    <button class="btn-icon" onclick="editBroker(${broker.id})" title="ویرایش"><i class="fas fa-edit"></i></button>
+    <button class="btn-icon" onclick="manageFeatures(${broker.id})" title="تنظیم ویژگی‌ها"><i class="fas fa-sliders-h"></i></button>
+    <button class="btn-icon danger" onclick="deleteBroker(${broker.id})" title="حذف"><i class="fas fa-trash"></i></button>
+</td>
                                 </tr>`;
                             });
                             document.getElementById('brokers-list').innerHTML = html;
@@ -743,6 +744,11 @@
                 document.body.appendChild(toast);
 
                 setTimeout(() => toast.remove(), 3000);
+            }
+
+            // ============= مدیریت ویژگی‌های بروکر =============
+            function manageFeatures(id) {
+                window.location.href = `/pprofessor/brokers/${id}/features`;
             }
 
             // ============= بارگذاری اولیه =============

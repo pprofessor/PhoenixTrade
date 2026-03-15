@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بازارهای مالی - PhoenixTrade</title>
+    <!-- فونت سمیم -->
+    <link rel="stylesheet" href="/css/fonts.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Samim', 'Vazir', 'Tahoma', sans-serif;
+            background: linear-gradient(165deg, #0a3825 0%, #1a4f33 30%, #2e6b49 60%, #1a4f33 100%);
+            min-height: 100vh;
+            color: #ffffff;
+            line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -40%;
+            left: -40%;
+            width: 180%;
+            height: 180%;
+            background: radial-gradient(circle at 40% 40%,
+                    rgba(255, 255, 255, 0.35) 0%,
+                    rgba(100, 230, 170, 0.25) 25%,
+                    rgba(40, 120, 80, 0.15) 50%,
+                    transparent 80%);
+            animation: jadeShimmer 18s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes jadeShimmer {
+            0% {
+                transform: rotate(0deg) scale(1);
+                opacity: 0.4;
+            }
+
+            25% {
+                transform: rotate(3deg) scale(1.05);
+                opacity: 0.8;
+            }
+
+            50% {
+                transform: rotate(0deg) scale(1.1);
+                opacity: 0.5;
+            }
+
+            75% {
+                transform: rotate(-3deg) scale(1.05);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: rotate(0deg) scale(1);
+                opacity: 0.4;
+            }
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .header {
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+            background: rgba(10, 40, 25, 0.25);
+            backdrop-filter: blur(20px) saturate(180%);
+            border-radius: 60px;
+            margin: 20px auto;
+            padding: 12px 35px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #ffd700, #b8860b);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            color: #0a3825;
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
+        }
+
+        .logo-text {
+            font-size: 1.7rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #ffd700, #ffe68f);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: #ffffff;
+            font-weight: 500;
+            transition: all 0.3s;
+            padding: 8px 18px;
+            border-radius: 40px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(5px);
+            font-size: 0.95rem;
+        }
+
+        .nav-menu a:hover {
+            background: rgba(255, 215, 0, 0.25);
+            color: #ffd700;
+            transform: translateY(-3px);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .lang-selector {
+            display: flex;
+            gap: 5px;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 4px;
+            border-radius: 40px;
+        }
+
+        .lang-btn {
+            padding: 5px 12px;
+            border: none;
+            background: transparent;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+            color: #ffffff;
+        }
+
+        .lang-btn.active {
+            background: #ffd700;
+            color: #0a3825;
+        }
+
+        .telegram-link {
+            background: linear-gradient(135deg, #27a7e7, #0f7bc0);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .page-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #ffd700;
+            margin: 50px 0 20px;
+        }
+
+        .page-subtitle {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 50px;
+            font-size: 1.1rem;
+        }
+
+        /* دسته‌بندی‌ها */
+        .category-tabs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .category-tab {
+            padding: 12px 30px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 40px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .category-tab:hover,
+        .category-tab.active {
+            background: #ffd700;
+            color: #0a3825;
+            border-color: #ffd700;
+        }
+
+        /* گرید بازارها */
+        .markets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .market-card {
+            background: rgba(10, 40, 25, 0.25);
+            backdrop-filter: blur(15px) saturate(180%);
+            border-radius: 30px;
+            padding: 25px;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .market-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(255, 215, 0, 0.4);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .market-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .market-symbol {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .market-type-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            background: rgba(255, 215, 0, 0.15);
+            color: #ffd700;
+            border: 1px solid #ffd700;
+        }
+
+        .market-name {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+        }
+
+        /* ویجت TradingView */
+        .tradingview-widget-container {
+            margin-top: 15px;
+            border-radius: 15px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.3);
+            min-height: 120px;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 50px;
+            color: #aaa;
+            background: rgba(10, 40, 25, 0.25);
+            border-radius: 30px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+        }
+
+        .loading i {
+            font-size: 3rem;
+            color: #ffd700;
+        }
+
+        .footer {
+            background: rgba(0, 20, 10, 0.35);
+            backdrop-filter: blur(20px) saturate(180%);
+            padding: 60px 0 30px;
+            margin-top: 100px;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+
+        .footer-section h3 {
+            color: #ffd700;
+            margin-bottom: 20px;
+        }
+
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .footer-section a:hover {
+            color: #ffd700;
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .markets-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- هدر -->
+        <header class="header">
+            <div class="header-content">
+                <a href="/" style="text-decoration: none;">
+                    <div class="logo">
+                        <div class="logo-icon">🦅</div>
+                        <span class="logo-text">ققنوس</span>
+                    </div>
+                </a>
+
+                <ul class="nav-menu">
+                    <li><a href="/">صفحه اصلی</a></li>
+                    <li><a href="/brokers">بروکرها</a></li>
+                    <li><a href="/education">آموزش</a></li>
+                    <li><a href="/markets">بازارها</a></li>
+                    <li><a href="/contact">ارتباط با ما</a></li>
+                </ul>
+
+                <div class="header-actions">
+                    <div class="lang-selector">
+                        <button class="lang-btn active" data-lang="fa">FA</button>
+                        <button class="lang-btn" data-lang="en">EN</button>
+                        <button class="lang-btn" data-lang="ar">AR</button>
+                    </div>
+
+                    <a href="https://t.me/PhoenixTradeBot" class="telegram-link" target="_blank">
+                        <i class="fab fa-telegram-plane"></i>
+                        کانال تلگرام
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- عنوان صفحه -->
+        <h1 class="page-title">بازارهای مالی</h1>
+        <p class="page-subtitle">قیمت‌های لحظه‌ای از TradingView</p>
+
+        <!-- دسته‌بندی‌ها -->
+        <div class="category-tabs" id="category-tabs">
+            <button class="category-tab active" data-type="all">همه</button>
+            <button class="category-tab" data-type="forex">فارکس</button>
+            <button class="category-tab" data-type="commodity">کالاها</button>
+            <button class="category-tab" data-type="crypto">ارز دیجیتال</button>
+            <button class="category-tab" data-type="index">شاخص‌ها</button>
+        </div>
+
+        <!-- گرید بازارها -->
+        <div id="markets-container">
+            <div class="loading">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p style="margin-top: 20px;">در حال بارگذاری بازارها...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- فوتر -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>دسترسی سریع</h3>
+                    <a href="/">صفحه اصلی</a>
+                    <a href="/brokers">بروکرها</a>
+                    <a href="/education">آموزش</a>
+                    <a href="/markets">بازارها</a>
+                </div>
+                <div class="footer-section">
+                    <h3>تماس با ما</h3>
+                    <p><i class="fas fa-envelope"></i> info@phoenixtrade.info</p>
+                    <p><i class="fas fa-phone"></i> ۰۲۱-۱۲۳۴۵۶۷۸</p>
+                    <p><i class="fab fa-telegram"></i> @PhoenixTradeBot</p>
+                </div>
+                <div class="footer-section">
+                    <h3>شبکه‌های اجتماعی</h3>
+                    <a href="#"><i class="fab fa-telegram"></i> تلگرام</a>
+                    <a href="#"><i class="fab fa-instagram"></i> اینستاگرام</a>
+                    <a href="#"><i class="fab fa-twitter"></i> توییتر</a>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>© ۲۰۲۶ تمامی حقوق برای ققنوس محفوظ است</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- اسکریپت TradingView -->
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    <script>
+        // لیست نمادها بر اساس دسته‌بندی
+        const symbols = {
+            all: [
+                { symbol: 'FX:EURUSD', name: 'یورو/دلار' },
+                { symbol: 'FX:GBPUSD', name: 'پوند/دلار' },
+                { symbol: 'FX:USDJPY', name: 'دلار/ین' },
+                { symbol: 'FX:USDCHF', name: 'دلار/فرانک' },
+                { symbol: 'FX:AUDUSD', name: 'دلار/استرالیا' },
+                { symbol: 'FX:USDCAD', name: 'دلار/کانادا' },
+                { symbol: 'FX:NZDUSD', name: 'دلار/نیوزیلند' },
+                { symbol: 'COMEX:GC1!', name: 'طلای جهانی' },
+                { symbol: 'COMEX:SI1!', name: 'نقره' },
+                { symbol: 'NYMEX:CL1!', name: 'نفت خام' },
+                { symbol: 'NYMEX:NG1!', name: 'گاز طبیعی' },
+                { symbol: 'BITSTAMP:BTCUSD', name: 'بیت‌کوین' },
+                { symbol: 'BITSTAMP:ETHUSD', name: 'اتریوم' },
+                { symbol: 'NASDAQ:TSLA', name: 'تسلا' },
+                { symbol: 'NASDAQ:AAPL', name: 'اپل' },
+                { symbol: 'CBOT:ZW1!', name: 'گندم' },
+                { symbol: 'CBOT:ZC1!', name: 'ذرت' },
+                { symbol: 'CBOT:ZS1!', name: 'سویا' }
+            ],
+            forex: [
+                { symbol: 'FX:EURUSD', name: 'یورو/دلار' },
+                { symbol: 'FX:GBPUSD', name: 'پوند/دلار' },
+                { symbol: 'FX:USDJPY', name: 'دلار/ین' },
+                { symbol: 'FX:USDCHF', name: 'دلار/فرانک' },
+                { symbol: 'FX:AUDUSD', name: 'دلار/استرالیا' },
+                { symbol: 'FX:USDCAD', name: 'دلار/کانادا' },
+                { symbol: 'FX:NZDUSD', name: 'دلار/نیوزیلند' }
+            ],
+            commodity: [
+                { symbol: 'COMEX:GC1!', name: 'طلای جهانی' },
+                { symbol: 'COMEX:SI1!', name: 'نقره' },
+                { symbol: 'NYMEX:CL1!', name: 'نفت خام' },
+                { symbol: 'NYMEX:NG1!', name: 'گاز طبیعی' },
+                { symbol: 'CBOT:ZW1!', name: 'گندم' },
+                { symbol: 'CBOT:ZC1!', name: 'ذرت' },
+                { symbol: 'CBOT:ZS1!', name: 'سویا' }
+            ],
+            crypto: [
+                { symbol: 'BITSTAMP:BTCUSD', name: 'بیت‌کوین' },
+                { symbol: 'BITSTAMP:ETHUSD', name: 'اتریوم' },
+                { symbol: 'BITSTAMP:BNBUSD', name: 'بایننس کوین' },
+                { symbol: 'BITSTAMP:XRPUSD', name: 'ریپل' },
+                { symbol: 'BITSTAMP:ADAUSD', name: 'کاردانو' },
+                { symbol: 'BITSTAMP:DOTUSD', name: 'پولکادات' }
+            ],
+            index: [
+                { symbol: 'NASDAQ:TSLA', name: 'تسلا' },
+                { symbol: 'NASDAQ:AAPL', name: 'اپل' },
+                { symbol: 'NASDAQ:MSFT', name: 'مایکروسافت' },
+                { symbol: 'NASDAQ:GOOGL', name: 'گوگل' },
+                { symbol: 'NYSE:JPM', name: 'جی‌پی مورگان' },
+                { symbol: 'CBOE:VIX', name: 'شاخص ترس' }
+            ]
+        };
+
+        let currentType = 'all';
+
+        function loadMarkets(type) {
+            const container = document.getElementById('markets-container');
+            const selectedSymbols = symbols[type] || symbols.all;
+
+            let html = '<div class="markets-grid">';
+
+            selectedSymbols.forEach(item => {
+                // تعیین نوع برای نمایش
+                let typeText = '';
+                let typeClass = '';
+
+                if (item.symbol.includes('FX:')) {
+                    typeText = 'فارکس';
+                    typeClass = 'type-forex';
+                } else if (item.symbol.includes('COMEX:') || item.symbol.includes('NYMEX:')) {
+                    typeText = 'کالا';
+                    typeClass = 'type-commodity';
+                } else if (item.symbol.includes('BITSTAMP:')) {
+                    typeText = 'ارز دیجیتال';
+                    typeClass = 'type-crypto';
+                } else {
+                    typeText = 'شاخص';
+                    typeClass = 'type-index';
+                }
+
+                html += `
+                    <div class="market-card">
+                        <div class="market-header">
+                            <span class="market-symbol">${item.symbol.split(':')[1] || item.symbol}</span>
+                            <span class="market-type-badge ${typeClass}">${typeText}</span>
+                        </div>
+                        <div class="market-name">${item.name}</div>
+                        <div class="tradingview-widget-container">
+                            <div class="tradingview-widget-container__widget" id="widget-${item.symbol.replace(/[:!]/g, '_')}"></div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            container.innerHTML = html;
+
+            // بارگذاری ویجت‌ها
+            setTimeout(() => {
+                selectedSymbols.forEach(item => {
+                    new TradingView.widget({
+                        "container_id": `widget-${item.symbol.replace(/[:!]/g, '_')}`,
+                        "symbol": item.symbol,
+                        "width": "100%",
+                        "height": 150,
+                        "locale": "fa",
+                        "colorTheme": "dark",
+                        "autosize": true,
+                        "hide_legend": true,
+                        "hide_side_toolbar": true,
+                        "allow_symbol_change": false,
+                        "details": false,
+                        "hotlist": false,
+                        "calendar": false,
+                        "studies": [],
+                        "theme": "dark",
+                        "style": "1",
+                        "timezone": "Asia/Tehran",
+                        "withdateranges": false,
+                        "hideideas": true,
+                        "show_popup_button": false,
+                        "popup_width": "1000",
+                        "popup_height": "650"
+                    });
+                });
+            }, 100);
+        }
+
+        // تغییر دسته‌بندی
+        function changeCategory(type) {
+            currentType = type;
+
+            document.querySelectorAll('.category-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`[data-type="${type}"]`).classList.add('active');
+
+            loadMarkets(type);
+        }
+
+        // رویداد کلیک دسته‌بندی‌ها
+        document.querySelectorAll('.category-tab').forEach(tab => {
+            tab.addEventListener('click', function () {
+                changeCategory(this.dataset.type);
+            });
+        });
+
+        // بارگذاری اولیه
+        document.addEventListener('DOMContentLoaded', () => {
+            loadMarkets('all');
+        });
+    </script>
+</body>
+
+</html>

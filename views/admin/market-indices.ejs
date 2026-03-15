@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %> - PhoenixTrade
+    </title>
+    <!-- فونت سمیم -->
+    <link rel="stylesheet" href="/css/fonts.css">
+    <!-- استایل سراسری پنل -->
+    <link rel="stylesheet" href="/css/admin.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* استایل‌های اختصاصی صفحه شاخص‌های بازار */
+        .type-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .type-forex {
+            background: rgba(23, 162, 184, 0.15);
+            color: #17a2b8;
+            border: 1px solid #17a2b8;
+        }
+
+        .type-commodity {
+            background: rgba(255, 193, 7, 0.15);
+            color: #ffc107;
+            border: 1px solid #ffc107;
+        }
+
+        .type-crypto {
+            background: rgba(153, 102, 255, 0.15);
+            color: #9966ff;
+            border: 1px solid #9966ff;
+        }
+
+        .type-index {
+            background: rgba(40, 167, 69, 0.15);
+            color: #28a745;
+            border: 1px solid #28a745;
+        }
+
+        .type-agricultural {
+            background: rgba(220, 53, 69, 0.15);
+            color: #dc3545;
+            border: 1px solid #dc3545;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        .status-active {
+            background: rgba(40, 167, 69, 0.15);
+            color: #28a745;
+            border: 1px solid #28a745;
+        }
+
+        .status-inactive {
+            background: rgba(220, 53, 69, 0.15);
+            color: #dc3545;
+            border: 1px solid #dc3545;
+        }
+
+        .featured-badge {
+            background: #ffd700;
+            color: #0a2f1f;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            display: inline-block;
+        }
+
+        /* استایل جدول */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            background: rgba(255, 215, 0, 0.1);
+            color: #ffd700;
+            padding: 12px 8px;
+            text-align: right;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .data-table td {
+            padding: 10px 8px;
+            color: #fff;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+            vertical-align: middle;
+        }
+
+        .data-table tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .btn-icon {
+            padding: 5px 8px;
+            border-radius: 5px;
+            background: transparent;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            color: #ffd700;
+            cursor: pointer;
+            margin: 0 2px;
+            font-size: 0.85rem;
+        }
+
+        .btn-icon:hover {
+            background: #ffd700;
+            color: #0a2f1f;
+        }
+
+        .btn-icon.danger:hover {
+            background: #dc3545;
+            color: white;
+            border-color: #dc3545;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #1a2f2a;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 700px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            border: 1px solid #ffd700;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            color: #ffd700;
+            font-size: 1.3rem;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .modal-close {
+            cursor: pointer;
+            font-size: 1.8rem;
+        }
+
+        .modal-close:hover {
+            color: #fff;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #ffd700;
+            margin-bottom: 5px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #ffd700;
+        }
+
+        .language-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .language-title {
+            color: #ffd700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .image-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            border: 2px dashed #ffd700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .index-image {
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('../sidebar', { activePage: 'market-indices' }) %>
+
+        <div class="main-content">
+            <div class="header">
+                <h1><i class="fas fa-chart-line"></i>
+                    <%= title %>
+                </h1>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <button class="btn" onclick="showIndexModal()">
+                    <i class="fas fa-plus"></i> شاخص جدید
+                </button>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>تصویر</th>
+                            <th>نماد</th>
+                            <th>نام فارسی</th>
+                            <th>نوع</th>
+                            <th>ویژه</th>
+                            <th>وضعیت</th>
+                            <th>ترتیب</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="indices-list">
+                        <tr>
+                            <td colspan="8" style="text-align:center; padding: 30px;">در حال بارگذاری...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- مودال ایجاد/ویرایش شاخص -->
+        <div class="modal" id="index-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span id="modal-title">ایجاد شاخص جدید</span>
+                    <span class="modal-close" onclick="closeModal()">&times;</span>
+                </div>
+
+                <form id="index-form" onsubmit="event.preventDefault(); saveIndex();">
+                    <input type="hidden" id="index-id">
+
+                    <div class="row">
+                        <div class="form-group">
+                            <label>نماد (symbol)</label>
+                            <input type="text" id="index-symbol" class="form-control" required placeholder="XAUUSD">
+                        </div>
+
+                        <div class="form-group">
+                            <label>نوع شاخص</label>
+                            <select id="index-type" class="form-control" required>
+                                <option value="forex">فارکس</option>
+                                <option value="commodity">کالا</option>
+                                <option value="crypto">ارز دیجیتال</option>
+                                <option value="index">شاخص</option>
+                                <option value="agricultural">کشاورزی</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="language-section">
+                        <div class="language-title"><i class="fas fa-flag"></i> نام شاخص</div>
+                        <div class="row">
+                            <div class="form-group">
+                                <label>نام فارسی</label>
+                                <input type="text" id="index-name-fa" class="form-control" required
+                                    placeholder="اونس طلا">
+                            </div>
+                            <div class="form-group">
+                                <label>نام انگلیسی</label>
+                                <input type="text" id="index-name-en" class="form-control" required placeholder="Gold">
+                            </div>
+                            <div class="form-group">
+                                <label>نام عربی</label>
+                                <input type="text" id="index-name-ar" class="form-control" required placeholder="الذهب">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- فیلد آپلود تصویر -->
+                    <div class="form-group">
+                        <label>تصویر نماد</label>
+                        <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                            <input type="file" id="index-image" accept="image/*" style="display: none;"
+                                onchange="previewImage()">
+                            <button type="button" class="btn btn-sm"
+                                onclick="document.getElementById('index-image').click()">
+                                <i class="fas fa-upload"></i> انتخاب تصویر
+                            </button>
+                            <div class="image-preview" id="image-preview">
+                                <i class="fas fa-image" style="color: #ffd700; font-size: 2rem;"></i>
+                            </div>
+                            <input type="hidden" id="index-image-url">
+                        </div>
+                        <small style="color:#aaa;">فرمت‌های مجاز: PNG, JPG, GIF, SVG</small>
+                    </div>
+
+                    <!-- لینک چارت -->
+                    <div class="form-group">
+                        <label>لینک چارت TradingView</label>
+                        <input type="url" id="index-tradingview-url" class="form-control"
+                            placeholder="https://www.tradingview.com/symbols/XAUUSD/">
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group">
+                            <label>ترتیب نمایش</label>
+                            <input type="number" id="index-order" class="form-control" value="0" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>ویژه (نمایش در صفحه اصلی)</label>
+                            <select id="index-isFeatured" class="form-control">
+                                <option value="false">خیر</option>
+                                <option value="true">بله</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>وضعیت</label>
+                            <select id="index-isActive" class="form-control">
+                                <option value="true">فعال</option>
+                                <option value="false">غیرفعال</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; margin-top: 20px;">
+                        <button type="submit" class="btn">ذخیره</button>
+                        <button type="button" class="btn btn-danger" onclick="closeModal()">انصراف</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            function loadIndices() {
+                fetch('/pprofessor/api/market-indices')
+                    .then(res => res.json())
+                    .then(result => {
+                        if (result.success) {
+                            let html = '';
+                            result.data.forEach(index => {
+                                let typeClass = {
+                                    forex: 'type-forex',
+                                    commodity: 'type-commodity',
+                                    crypto: 'type-crypto',
+                                    index: 'type-index',
+                                    agricultural: 'type-agricultural'
+                                }[index.type] || '';
+
+                                let typeText = {
+                                    forex: 'فارکس',
+                                    commodity: 'کالا',
+                                    crypto: 'ارز دیجیتال',
+                                    index: 'شاخص',
+                                    agricultural: 'کشاورزی'
+                                }[index.type] || index.type;
+
+                                html += `<tr>
+                                <td style="text-align: center;">
+                                    ${index.image ?
+                                        `<img src="${index.image}" class="index-image">` :
+                                        '<i class="fas fa-chart-line" style="color:#ffd700; font-size: 1.2rem;"></i>'}
+                                </td>
+                                <td><strong style="color:#ffd700;">${index.symbol}</strong></td>
+                                <td>${index.name_fa || '-'}</td>
+                                <td><span class="type-badge ${typeClass}">${typeText}</span></td>
+                                <td style="text-align: center;">
+                                    ${index.isFeatured ? '<span class="featured-badge">ویژه</span>' : '-'}
+                                </td>
+                                <td>
+                                    <span class="status-badge ${index.isActive ? 'status-active' : 'status-inactive'}" 
+                                          onclick="toggleIndexStatus(${index.id})" style="cursor:pointer;">
+                                        ${index.isActive ? 'فعال' : 'غیرفعال'}
+                                    </span>
+                                </td>
+                                <td style="text-align: center;">${index.order || 0}</td>
+                                <td>
+                                    <button class="btn-icon" onclick="editIndex(${index.id})" title="ویرایش">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-icon danger" onclick="deleteIndex(${index.id})" title="حذف">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>`;
+                            });
+                            document.getElementById('indices-list').innerHTML = html;
+                        }
+                    })
+                    .catch(error => {
+                        document.getElementById('indices-list').innerHTML =
+                            '<tr><td colspan="8" style="text-align:center; color:#dc3545; padding:30px;">خطا در بارگذاری</td></tr>';
+                    });
+            }
+
+            function previewImage() {
+                const file = document.getElementById('index-image').files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const preview = document.getElementById('image-preview');
+                        preview.innerHTML = `<img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover;">`;
+                        document.getElementById('index-image-url').value = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+
+            function showIndexModal() {
+                document.getElementById('modal-title').textContent = 'ایجاد شاخص جدید';
+                document.getElementById('index-id').value = '';
+                document.getElementById('index-symbol').value = '';
+                document.getElementById('index-type').value = 'forex';
+                document.getElementById('index-name-fa').value = '';
+                document.getElementById('index-name-en').value = '';
+                document.getElementById('index-name-ar').value = '';
+                document.getElementById('index-tradingview-url').value = '';
+                document.getElementById('index-order').value = '0';
+                document.getElementById('index-isFeatured').value = 'false';
+                document.getElementById('index-isActive').value = 'true';
+                document.getElementById('image-preview').innerHTML = '<i class="fas fa-image" style="color: #ffd700; font-size: 2rem;"></i>';
+                document.getElementById('index-image-url').value = '';
+                document.getElementById('index-modal').classList.add('active');
+            }
+
+            function editIndex(id) {
+                fetch(`/pprofessor/api/market-indices/${id}`)
+                    .then(res => res.json())
+                    .then(result => {
+                        if (result.success) {
+                            const index = result.data;
+                            document.getElementById('modal-title').textContent = 'ویرایش شاخص';
+                            document.getElementById('index-id').value = index.id;
+                            document.getElementById('index-symbol').value = index.symbol || '';
+                            document.getElementById('index-type').value = index.type || 'forex';
+                            document.getElementById('index-name-fa').value = index.name_fa || '';
+                            document.getElementById('index-name-en').value = index.name_en || '';
+                            document.getElementById('index-name-ar').value = index.name_ar || '';
+                            document.getElementById('index-tradingview-url').value = index.tradingViewUrl || '';
+                            document.getElementById('index-order').value = index.order || '0';
+                            document.getElementById('index-isFeatured').value = index.isFeatured ? 'true' : 'false';
+                            document.getElementById('index-isActive').value = index.isActive ? 'true' : 'false';
+
+                            if (index.image) {
+                                document.getElementById('image-preview').innerHTML =
+                                    `<img src="${index.image}" style="width:100%; height:100%; object-fit:cover;">`;
+                                document.getElementById('index-image-url').value = index.image;
+                            }
+
+                            document.getElementById('index-modal').classList.add('active');
+                        }
+                    });
+            }
+
+            function saveIndex() {
+                const data = {
+                    symbol: document.getElementById('index-symbol').value,
+                    type: document.getElementById('index-type').value,
+                    name_fa: document.getElementById('index-name-fa').value,
+                    name_en: document.getElementById('index-name-en').value,
+                    name_ar: document.getElementById('index-name-ar').value,
+                    image: document.getElementById('index-image-url').value || '',
+                    tradingViewUrl: document.getElementById('index-tradingview-url').value,
+                    order: parseInt(document.getElementById('index-order').value) || 0,
+                    isFeatured: document.getElementById('index-isFeatured').value === 'true',
+                    isActive: document.getElementById('index-isActive').value === 'true'
+                };
+
+                const id = document.getElementById('index-id').value;
+                const url = id ? `/pprofessor/api/market-indices/${id}` : '/pprofessor/api/market-indices';
+                const method = id ? 'PUT' : 'POST';
+
+                fetch(url, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                })
+                    .then(res => res.json())
+                    .then(result => {
+                        if (result.success) {
+                            alert(id ? 'شاخص ویرایش شد' : 'شاخص ایجاد شد');
+                            closeModal();
+                            loadIndices();
+                        } else {
+                            alert('خطا: ' + result.error);
+                        }
+                    });
+            }
+
+            function toggleIndexStatus(id) {
+                fetch(`/pprofessor/api/market-indices/${id}/toggle`, { method: 'PATCH' })
+                    .then(res => res.json())
+                    .then(result => {
+                        if (result.success) {
+                            loadIndices();
+                        }
+                    });
+            }
+
+            function deleteIndex(id) {
+                if (confirm('آیا از حذف این شاخص اطمینان دارید؟')) {
+                    fetch(`/pprofessor/api/market-indices/${id}`, { method: 'DELETE' })
+                        .then(res => res.json())
+                        .then(result => {
+                            if (result.success) {
+                                loadIndices();
+                            }
+                        });
+                }
+            }
+
+            function closeModal() {
+                document.getElementById('index-modal').classList.remove('active');
+            }
+
+            document.addEventListener('DOMContentLoaded', loadIndices);
+        </script>
+</body>
+
+</html>
