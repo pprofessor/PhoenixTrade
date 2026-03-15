@@ -311,11 +311,26 @@ router.get('/api/brokers', isAuthenticated, async (req, res) => {
   }
 });
 
+// ============= API ایجاد بروکر =============
 router.post('/api/brokers', isAuthenticated, async (req, res) => {
   try {
+    console.log('📝 Creating broker with data:', req.body);
+
     const brokerData = {
+      // اطلاعات پایه
       name: req.body.name,
       slug: req.body.slug,
+
+      // فیلدهای سه‌زبانه
+      display_name_fa: req.body.display_name_fa || '',
+      display_name_en: req.body.display_name_en || '',
+      display_name_ar: req.body.display_name_ar || '',
+
+      description_fa: req.body.description_fa || '',
+      description_en: req.body.description_en || '',
+      description_ar: req.body.description_ar || '',
+
+      // سایر اطلاعات
       logo: req.body.logo || '',
       foundedYear: req.body.foundedYear,
       usersCount: req.body.usersCount,
@@ -331,15 +346,34 @@ router.post('/api/brokers', isAuthenticated, async (req, res) => {
     };
 
     const broker = await Broker.create(brokerData);
+    console.log('✅ Broker created successfully:', broker.id);
     res.status(201).json({ success: true, data: broker });
+
   } catch (error) {
-    console.error('❌ Error:', error);
-    res.status(500).json({ success: false, error: error.message });
+    console.error('❌ Error creating broker:', error);
+
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      const field = error.errors?.[0]?.path || 'slug';
+      const value = error.errors?.[0]?.value || '';
+
+      return res.status(400).json({
+        success: false,
+        error: `مقدار "${value}" برای فیلد "${field}" تکراری است. لطفاً یک مقدار یکتا وارد کنید.`
+      });
+    }
+
+    res.status(500).json({
+      success: false,
+      error: error.message || 'خطا در ایجاد بروکر'
+    });
   }
 });
 
+// ============= API ویرایش بروکر =============
 router.put('/api/brokers/:id', isAuthenticated, async (req, res) => {
   try {
+    console.log('📝 Updating broker ID:', req.params.id, 'with data:', req.body);
+
     const broker = await Broker.findByPk(req.params.id);
     if (!broker) {
       return res.status(404).json({ success: false, error: 'بروکر یافت نشد' });
@@ -348,6 +382,16 @@ router.put('/api/brokers/:id', isAuthenticated, async (req, res) => {
     const updateData = {
       name: req.body.name,
       slug: req.body.slug,
+
+      // فیلدهای سه‌زبانه
+      display_name_fa: req.body.display_name_fa || '',
+      display_name_en: req.body.display_name_en || '',
+      display_name_ar: req.body.display_name_ar || '',
+
+      description_fa: req.body.description_fa || '',
+      description_en: req.body.description_en || '',
+      description_ar: req.body.description_ar || '',
+
       logo: req.body.logo || '',
       foundedYear: req.body.foundedYear,
       usersCount: req.body.usersCount,
@@ -363,10 +407,26 @@ router.put('/api/brokers/:id', isAuthenticated, async (req, res) => {
     };
 
     await broker.update(updateData);
+    console.log('✅ Broker updated successfully');
     res.json({ success: true, data: broker });
+
   } catch (error) {
-    console.error('❌ Error:', error);
-    res.status(500).json({ success: false, error: error.message });
+    console.error('❌ Error updating broker:', error);
+
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      const field = error.errors?.[0]?.path || 'slug';
+      const value = error.errors?.[0]?.value || '';
+
+      return res.status(400).json({
+        success: false,
+        error: `مقدار "${value}" برای فیلد "${field}" تکراری است. لطفاً یک مقدار یکتا وارد کنید.`
+      });
+    }
+
+    res.status(500).json({
+      success: false,
+      error: error.message || 'خطا در ویرایش بروکر'
+    });
   }
 });
 
@@ -392,7 +452,7 @@ router.get('/api/brokers/:id', isAuthenticated, async (req, res) => {
     if (!broker) {
       return res.status(404).json({ success: false, error: 'بروکر یافت نشد' });
     }
-    res.json({ success: true, data: broker });  
+    res.json({ success: true, data: broker });
   } catch (error) {
     console.error('❌ Error:', error);
     res.status(500).json({ success: false, error: error.message });

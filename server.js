@@ -106,15 +106,15 @@ const apiRoutes = require('./routes/apiRoutes');
 
 // *** ترتیب صحیح مسیرها - بسیار مهم ***
 // 1. اول مسیرهای عمومی API (با /api)
-app.use('/api', apiRoutes);  // اینجا apiRoutes را برای مسیرهای عمومی قرار می‌دهیم
+app.use('/api', apiRoutes);
 
 // 2. بعد مسیرهای پنل مدیریت (با /pprofessor)
 app.use('/pprofessor', authRoutes);
 app.use('/pprofessor', adminRoutes);
 
-// 3. بعد مسیرهای API پنل مدیریت (با /pprofessor/api) - اینها از middleware isAuthenticated استفاده می‌کنند
-// توجه: این مسیر دیگر نیازی به تعریف جداگانه نیست چون apiRoutes قبلاً برای /api تعریف شده
-// app.use('/pprofessor/api', apiRoutes); // این خط را حذف می‌کنیم
+// 3. بعد مسیرهای API پنل مدیریت (با /pprofessor/api)
+// این مسیر برای APIهایی که نیاز به احراز هویت دارند
+app.use('/pprofessor/api', apiRoutes);
 
 // صفحه اصلی سایت
 app.get('/', async (req, res) => {

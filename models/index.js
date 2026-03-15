@@ -416,31 +416,35 @@ const WebappSetting = sequelize.define('WebappSetting', {
 const Broker = sequelize.define('Broker', {
   id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
 
-  // اطلاعات پایه
-  name: { type: Sequelize.STRING(100), allowNull: false },
+  // اطلاعات پایه (غیر زبانی)
+  name: { type: Sequelize.STRING(100), allowNull: false }, // نام اصلی بروکر (مثلاً TIOmarkets)
   slug: { type: Sequelize.STRING(100), allowNull: false, unique: true },
   logo: { type: Sequelize.STRING(500), defaultValue: '' },
 
-  // اطلاعات بروکر
-  foundedYear: { type: Sequelize.INTEGER }, // سال تأسیس
-  usersCount: { type: Sequelize.STRING(50), defaultValue: '۰' }, // تعداد کاربران (مثلاً "+۵۰۰٬۰۰۰")
+  // فیلدهای سه‌زبانه
+  display_name_fa: { type: Sequelize.STRING(100), defaultValue: '' }, // نام نمایشی فارسی
+  display_name_en: { type: Sequelize.STRING(100), defaultValue: '' }, // نام نمایشی انگلیسی
+  display_name_ar: { type: Sequelize.STRING(100), defaultValue: '' }, // نام نمایشی عربی
 
-  // رتبه‌بندی
-  rating: { type: Sequelize.FLOAT, defaultValue: 0 }, // امتیاز (۰ تا ۵)
-  ratingCount: { type: Sequelize.INTEGER, defaultValue: 0 }, // تعداد رأی‌دهندگان
-
-  // رگوله‌ها (به صورت JSON)
-  regulations: { type: Sequelize.TEXT, defaultValue: '[]' }, // آرایه‌ای از رگوله‌ها
-
-  // توضیحات
   description_fa: { type: Sequelize.TEXT, defaultValue: '' },
   description_en: { type: Sequelize.TEXT, defaultValue: '' },
   description_ar: { type: Sequelize.TEXT, defaultValue: '' },
 
-  // ویژگی‌ها (اسپرد، اهرم، حداقل واریز و...)
-  spread: { type: Sequelize.STRING(50), defaultValue: '' }, // مثلاً "از ۰.۰ پیپ"
-  leverage: { type: Sequelize.STRING(50), defaultValue: '' }, // مثلاً "۱:۱۰۰۰"
-  minDeposit: { type: Sequelize.STRING(50), defaultValue: '' }, // حداقل واریز
+  // اطلاعات بروکر
+  foundedYear: { type: Sequelize.INTEGER },
+  usersCount: { type: Sequelize.STRING(50), defaultValue: '۰' },
+
+  // رتبه‌بندی
+  rating: { type: Sequelize.FLOAT, defaultValue: 0 },
+  ratingCount: { type: Sequelize.INTEGER, defaultValue: 0 },
+
+  // رگوله‌ها (به صورت JSON)
+  regulations: { type: Sequelize.TEXT, defaultValue: '[]' },
+
+  // ویژگی‌ها
+  spread: { type: Sequelize.STRING(50), defaultValue: '' },
+  leverage: { type: Sequelize.STRING(50), defaultValue: '' },
+  minDeposit: { type: Sequelize.STRING(50), defaultValue: '' },
 
   // لینک‌ها
   website: { type: Sequelize.STRING(500), defaultValue: '' },
@@ -448,8 +452,8 @@ const Broker = sequelize.define('Broker', {
 
   // وضعیت
   isActive: { type: Sequelize.BOOLEAN, defaultValue: true },
-  isFeatured: { type: Sequelize.BOOLEAN, defaultValue: false }, // بروکر ویژه
-  order: { type: Sequelize.INTEGER, defaultValue: 0 } // ترتیب نمایش
+  isFeatured: { type: Sequelize.BOOLEAN, defaultValue: false },
+  order: { type: Sequelize.INTEGER, defaultValue: 0 }
 
 }, { timestamps: true });
 
