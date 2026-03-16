@@ -4,7 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ققنوس - آموزش فارکس، معرفی بروکرها و تحلیل بازار</title>
+    <title data-fa="ققنوس - آموزش فارکس، معرفی بروکرها و تحلیل بازار"
+        data-en="Phoenix - Forex Education, Brokers Review & Market Analysis"
+        data-ar="العنقاء - تعليم الفوركس، مراجعة الوسطاء وتحليل السوق">ققنوس - آموزش فارکس، معرفی بروکرها و تحلیل بازار
+    </title>
     <!-- TradingView Widget Script -->
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
     <!-- فونت سمیم -->
@@ -20,6 +23,7 @@
     <meta property="og:description" content="با ققنوس، بهترین بروکر را انتخاب کنید و حرفه‌ای معامله کنید">
     <meta property="og:type" content="website">
     <style>
+        /* استایل‌ها دقیقاً مثل قبل */
         * {
             margin: 0;
             padding: 0;
@@ -758,8 +762,7 @@
             <div class="header-content">
                 <div class="logo">
                     <div class="logo-icon">🦅</div>
-                    <span class="logo-text" id="site-logo" data-fa="ققنوس" data-en="Phoenix"
-                        data-ar="العنقاء">ققنوس</span>
+                    <span class="logo-text" data-fa="ققنوس" data-en="Phoenix" data-ar="العنقاء">ققنوس</span>
                 </div>
 
                 <ul class="nav-menu" id="main-menu">
@@ -887,6 +890,52 @@
         let allBrokers = [];
         let allEducation = [];
         let featuredIndices = [];
+
+        // ============= شاخص‌های ثابت =============
+        const indices = [
+            {
+                symbol: 'FX:XAUUSD',
+                displaySymbol: 'XAUUSD',
+                name: { fa: 'انس جهانی طلا', en: 'Gold', ar: 'الذهب' },
+                icon: '🥇',
+                color: '#ffd700'
+            },
+            {
+                symbol: 'FX:XAGUSD',
+                displaySymbol: 'XAGUSD',
+                name: { fa: 'انس جهانی نقره', en: 'Silver', ar: 'الفضة' },
+                icon: '🥈',
+                color: '#c0c0c0'
+            },
+            {
+                symbol: 'TVC:USOIL',
+                displaySymbol: 'WTI',
+                name: { fa: 'نفت خام', en: 'Crude Oil', ar: 'النفط' },
+                icon: '🛢️',
+                color: '#8B4513'
+            },
+            {
+                symbol: 'TVC:NATGAS',
+                displaySymbol: 'NG',
+                name: { fa: 'گاز طبیعی', en: 'Natural Gas', ar: 'الغاز الطبيعي' },
+                icon: '🔥',
+                color: '#87CEEB'
+            },
+            {
+                symbol: 'TVC:CORN',
+                displaySymbol: 'CORN',
+                name: { fa: 'ذرت', en: 'Corn', ar: 'الذرة' },
+                icon: '🌽',
+                color: '#FFD700'
+            },
+            {
+                symbol: 'BITSTAMP:BTCUSD',
+                displaySymbol: 'BTCUSD',
+                name: { fa: 'بیت‌کوین', en: 'Bitcoin', ar: 'بتكوين' },
+                icon: '₿',
+                color: '#F7931A'
+            }
+        ];
 
         // ============= اسلایدشو =============
         function loadSlides() {
@@ -1035,13 +1084,13 @@
                         </div>
                         <div class="broker-rating"><span class="stars">${stars}</span> <span>(${broker.rating})</span></div>
                         <div class="broker-features">
-                            <div class="feature-item"><span class="feature-label">سابقه:</span> <span>${broker.foundedYear || '-'}</span></div>
-                            <div class="feature-item"><span class="feature-label">حداکثر لوریج:</span> <span>${broker.leverage || '۱:۱۰۰۰'}</span></div>
-                            <div class="feature-item"><span class="feature-label">رگوله‌ها:</span> <div class="regulators">${regulations.slice(0, 2).map(r => `<span class="regulator-badge">${r}</span>`).join(' ')}${regulations.length > 2 ? `<span class="regulator-badge">+${regulations.length - 2}</span>` : ''}</div></div>
-                            <div class="feature-item"><span class="feature-label">نوع بروکر:</span> <span class="broker-type">${randomType}</span></div>
-                            <div class="feature-item"><span class="feature-label">حداقل واریز:</span> <span>${broker.minDeposit || '۱۰۰ دلار'}</span></div>
+                            <div class="feature-item"><span class="feature-label">${currentLang === 'fa' ? 'سابقه' : currentLang === 'en' ? 'Founded' : 'تأسس'}:</span> <span>${broker.foundedYear || '-'}</span></div>
+                            <div class="feature-item"><span class="feature-label">${currentLang === 'fa' ? 'حداکثر لوریج' : currentLang === 'en' ? 'Max Leverage' : 'الرافعة المالية'}:</span> <span>${broker.leverage || '۱:۱۰۰۰'}</span></div>
+                            <div class="feature-item"><span class="feature-label">${currentLang === 'fa' ? 'رگوله‌ها' : currentLang === 'en' ? 'Regulations' : 'التراخيص'}:</span> <div class="regulators">${regulations.slice(0, 2).map(r => `<span class="regulator-badge">${r}</span>`).join(' ')}${regulations.length > 2 ? `<span class="regulator-badge">+${regulations.length - 2}</span>` : ''}</div></div>
+                            <div class="feature-item"><span class="feature-label">${currentLang === 'fa' ? 'نوع بروکر' : currentLang === 'en' ? 'Type' : 'النوع'}:</span> <span class="broker-type">${randomType}</span></div>
+                            <div class="feature-item"><span class="feature-label">${currentLang === 'fa' ? 'حداقل واریز' : currentLang === 'en' ? 'Min Deposit' : 'الحد الأدنى للإيداع'}:</span> <span>${broker.minDeposit || '۱۰۰ دلار'}</span></div>
                         </div>
-                        <div class="broker-actions"><a href="/brokers/${broker.slug}" class="broker-btn">مشاهده جزئیات و ثبت‌نام</a></div>
+                        <div class="broker-actions"><a href="/brokers/${broker.slug}" class="broker-btn">${currentLang === 'fa' ? 'مشاهده جزئیات و ثبت‌نام' : currentLang === 'en' ? 'View Details & Register' : 'عرض التفاصيل والتسجيل'}</a></div>
                     </div>
                 `;
             });
@@ -1075,87 +1124,58 @@
                 html += `
                     <div class="education-card">
                         <h3>${item.title_fa}</h3>
-                        <p>${item.excerpt_fa || 'برای مشاهده محتوا کلیک کنید'}</p>
-                        <a href="/education/${item.slug}" class="education-link">ادامه مطلب</a>
+                        <p>${item.excerpt_fa || (currentLang === 'fa' ? 'برای مشاهده محتوا کلیک کنید' : currentLang === 'en' ? 'Click to view content' : 'انقر لعرض المحتوى')}</p>
+                        <a href="/education/${item.slug}" class="education-link">${currentLang === 'fa' ? 'ادامه مطلب' : currentLang === 'en' ? 'Read More' : 'اقرأ المزيد'}</a>
                     </div>
                 `;
             });
             container.innerHTML = html;
         }
 
-        // ============= دریافت قیمت‌های لحظه‌ای از TradingView =============
+        // ============= دریافت قیمت‌های لحظه‌ای از FCSAPI =============
         async function loadIndices() {
             const container = document.getElementById('indices-container');
             const currentLang = document.querySelector('.lang-btn.active')?.dataset.lang || 'fa';
 
-            // شاخص‌های ثابت
-            const indices = [
-                {
-                    symbol: 'FX:XAUUSD',
-                    displaySymbol: 'XAUUSD',
-                    name: { fa: 'انس جهانی طلا', en: 'Gold', ar: 'الذهب' },
-                    icon: '🥇',
-                    color: '#ffd700'
-                },
-                {
-                    symbol: 'FX:XAGUSD',
-                    displaySymbol: 'XAGUSD',
-                    name: { fa: 'انس جهانی نقره', en: 'Silver', ar: 'الفضة' },
-                    icon: '🥈',
-                    color: '#c0c0c0'
-                },
-                {
-                    symbol: 'TVC:USOIL',
-                    displaySymbol: 'WTI',
-                    name: { fa: 'نفت خام', en: 'Crude Oil', ar: 'النفط' },
-                    icon: '🛢️',
-                    color: '#8B4513'
-                },
-                {
-                    symbol: 'TVC:NATGAS',
-                    displaySymbol: 'NG',
-                    name: { fa: 'گاز طبیعی', en: 'Natural Gas', ar: 'الغاز الطبيعي' },
-                    icon: '🔥',
-                    color: '#87CEEB'
-                },
-                {
-                    symbol: 'TVC:CORN',
-                    displaySymbol: 'CORN',
-                    name: { fa: 'ذرت', en: 'Corn', ar: 'الذرة' },
-                    icon: '🌽',
-                    color: '#FFD700'
-                },
-                {
-                    symbol: 'BITSTAMP:BTCUSD',
-                    displaySymbol: 'BTCUSD',
-                    name: { fa: 'بیت‌کوین', en: 'Bitcoin', ar: 'بتكوين' },
-                    icon: '₿',
-                    color: '#F7931A'
-                }
-            ];
-
             // نمایش لودینگ
             container.innerHTML = `
-        <div style="grid-column:1/-1; text-align:center; padding:40px;">
-            <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #ffd700;"></i>
-            <p style="margin-top: 20px;">در حال دریافت قیمت‌های لحظه‌ای...</p>
-        </div>
-    `;
+                <div style="grid-column:1/-1; text-align:center; padding:40px;">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #ffd700;"></i>
+                    <p style="margin-top: 20px;">${currentLang === 'fa' ? 'در حال دریافت قیمت‌های لحظه‌ای...' : currentLang === 'en' ? 'Loading live prices...' : 'جاري تحميل الأسعار المباشرة...'}</p>
+                </div>
+            `;
 
             try {
-                // دریافت قیمت‌ها از طریق یک پروکسی سرور (برای جلوگیری از CORS)
+                // دریافت قیمت‌ها از طریق سرور پروکسی
                 const response = await fetch('/api/market-prices');
                 const result = await response.json();
 
                 if (result.success) {
                     displayIndices(indices, result.data, currentLang);
+                    // ذخیره در localStorage برای استفاده بعدی
+                    localStorage.setItem('marketPrices', JSON.stringify(result.data));
                 } else {
                     throw new Error('خطا در دریافت قیمت‌ها');
                 }
             } catch (error) {
                 console.error('Error fetching prices:', error);
                 // در صورت خطا، از داده‌های کش شده استفاده کن
-                loadCachedPrices(indices, currentLang);
+                const cachedPrices = JSON.parse(localStorage.getItem('marketPrices') || '{}');
+
+                if (Object.keys(cachedPrices).length > 0) {
+                    displayIndices(indices, cachedPrices, currentLang);
+                } else {
+                    // اگر هیچ داده‌ای وجود نداشت، از داده‌های پیش‌فرض استفاده کن
+                    const defaultPrices = {
+                        'XAUUSD': { price: '۲٬۳۴۵٫۵۰', change: 0.8, changePercent: 0.8 },
+                        'XAGUSD': { price: '۳۰٫۲۵', change: 1.2, changePercent: 1.2 },
+                        'WTI': { price: '۷۸٫۳۲', change: -0.3, changePercent: -0.3 },
+                        'NG': { price: '۲٫۱۵', change: 2.5, changePercent: 2.5 },
+                        'CORN': { price: '۴۴۵٫۷۵', change: -0.5, changePercent: -0.5 },
+                        'BTCUSD': { price: '۵۶٬۲۳۰', change: 2.1, changePercent: 2.1 }
+                    };
+                    displayIndices(indices, defaultPrices, currentLang);
+                }
             }
         }
 
@@ -1177,66 +1197,44 @@
                 const changeSign = changeValue >= 0 ? '+' : '';
 
                 html += `
-            <div class="index-item">
-                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                    <span style="font-size: 2rem;">${item.icon}</span>
-                    <div>
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <span style="font-weight: bold; color: #ffd700;">${item.displaySymbol}</span>
+                    <div class="index-item">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                            <span style="font-size: 2rem;">${item.icon}</span>
+                            <div>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span style="font-weight: bold; color: #ffd700;">${item.displaySymbol}</span>
+                                </div>
+                                <div style="font-size: 0.9rem; color: rgba(255,255,255,0.7);">
+                                    ${item.name[lang]}
+                                </div>
+                            </div>
                         </div>
-                        <div style="font-size: 0.9rem; color: rgba(255,255,255,0.7);">
-                            ${item.name[lang]}
+                        
+                        <div style="margin-top: 15px;">
+                            <div style="font-size: 2rem; font-weight: bold; color: white;">
+                                ${priceData.price}
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
+                                <span style="font-size: 1rem; ${changeClass}">
+                                    ${changeSign}${changePercent.toFixed(1)}%
+                                </span>
+                                <span style="font-size: 0.8rem; color: rgba(255,255,255,0.5);">
+                                    ${lang === 'fa' ? '۲۴h تغییر' : lang === 'en' ? '24h change' : 'تغير ٢٤ ساعة'}
+                                </span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                
-                <div style="margin-top: 15px;">
-                    <div style="font-size: 2rem; font-weight: bold; color: white;">
-                        ${priceData.price}
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
-                        <span style="font-size: 1rem; ${changeClass}">
-                            ${changeSign}${changePercent.toFixed(1)}%
-                        </span>
-                        <span style="font-size: 0.8rem; color: rgba(255,255,255,0.5);">
-                            ۲۴h تغییر
-                        </span>
-                    </div>
-                </div>
-            </div>
-        `;
+                `;
             });
 
             container.innerHTML = html;
         }
 
-        function loadCachedPrices(indices, lang) {
-            const container = document.getElementById('indices-container');
-
-            // داده‌های کش شده از آخرین بروزرسانی
-            const cachedPrices = JSON.parse(localStorage.getItem('marketPrices') || '{}');
-
-            if (Object.keys(cachedPrices).length > 0) {
-                displayIndices(indices, cachedPrices, lang);
-            } else {
-                // اگر هیچ داده‌ای وجود نداشت، از داده‌های پیش‌فرض استفاده کن
-                const defaultPrices = {
-                    'XAUUSD': { price: '۲٬۳۴۵٫۵۰', change: 0.8, changePercent: 0.8 },
-                    'XAGUSD': { price: '۳۰٫۲۵', change: 1.2, changePercent: 1.2 },
-                    'WTI': { price: '۷۸٫۳۲', change: -0.3, changePercent: -0.3 },
-                    'NG': { price: '۲٫۱۵', change: 2.5, changePercent: 2.5 },
-                    'CORN': { price: '۴۴۵٫۷۵', change: -0.5, changePercent: -0.5 },
-                    'BTCUSD': { price: '۵۶٬۲۳۰', change: 2.1, changePercent: 2.1 }
-                };
-                displayIndices(indices, defaultPrices, lang);
-            }
-        }
-
-        // تغییر زبان (به تابع changeLanguage اضافه کنید)
+        // ============= تغییر زبان =============
         function changeLanguage(lang) {
             document.querySelectorAll('[data-' + lang + ']').forEach(element => {
                 const translation = element.getAttribute('data-' + lang);
-                element.textContent = translation;
+                if (translation) element.textContent = translation;
             });
 
             document.querySelectorAll('.lang-btn').forEach(btn => {
@@ -1244,79 +1242,25 @@
             });
             document.querySelector(`.lang-btn[data-lang="${lang}"]`).classList.add('active');
 
-            // بارگذاری مجدد شاخص‌ها برای تغییر زبان
-            loadIndices();
-        }
-
-        // در DOMContentLoaded، تابع loadIndices را فراخوانی کنید
-        document.addEventListener('DOMContentLoaded', () => {
-            loadSlides();
-            loadBrokers();
-            loadEducation();
-            loadIndices();
-            changeLanguage('fa');
-        });
-
-        // بارگذاری ویجت‌های TradingView
-        setTimeout(() => {
-            defaultIndices.forEach(index => {
-                if (typeof TradingView !== 'undefined') {
-                    new TradingView.widget({
-                        "container_id": `tv-widget-${index.symbol}`,
-                        "symbol": index.symbol === 'XAUUSD' ? 'FX:XAUUSD' :
-                            index.symbol === 'XAGUSD' ? 'FX:XAGUSD' :
-                                index.symbol === 'WTI' ? 'TVC:USOIL' :
-                                    'BITSTAMP:BTCUSD',
-                        "width": "100%",
-                        "height": 100,
-                        "locale": "fa",
-                        "colorTheme": "dark",
-                        "autosize": true,
-                        "hide_legend": true,
-                        "hide_side_toolbar": true,
-                        "allow_symbol_change": false,
-                        "details": false,
-                        "hotlist": false,
-                        "calendar": false,
-                        "studies": [],
-                        "theme": "dark",
-                        "style": "1",
-                        "timezone": "Asia/Tehran",
-                        "withdateranges": false,
-                        "hideideas": true,
-                        "show_popup_button": false
-                    });
-                }
-            });
-        }, 100);
-
-
-        // ============= تغییر زبان =============
-        function changeLanguage(lang) {
-            document.querySelectorAll('[data-' + lang + ']').forEach(element => {
-                const translation = element.getAttribute('data-' + lang);
-                element.textContent = translation;
-            });
-            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`.lang-btn[data-lang="${lang}"]`).classList.add('active');
             renderSlides();
             displayBrokers(allBrokers);
             displayEducation(allEducation);
-            displayIndices(featuredIndices);
+            loadIndices(); // بارگذاری مجدد شاخص‌ها با زبان جدید
         }
 
+        // ============= رویدادهای زبان =============
         document.querySelectorAll('.lang-btn').forEach(btn => {
             btn.addEventListener('click', function () {
                 changeLanguage(this.dataset.lang);
             });
         });
 
+        // ============= مقداردهی اولیه =============
         document.addEventListener('DOMContentLoaded', () => {
             loadSlides();
             loadBrokers();
             loadEducation();
-            loadFeaturedIndices();
-            changeLanguage('fa');
+            loadIndices(); // بارگذاری شاخص‌های لحظه‌ای
         });
     </script>
 </body>

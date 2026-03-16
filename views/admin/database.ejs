@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - PhoenixTrade</title>
+    <link rel="stylesheet" href="/css/fonts.css">
+    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .tabs { display: flex; gap: 0.8rem; margin-bottom: 1.5rem; }
+        .tab { padding: 0.6rem 1.8rem; background: rgba(255, 255, 255, 0.05); border-radius: 25px; color: #fff; cursor: pointer; border: 1px solid rgba(255, 215, 0, 0.2); }
+        .tab.active { background: #ffd700; color: #0a2f1f; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .card { background: rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; border: 1px solid rgba(255, 215, 0, 0.2); }
+        .terminal { background: #1e1e1e; border-radius: 12px; overflow: hidden; font-family: monospace; }
+        .terminal-body { padding: 1rem; min-height: 200px; background: #1e1e1e; color: #0f0; }
+        .terminal-input-area { display: flex; padding: 0.6rem 1rem; background: #2d2d2d; }
+        .terminal-prompt { color: #ffd700; margin-left: 0.5rem; }
+        .terminal-input { flex: 1; background: transparent; border: none; color: #fff; outline: none; }
+        .terminal-execute-btn { background: #ffd700; color: #0a2f1f; border: none; border-radius: 20px; padding: 0.4rem 1rem; cursor: pointer; }
+        .commands-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .command-item { background: rgba(255, 255, 255, 0.03); padding: 1rem; border-radius: 12px; cursor: pointer; border: 1px solid rgba(255, 215, 0, 0.1); }
+        .command-item:hover { border-color: #ffd700; }
+        .command-sql { background: rgba(0, 0, 0, 0.3); padding: 0.3rem; border-radius: 4px; color: #0f0; font-size: 0.8rem; direction: ltr; text-align: left; }
+    </style>
+</head>
+<body>
+    <%- include('../sidebar', { activePage: 'database' }) %>
+
+    <div class="main-content">
+        <div class="header">
+            <h1><i class="fas fa-database"></i> <%= title %></h1>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('terminal')">ترمینال SQL</div>
+            <div class="tab" onclick="showTab('data')">مدیریت داده‌ها</div>
+            <div class="tab" onclick="showTab('schema')">ساختار جداول</div>
+        </div>
+
+        <div id="tab-terminal" class="tab-content active">
+            <div class="card">
+                <h3>ترمینال SQL</h3>
+                <div class="terminal">
+                    <div class="terminal-body" id="terminal-output">
+                        <div>SQLite version 3.45.1</div>
+                        <div>sqlite&gt; </div>
+                    </div>
+                    <div class="terminal-input-area">
+                        <span class="terminal-prompt">sqlite&gt;</span>
+                        <input type="text" class="terminal-input" id="sql-input" placeholder="دستور SQL را وارد کنید...">
+                        <button class="terminal-execute-btn" onclick="executeSql()">اجرا</button>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 1rem;">دستورات پرکاربرد</h3>
+                <div class="commands-grid" id="commands-container"></div>
+            </div>
+        </div>
+
+        <div id="tab-data" class="tab-content">
+            <div class="card">
+                <h3>مدیریت داده‌ها</h3>
+                <p>این بخش در حال تکمیل است...</p>
+            </div>
+        </div>
+
+        <div id="tab-schema" class="tab-content">
+            <div class="card">
+                <h3>ساختار جداول</h3>
+                <p>این بخش در حال تکمیل است...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============= متغیرهای سراسری =============
+        var currentTable = '<%= typeof selectedTable !== "undefined" ? selectedTable : "" %>';
+        
+        // ============= نمایش تب‌ها =============
+        window.showTab = function(tabName) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById('tab-' + tabName).classList.add('active');
+            event.currentTarget.classList.add('active');
+        };
+
+        // ============= اجرای دستور SQL واقعی =============
+        window.executeSql = function() {
+            var cmd = document.getElementById('sql-input').value.trim();
+            if (!cmd) {
+                alert('لطفاً یک دستور وارد کنید');
+                return;
+            }
+
+            var output = document.getElementById('terminal-output');
+            output.innerHTML += '<div>sqlite&gt; ' + cmd + '</div>';
+
+            // ارسال به سرور
+            fetch('/pprofessor/api/database/query', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query: cmd })
+            })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                if (data.success) {
+                    if (data.results && data.results.length > 0) {
+                        data.results.forEach(function(line) {
+                            output.innerHTML += '<div style="color:#0f0;">' + line + '</div>';
+                        });
+                    } else {
+                        output.innerHTML += '<div style="color:#0f0;">✅ دستور با موفقیت اجرا شد</div>';
+                    }
+                } else {
+                    output.innerHTML += '<div style="color:#f00;">❌ ' + (data.error || 'خطا') + '</div>';
+                }
+                output.innerHTML += '<div>&nbsp;</div>';
+                output.scrollTop = output.scrollHeight;
+            })
+            .catch(function(error) {
+                output.innerHTML += '<div style="color:#f00;">❌ خطا در ارتباط با سرور</div>';
+                output.scrollTop = output.scrollHeight;
+            });
+            
+            document.getElementById('sql-input').value = '';
+        };
+
+        // ============= درج دستور در ترمینال =============
+        window.insertSqlCommand = function(cmd) {
+            document.getElementById('sql-input').value = cmd;
+            document.getElementById('sql-input').focus();
+        };
+
+        // ============= بارگذاری دستورات =============
+        window.loadCommands = function() {
+            var commands = [
+                { cmd: '.tables', title: 'نمایش جداول', desc: 'لیست تمام جداول' },
+                { cmd: 'PRAGMA table_info(Admins)', title: 'ساختار Admins', desc: 'فیلدهای جدول مدیران' },
+                { cmd: 'PRAGMA table_info(Brokers)', title: 'ساختار Brokers', desc: 'فیلدهای جدول بروکرها' },
+                { cmd: 'SELECT * FROM Admins', title: 'مدیران سیستم', desc: 'لیست مدیران' },
+                { cmd: 'SELECT * FROM Brokers LIMIT 10', title: 'بروکرها', desc: 'لیست بروکرها' },
+                { cmd: 'SELECT COUNT(*) as total FROM BotUsers', title: 'تعداد کاربران', desc: 'تعداد کل کاربران ربات' }
+            ];
+
+            var container = document.getElementById('commands-container');
+            var html = '';
+
+            commands.forEach(function(item) {
+                html += '<div class="command-item" onclick="insertSqlCommand(\'' + item.cmd + '\')">';
+                html += '<div class="command-title">' + item.title + '</div>';
+                html += '<div class="command-desc">' + item.desc + '</div>';
+                html += '<div class="command-sql">' + item.cmd + '</div>';
+                html += '</div>';
+            });
+
+            container.innerHTML = html;
+        };
+
+        // ============= مقداردهی اولیه =============
+        document.addEventListener('DOMContentLoaded', function() {
+            window.loadCommands();
+        });
+    </script>
+</body>
+</html>

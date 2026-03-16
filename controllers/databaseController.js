@@ -15,11 +15,11 @@ const databaseIndex = async (req, res) => {
       "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name;",
       { type: QueryTypes.SELECT }
     );
-    
+
     // دریافت تعداد رکوردهای هر جدول
     let totalRecords = 0;
     const tableSchemas = [];
-    
+
     for (const table of tables) {
       // تعداد رکوردها
       const countResult = await sequelize.query(
@@ -28,20 +28,20 @@ const databaseIndex = async (req, res) => {
       );
       const recordCount = countResult[0].count;
       totalRecords += recordCount;
-      
+
       // ساختار جدول
       const columns = await sequelize.query(
         `PRAGMA table_info(\`${table.name}\`);`,
         { type: QueryTypes.SELECT }
       );
-      
+
       tableSchemas.push({
         name: table.name,
         recordCount: recordCount,
         columns: columns.map(col => col.name)
       });
     }
-    
+
     // حجم دیتابیس
     let dbSize = '0';
     try {
@@ -50,20 +50,20 @@ const databaseIndex = async (req, res) => {
     } catch (err) {
       console.error('خطا در خواندن حجم دیتابیس:', err);
     }
-    
+
     // آمار نهایی
     const stats = {
       totalTables: tables.length,
       totalRecords: totalRecords,
       dbSize: dbSize
     };
-    
+
     // ===== ۲. جدول انتخاب شده =====
     const selectedTable = req.query.table || (tables.length > 0 ? tables[0].name : '');
-    
+
     let currentColumns = [];
     let currentData = [];
-    
+
     if (selectedTable) {
       // دریافت ستون‌های جدول انتخاب شده
       const columns = await sequelize.query(
@@ -71,14 +71,14 @@ const databaseIndex = async (req, res) => {
         { type: QueryTypes.SELECT }
       );
       currentColumns = columns.map(c => c.name);
-      
+
       // دریافت داده‌های جدول انتخاب شده
       currentData = await sequelize.query(
         `SELECT * FROM \`${selectedTable}\` ORDER BY id DESC LIMIT 50;`,
         { type: QueryTypes.SELECT }
       );
     }
-    
+
     // ===== ۳. دستورات پرکاربرد =====
     const commonCommands = [
       { command: "SELECT * FROM Admins;", title: "لیست مدیران", description: "مشاهده همه مدیران" },
@@ -87,9 +87,9 @@ const databaseIndex = async (req, res) => {
       { command: ".tables", title: "لیست جداول", description: "نمایش همه جداول" },
       { command: "PRAGMA table_info(Admins);", title: "ساختار Admins", description: "مشاهده ستون‌های جدول" }
     ];
-    
+
     // ===== ۴. رندر صفحه =====
-    res.render('database', {
+    res.render('admin/database', {
       title: 'مدیریت دیتابیس',
       user: req.session.adminUsername,
       activePage: 'database',
@@ -103,7 +103,7 @@ const databaseIndex = async (req, res) => {
       lastCommand: '',
       commonCommands: commonCommands
     });
-    
+
   } catch (error) {
     console.error('❌ خطا در صفحه دیتابیس:', error);
     res.status(500).render('error', {
@@ -119,14 +119,14 @@ const databaseIndex = async (req, res) => {
 const executeQuery = async (req, res) => {
   try {
     const { query } = req.body;
-    
+
     if (!query) {
       return res.status(400).json({ success: false, error: 'دستور وارد نشده است' });
     }
-    
+
     let results = [];
     const cleanQuery = query.trim();
-    
+
     if (cleanQuery.startsWith('.')) {
       // دستورات خاص SQLite
       if (cleanQuery === '.tables') {
@@ -148,7 +148,7 @@ const executeQuery = async (req, res) => {
     } else {
       // دستورات SQL معمولی
       const isSelect = cleanQuery.toLowerCase().startsWith('select');
-      
+
       if (isSelect) {
         const data = await sequelize.query(cleanQuery, { type: QueryTypes.SELECT });
         results = data.map(row => JSON.stringify(row));
@@ -157,14 +157,14 @@ const executeQuery = async (req, res) => {
         results = ['دستور با موفقیت اجرا شد'];
       }
     }
-    
+
     res.json({ success: true, results });
-    
+
   } catch (error) {
     console.error('❌ خطا در اجرای دستور SQL:', error);
-    res.status(500).json({ 
-      success: false, 
-      error: error.message 
+    res.status(500).json({
+      success: false,
+      error: error.message
     });
   }
 };
@@ -173,14 +173,14 @@ const executeQuery = async (req, res) => {
 const searchData = async (req, res) => {
   try {
     const { table, field, term } = req.body;
-    
+
     if (!table) {
       return res.status(400).json({ success: false, error: 'جدول مشخص نشده است' });
     }
-    
+
     let query = `SELECT * FROM \`${table}\``;
     const replacements = {};
-    
+
     if (term && term.trim() !== '') {
       if (field && field !== 'all') {
         query += ` WHERE \`${field}\` LIKE :term`;
@@ -191,22 +191,22 @@ const searchData = async (req, res) => {
           `PRAGMA table_info(\`${table}\`);`,
           { type: QueryTypes.SELECT }
         );
-        
+
         const conditions = columns.map(col => `\`${col.name}\` LIKE :term`).join(' OR ');
         query += ` WHERE ${conditions}`;
         replacements.term = `%${term}%`;
       }
     }
-    
+
     query += ' ORDER BY id DESC LIMIT 50;';
-    
-    const data = await sequelize.query(query, { 
+
+    const data = await sequelize.query(query, {
       type: QueryTypes.SELECT,
       replacements: replacements
     });
-    
+
     res.json({ success: true, data });
-    
+
   } catch (error) {
     console.error('❌ خطا در جستجو:', error);
     res.status(500).json({ success: false, error: error.message });
@@ -217,17 +217,17 @@ const searchData = async (req, res) => {
 const deleteRow = async (req, res) => {
   try {
     const { table, id } = req.body;
-    
+
     if (!table || !id) {
       return res.status(400).json({ success: false, error: 'اطلاعات ناقص است' });
     }
-    
+
     await sequelize.query(`DELETE FROM \`${table}\` WHERE id = :id`, {
       replacements: { id }
     });
-    
+
     res.json({ success: true });
-    
+
   } catch (error) {
     console.error('❌ خطا در حذف رکورد:', error);
     res.status(500).json({ success: false, error: error.message });
