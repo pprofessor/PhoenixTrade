@@ -18,7 +18,8 @@ const {
   MarketIndex,
   BrokerFeature,
   BrokerFeatureValue,
-  HomeSlide
+  HomeSlide,
+  SlideSettings
 } = require('../models');
 const { checkBotStatus } = require('../services/telegramBot');
 
@@ -973,5 +974,68 @@ router.patch('/api/home-slides/:id/toggle', isAuthenticated, async (req, res) =>
     res.status(500).json({ success: false, error: error.message });
   }
 });
+
+
+// ============= API ذخیره تنظیمات اسلایدشو =============
+router.post('/api/slide-settings', isAuthenticated, async (req, res) => {
+  try {
+    console.log('📝 Saving slide settings with data:', req.body);
+
+    let settings = await SlideSettings.findOne();
+
+    if (!settings) {
+      settings = await SlideSettings.create({
+        slideDuration: req.body.slideDuration || 5000,
+        autoPlay: req.body.autoPlay === 'true',
+        showArrows: req.body.showArrows === 'true',
+        showDots: req.body.showDots === 'true'
+      });
+    } else {
+      await settings.update({
+        slideDuration: req.body.slideDuration || 5000,
+        autoPlay: req.body.autoPlay === 'true',
+        showArrows: req.body.showArrows === 'true',
+        showDots: req.body.showDots === 'true'
+      });
+    }
+
+    console.log('✅ Slide settings saved successfully');
+    res.json({ success: true, data: settings });
+
+  } catch (error) {
+    console.error('❌ Error saving slide settings:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'خطا در ذخیره تنظیمات'
+    });
+  }
+});
+
+// ============= دریافت تنظیمات اسلایدشو =============
+router.get('/api/slide-settings', isAuthenticated, async (req, res) => {
+  try {
+    let settings = await SlideSettings.findOne();
+
+    if (!settings) {
+      settings = await SlideSettings.create({
+        slideDuration: 5000,
+        autoPlay: true,
+        showArrows: true,
+        showDots: true
+      });
+    }
+
+    res.json({ success: true, data: settings });
+
+  } catch (error) {
+    console.error('❌ Error fetching slide settings:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'خطا در دریافت تنظیمات'
+    });
+  }
+});
+
+
 
 module.exports = router;

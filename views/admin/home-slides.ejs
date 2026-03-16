@@ -176,7 +176,6 @@
             object-fit: cover;
         }
 
-        /* استایل‌های اضافی برای هماهنگی با پنل */
         .table-container {
             background: rgba(0, 0, 0, 0.2);
             border-radius: 15px;
@@ -206,6 +205,14 @@
         .data-table tr:hover {
             background: rgba(255, 255, 255, 0.05);
         }
+
+        .settings-panel {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
     </style>
 </head>
 
@@ -219,12 +226,34 @@
                 </h1>
             </div>
 
+            <!-- پنل تنظیمات اسلایدشو -->
+            <div class="settings-panel" id="settings-panel">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h3 style="color: #ffd700; display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-cog"></i> تنظیمات اسلایدشو
+                    </h3>
+                    <span class="status-badge"
+                        style="background: rgba(255,215,0,0.1); color:#ffd700; border:1px solid #ffd700;">
+                        تنظیمات کلی
+                    </span>
+                </div>
+
+                <div id="settings-container">
+                    <div style="text-align: center; padding: 20px;">
+                        <i class="fas fa-spinner fa-spin" style="color: #ffd700;"></i>
+                        <p>در حال بارگذاری تنظیمات...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- دکمه اسلاید جدید -->
             <div style="margin-bottom: 20px;">
                 <button class="btn" onclick="showSlideModal()">
                     <i class="fas fa-plus"></i> اسلاید جدید
                 </button>
             </div>
 
+            <!-- جدول اسلایدها -->
             <div class="table-container">
                 <table class="data-table">
                     <thead>
@@ -279,16 +308,16 @@
                     <div class="language-section">
                         <div class="language-title"><i class="fas fa-flag"></i> اطلاعات فارسی</div>
                         <div class="form-group">
-                            <label>عنوان فارسی</label>
-                            <input type="text" id="slide-title-fa" class="form-control" required>
+                            <label>عنوان فارسی (اختیاری)</label>
+                            <input type="text" id="slide-title-fa" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label>زیرعنوان فارسی</label>
-                            <textarea id="slide-subtitle-fa" class="form-control" rows="2" required></textarea>
+                            <label>زیرعنوان فارسی (اختیاری)</label>
+                            <textarea id="slide-subtitle-fa" class="form-control" rows="2"></textarea>
                         </div>
                         <div class="form-group">
-                            <label>متن دکمه (فارسی)</label>
-                            <input type="text" id="slide-button-fa" class="form-control" required>
+                            <label>متن دکمه (فارسی) (اختیاری)</label>
+                            <input type="text" id="slide-button-fa" class="form-control">
                         </div>
                     </div>
 
@@ -296,16 +325,16 @@
                     <div class="language-section">
                         <div class="language-title"><i class="fas fa-flag"></i> English Information</div>
                         <div class="form-group">
-                            <label>English Title</label>
-                            <input type="text" id="slide-title-en" class="form-control" required>
+                            <label>English Title (Optional)</label>
+                            <input type="text" id="slide-title-en" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label>English Subtitle</label>
-                            <textarea id="slide-subtitle-en" class="form-control" rows="2" required></textarea>
+                            <label>English Subtitle (Optional)</label>
+                            <textarea id="slide-subtitle-en" class="form-control" rows="2"></textarea>
                         </div>
                         <div class="form-group">
-                            <label>Button Text (English)</label>
-                            <input type="text" id="slide-button-en" class="form-control" required>
+                            <label>Button Text (English) (Optional)</label>
+                            <input type="text" id="slide-button-en" class="form-control">
                         </div>
                     </div>
 
@@ -313,16 +342,16 @@
                     <div class="language-section">
                         <div class="language-title"><i class="fas fa-flag"></i> المعلومات العربية</div>
                         <div class="form-group">
-                            <label>العنوان (عربي)</label>
-                            <input type="text" id="slide-title-ar" class="form-control" required>
+                            <label>العنوان (عربي) (اختياري)</label>
+                            <input type="text" id="slide-title-ar" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label>العنوان الفرعي (عربي)</label>
-                            <textarea id="slide-subtitle-ar" class="form-control" rows="2" required></textarea>
+                            <label>العنوان الفرعي (عربي) (اختياري)</label>
+                            <textarea id="slide-subtitle-ar" class="form-control" rows="2"></textarea>
                         </div>
                         <div class="form-group">
-                            <label>نص الزر (عربي)</label>
-                            <input type="text" id="slide-button-ar" class="form-control" required>
+                            <label>نص الزر (عربي) (اختياري)</label>
+                            <input type="text" id="slide-button-ar" class="form-control">
                         </div>
                     </div>
 
@@ -353,6 +382,46 @@
         </div>
 
         <script>
+            // ============= متغیرهای سراسری =============
+            let slideSettings = {
+                slideDuration: 5000,
+                autoPlay: true,
+                showArrows: true,
+                showDots: true
+            };
+
+            // ============= نمایش پیام =============
+            function showToast(message, type = 'success') {
+                const oldToast = document.getElementById('toast');
+                if (oldToast) oldToast.remove();
+
+                const toast = document.createElement('div');
+                toast.id = 'toast';
+                toast.textContent = message;
+                toast.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                padding: 15px 30px;
+                border-radius: 10px;
+                color: white;
+                font-weight: bold;
+                z-index: 9999;
+                background: ${type === 'success' ? 'rgba(40, 167, 69, 0.9)' :
+                        type === 'error' ? 'rgba(220, 53, 69, 0.9)' :
+                            'rgba(23, 162, 184, 0.9)'};
+                backdrop-filter: blur(10px);
+                border: 1px solid ${type === 'success' ? '#28a745' :
+                        type === 'error' ? '#dc3545' :
+                            '#17a2b8'};
+                box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            `;
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 3000);
+            }
+
+            // ============= بارگذاری اسلایدها =============
             function loadSlides() {
                 fetch('/pprofessor/api/home-slides')
                     .then(res => res.json())
@@ -391,19 +460,119 @@
                     });
             }
 
+            // ============= بارگذاری تنظیمات اسلایدشو =============
+            function loadSlideSettings() {
+                fetch('/pprofessor/api/slide-settings', {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                    .then(res => res.json())
+                    .then(result => {
+                        if (result.success) {
+                            slideSettings = result.data;
+                            displaySettings();
+                        } else {
+                            showToast('خطا در بارگذاری تنظیمات', 'error');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error loading settings:', error);
+                        showToast('خطا در ارتباط با سرور', 'error');
+                    });
+            }
+
+            // ============= نمایش تنظیمات =============
+            function displaySettings() {
+                const container = document.getElementById('settings-container');
+
+                const html = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                    <div class="form-group">
+                        <label style="color:#ffd700;">⏱️ زمان تعویض اسلاید</label>
+                        <select id="slide-duration" class="form-control" style="width:100%;">
+                            <option value="3000" ${slideSettings.slideDuration === 3000 ? 'selected' : ''}>۳ ثانیه</option>
+                            <option value="5000" ${slideSettings.slideDuration === 5000 ? 'selected' : ''}>۵ ثانیه</option>
+                            <option value="7000" ${slideSettings.slideDuration === 7000 ? 'selected' : ''}>۷ ثانیه</option>
+                            <option value="10000" ${slideSettings.slideDuration === 10000 ? 'selected' : ''}>۱۰ ثانیه</option>
+                        </select>
+                    </div>
+                    
+                    <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
+                        <label style="display: flex; align-items: center; gap: 5px; color:white;">
+                            <input type="checkbox" id="autoplay" ${slideSettings.autoPlay ? 'checked' : ''}>
+                            <i class="fas fa-play" style="color:#ffd700;"></i> حرکت خودکار
+                        </label>
+                        
+                        <label style="display: flex; align-items: center; gap: 5px; color:white;">
+                            <input type="checkbox" id="show-arrows" ${slideSettings.showArrows ? 'checked' : ''}>
+                            <i class="fas fa-arrow-left" style="color:#ffd700;"></i> دکمه‌های قبلی/بعدی
+                        </label>
+                        
+                        <label style="display: flex; align-items: center; gap: 5px; color:white;">
+                            <input type="checkbox" id="show-dots" ${slideSettings.showDots ? 'checked' : ''}>
+                            <i class="fas fa-circle" style="color:#ffd700;"></i> نقاط پایین صفحه
+                        </label>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center;">
+                        <button class="btn btn-sm" onclick="saveSettings()" style="width:100%;">
+                            <i class="fas fa-save"></i> ذخیره تنظیمات
+                        </button>
+                    </div>
+                </div>
+            `;
+
+                container.innerHTML = html;
+            }
+
+            // ============= ذخیره تنظیمات اسلایدشو =============
+            function saveSettings() {
+                const data = {
+                    slideDuration: parseInt(document.getElementById('slide-duration').value),
+                    autoPlay: document.getElementById('autoplay').checked,
+                    showArrows: document.getElementById('show-arrows').checked,
+                    showDots: document.getElementById('show-dots').checked
+                };
+
+                fetch('/pprofessor/api/slide-settings', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify(data)
+                })
+                    .then(res => res.json())
+                    .then(result => {
+                        if (result.success) {
+                            slideSettings = data;
+                            showToast('✅ تنظیمات ذخیره شد');
+                        } else {
+                            showToast('❌ خطا: ' + result.error, 'error');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showToast('❌ خطا در ارتباط با سرور', 'error');
+                    });
+            }
+
+            // ============= پیش‌نمایش تصویر =============
             function previewImage() {
                 const file = document.getElementById('slide-image').files[0];
                 if (file) {
                     const reader = new FileReader();
                     reader.onload = function (e) {
-                        const preview = document.getElementById('image-preview');
-                        preview.innerHTML = `<img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover;">`;
+                        document.getElementById('image-preview').innerHTML = `<img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover;">`;
                         document.getElementById('slide-image-url').value = e.target.result;
                     };
                     reader.readAsDataURL(file);
                 }
             }
 
+            // ============= نمایش مودال ایجاد اسلاید =============
             function showSlideModal() {
                 document.getElementById('modal-title').textContent = 'ایجاد اسلاید جدید';
                 document.getElementById('slide-id').value = '';
@@ -424,6 +593,7 @@
                 document.getElementById('slide-modal').classList.add('active');
             }
 
+            // ============= ویرایش اسلاید =============
             function editSlide(id) {
                 fetch(`/pprofessor/api/home-slides/${id}`)
                     .then(res => res.json())
@@ -455,14 +625,14 @@
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        alert('خطا در دریافت اطلاعات اسلاید');
+                        showToast('خطا در دریافت اطلاعات اسلاید', 'error');
                     });
             }
 
+            // ============= ذخیره اسلاید =============
             function saveSlide() {
-                // اعتبارسنجی
                 if (!document.getElementById('slide-image-url').value) {
-                    alert('لطفاً یک تصویر انتخاب کنید');
+                    showToast('لطفاً یک تصویر انتخاب کنید', 'error');
                     return;
                 }
 
@@ -491,28 +661,23 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 })
-                    .then(res => {
-                        if (!res.ok) {
-                            return res.text().then(text => {
-                                throw new Error(text);
-                            });
-                        }
-                        return res.json();
-                    })
+                    .then(res => res.json())
                     .then(result => {
                         if (result.success) {
-                            alert(id ? 'اسلاید ویرایش شد' : 'اسلاید ایجاد شد');
+                            showToast(id ? 'اسلاید ویرایش شد' : 'اسلاید ایجاد شد');
                             closeModal();
                             loadSlides();
                         } else {
-                            alert('خطا: ' + (result.error || 'خطای ناشناخته'));
+                            showToast('خطا: ' + result.error, 'error');
                         }
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        alert('خطا در ارتباط با سرور: ' + error.message);
+                        showToast('خطا در ارتباط با سرور', 'error');
                     });
             }
+
+            // ============= تغییر وضعیت اسلاید =============
             function toggleSlideStatus(id) {
                 fetch(`/pprofessor/api/home-slides/${id}/toggle`, { method: 'PATCH' })
                     .then(res => res.json())
@@ -523,10 +688,11 @@
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        alert('خطا در تغییر وضعیت');
+                        showToast('خطا در تغییر وضعیت', 'error');
                     });
             }
 
+            // ============= حذف اسلاید =============
             function deleteSlide(id) {
                 if (confirm('آیا از حذف این اسلاید اطمینان دارید؟')) {
                     fetch(`/pprofessor/api/home-slides/${id}`, { method: 'DELETE' })
@@ -535,21 +701,26 @@
                             if (result.success) {
                                 loadSlides();
                             } else {
-                                alert('خطا: ' + result.error);
+                                showToast('خطا: ' + result.error, 'error');
                             }
                         })
                         .catch(error => {
                             console.error('Error:', error);
-                            alert('خطا در ارتباط با سرور');
+                            showToast('خطا در ارتباط با سرور', 'error');
                         });
                 }
             }
 
+            // ============= بستن مودال =============
             function closeModal() {
                 document.getElementById('slide-modal').classList.remove('active');
             }
 
-            document.addEventListener('DOMContentLoaded', loadSlides);
+            // ============= مقداردهی اولیه =============
+            document.addEventListener('DOMContentLoaded', () => {
+                loadSlides();
+                loadSlideSettings();
+            });
         </script>
 </body>
 

@@ -610,6 +610,24 @@ const HomeSlide = sequelize.define('HomeSlide', {
 
 }, { timestamps: true });
 
+// ============= مدل SlideSettings (تنظیمات اسلایدشو) =============
+const SlideSettings = sequelize.define('SlideSettings', {
+  id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+
+  // زمان تعویض اسلاید به میلی‌ثانیه
+  slideDuration: { type: Sequelize.INTEGER, defaultValue: 5000 }, // 5 ثانیه
+
+  // آیا اسلایدشو به صورت خودکار حرکت کند؟
+  autoPlay: { type: Sequelize.BOOLEAN, defaultValue: true },
+
+  // آیا دکمه‌های قبلی/بعدی نمایش داده شوند؟
+  showArrows: { type: Sequelize.BOOLEAN, defaultValue: true },
+
+  // آیا نقاط پایین صفحه نمایش داده شوند؟
+  showDots: { type: Sequelize.BOOLEAN, defaultValue: true }
+
+}, { timestamps: true });
+
 // ============= مدل SiteSettings (تنظیمات سایت) =============
 const SiteSettings = sequelize.define('SiteSettings', {
   id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
@@ -792,6 +810,7 @@ module.exports = {
   EducationalContent,
   MarketIndex,
   HomeSlide,
+  SlideSettings,
   SiteSettings,
   Event,
   BotMessage,

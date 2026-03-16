@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ارتباط با ما - PhoenixTrade</title>
+    <!-- فونت سمیم -->
+    <link rel="stylesheet" href="/css/fonts.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Samim', 'Vazir', 'Tahoma', sans-serif;
+            background: linear-gradient(165deg, #0a3825 0%, #1a4f33 30%, #2e6b49 60%, #1a4f33 100%);
+            min-height: 100vh;
+            color: #ffffff;
+            line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -40%;
+            left: -40%;
+            width: 180%;
+            height: 180%;
+            background: radial-gradient(circle at 40% 40%,
+                    rgba(255, 255, 255, 0.35) 0%,
+                    rgba(100, 230, 170, 0.25) 25%,
+                    rgba(40, 120, 80, 0.15) 50%,
+                    transparent 80%);
+            animation: jadeShimmer 18s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes jadeShimmer {
+            0% {
+                transform: rotate(0deg) scale(1);
+                opacity: 0.4;
+            }
+
+            25% {
+                transform: rotate(3deg) scale(1.05);
+                opacity: 0.8;
+            }
+
+            50% {
+                transform: rotate(0deg) scale(1.1);
+                opacity: 0.5;
+            }
+
+            75% {
+                transform: rotate(-3deg) scale(1.05);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: rotate(0deg) scale(1);
+                opacity: 0.4;
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* ===== هدر ===== */
+        .header {
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+            background: rgba(10, 40, 25, 0.25);
+            backdrop-filter: blur(20px) saturate(180%);
+            border-radius: 60px;
+            margin: 20px auto;
+            padding: 10px 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #ffd700, #b8860b);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            color: #0a3825;
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
+        }
+
+        .logo-text {
+            font-size: 1.7rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #ffd700, #ffe68f);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: #ffffff;
+            font-weight: 500;
+            transition: all 0.3s;
+            padding: 8px 18px;
+            border-radius: 40px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(5px);
+            font-size: 0.95rem;
+        }
+
+        .nav-menu a:hover {
+            background: rgba(255, 215, 0, 0.25);
+            color: #ffd700;
+            transform: translateY(-3px);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .lang-selector {
+            display: flex;
+            gap: 5px;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 4px;
+            border-radius: 40px;
+        }
+
+        .lang-btn {
+            padding: 5px 12px;
+            border: none;
+            background: transparent;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+            color: #ffffff;
+        }
+
+        .lang-btn.active {
+            background: #ffd700;
+            color: #0a3825;
+        }
+
+        .telegram-link {
+            background: linear-gradient(135deg, #27a7e7, #0f7bc0);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ===== عنوان صفحه ===== */
+        .page-header {
+            text-align: center;
+            margin: 50px 0 40px;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+
+        .page-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+
+        /* ===== محتوای اصلی ===== */
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin: 40px 0;
+        }
+
+        .contact-card {
+            background: rgba(10, 40, 25, 0.25);
+            backdrop-filter: blur(15px) saturate(180%);
+            border-radius: 30px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-title {
+            color: #ffd700;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+            padding-bottom: 15px;
+        }
+
+        /* ===== بخش سابقه شرکت ===== */
+        .history-text {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .history-text p {
+            margin-bottom: 20px;
+        }
+
+        .history-highlight {
+            display: inline-block;
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid #ffd700;
+            color: #ffd700;
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        /* ===== اطلاعات تماس ===== */
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
+        .info-item:hover {
+            border-color: #ffd700;
+            transform: translateY(-5px);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .info-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #ffd700, #b8860b);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: #0a3825;
+        }
+
+        .info-details {
+            flex: 1;
+        }
+
+        .info-label {
+            color: #ffd700;
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            word-break: break-all;
+        }
+
+        .info-link {
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .info-link:hover {
+            color: #ffd700;
+        }
+
+        /* ===== فوتر ===== */
+        .footer {
+            background: rgba(0, 20, 10, 0.35);
+            backdrop-filter: blur(20px) saturate(180%);
+            padding: 40px 0 20px;
+            margin-top: 80px;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .footer-content {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-section {
+            margin-bottom: 30px;
+        }
+
+        .footer-section h3 {
+            color: #ffd700;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+
+        .contact-info-footer {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .contact-info-footer a {
+            color: #ffd700;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .contact-info-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .awards {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .award {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: #ffd700;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            transition: all 0.3s;
+        }
+
+        .award:hover {
+            transform: scale(1.1);
+            border-color: #ffd700;
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        /* ===== ریسپانسیو ===== */
+        @media (max-width: 768px) {
+            .contact-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .info-item {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- ===== هدر ===== -->
+        <header class="header">
+            <div class="header-content">
+                <a href="/" style="text-decoration: none;">
+                    <div class="logo">
+                        <div class="logo-icon">🦅</div>
+                        <span class="logo-text">ققنوس</span>
+                    </div>
+                </a>
+
+                <ul class="nav-menu">
+                    <li><a href="/">صفحه اصلی</a></li>
+                    <li><a href="/brokers">بروکرها</a></li>
+                    <li><a href="/education">آموزش</a></li>
+                    <li><a href="/markets">بازارها</a></li>
+                    <li><a href="/contact" style="background: rgba(255,215,0,0.2); color:#ffd700;">ارتباط با ما</a></li>
+                </ul>
+
+                <div class="header-actions">
+                    <div class="lang-selector">
+                        <button class="lang-btn active" data-lang="fa">FA</button>
+                        <button class="lang-btn" data-lang="en">EN</button>
+                        <button class="lang-btn" data-lang="ar">AR</button>
+                    </div>
+
+                    <a href="https://t.me/PhoenixTradeBot" class="telegram-link" target="_blank">
+                        <i class="fab fa-telegram-plane"></i>
+                        <span>کانال تلگرام</span>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- ===== عنوان صفحه ===== -->
+        <div class="page-header">
+            <h1 class="page-title">ارتباط با ما</h1>
+            <p class="page-subtitle">ما همیشه آماده پاسخگویی به سوالات شما هستیم</p>
+        </div>
+
+        <!-- ===== محتوای اصلی ===== -->
+        <div class="contact-content">
+            <!-- بخش راست - سابقه شرکت -->
+            <div class="contact-card">
+                <h2 class="card-title">درباره ققنوس</h2>
+                <div class="history-text">
+                    <span class="history-highlight">✧ از سال ۲۰۱۷ در کنار شما هستیم ✧</span>
+
+                    <p>شرکت ققنوس (PhoenixTrade) از سال ۲۰۱۷ فعالیت خود را در زمینه آموزش و ارائه خدمات تحلیلی بازارهای
+                        مالی آغاز کرد. ما با تیمی از تحلیلگران و معامله‌گران حرفه‌ای، مسیر موفقیت را برای هزاران
+                        معامله‌گر هموار کرده‌ایم.</p>
+
+                    <p>هدف ما ایجاد یک پلتفرم جامع و قابل اعتماد برای معامله‌گران فارسی‌زبان است تا بتوانند با دسترسی به
+                        بهترین منابع آموزشی، تحلیل‌های دقیق و معرفی بروکرهای معتبر، به موفقیت در بازارهای مالی دست
+                        یابند.</p>
+
+                    <p>در این سال‌ها با ارائه بیش از ۵۰۰ مطلب آموزشی، ده‌ها وبینار زنده و تحلیل‌های روزانه، همراه
+                        معامله‌گران بوده‌ایم و افتخار می‌کنیم که بخشی از مسیر موفقیت آنها بوده‌ایم.</p>
+                </div>
+
+                <div style="display: flex; gap: 15px; justify-content: center; margin-top: 30px;">
+                    <div class="award" title="بهترین پلتفرم آموزشی ۲۰۲۳">🏆</div>
+                    <div class="award" title="تیم برتر تحلیل ۲۰۲۴">⭐</div>
+                    <div class="award" title="بیش از ۵۰۰۰ کاربر فعال">🌍</div>
+                </div>
+            </div>
+
+            <!-- بخش چپ - اطلاعات تماس -->
+            <div class="contact-card">
+                <h2 class="card-title">راه‌های ارتباطی</h2>
+
+                <div class="contact-info">
+                    <!-- ایمیل -->
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="info-details">
+                            <div class="info-label">ایمیل شرکت</div>
+                            <div class="info-value">
+                                <a href="mailto:info@phoenixtrade.info" class="info-link">
+                                    info@phoenixtrade.info
+                                </a>
+                            </div>
+                            <div style="color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-top: 5px;">
+                                کلیک کنید تا در برنامه ایمیل باز شود
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- تلگرام -->
+                    <div class="info-item">
+                        <div class="info-icon" style="background: linear-gradient(135deg, #27a7e7, #0f7bc0);">
+                            <i class="fab fa-telegram-plane"></i>
+                        </div>
+                        <div class="info-details">
+                            <div class="info-label">ربات تلگرام</div>
+                            <div class="info-value">
+                                <a href="https://t.me/PhoenixTradeBot" target="_blank" class="info-link">
+                                    @PhoenixTradeBot
+                                </a>
+                            </div>
+                            <div style="color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-top: 5px;">
+                                کلیک کنید تا در تلگرام باز شود
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- کانال تلگرام -->
+                    <div class="info-item">
+                        <div class="info-icon" style="background: linear-gradient(135deg, #27a7e7, #0f7bc0);">
+                            <i class="fab fa-telegram"></i>
+                        </div>
+                        <div class="info-details">
+                            <div class="info-label">کانال تلگرام</div>
+                            <div class="info-value">
+                                <a href="https://t.me/phoenixtrade_channel" target="_blank" class="info-link">
+                                    @phoenixtrade_channel
+                                </a>
+                            </div>
+                            <div style="color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-top: 5px;">
+                                عضویت در کانال آموزشی
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== فوتر ===== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>تماس با ما</h3>
+                    <div class="contact-info-footer">
+                        <p><i class="fas fa-envelope"></i> info@phoenixtrade.info</p>
+                        <a href="https://t.me/PhoenixTradeBot" target="_blank">
+                            <i class="fab fa-telegram"></i> @PhoenixTradeBot
+                        </a>
+                    </div>
+                </div>
+
+                <div class="awards">
+                    <div class="award" title="FCA Regulated">🏆</div>
+                    <div class="award" title="CySEC Regulated">🏅</div>
+                    <div class="award" title="Best Broker 2024">⭐</div>
+                    <div class="award" title="International Forex Award">🌍</div>
+                </div>
+            </div>
+
+            <div class="copyright">
+                <p>© ۲۰۲۶ تمامی حقوق برای ققنوس محفوظ است</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ============= تغییر زبان =============
+        function changeLanguage(lang) {
+            // این تابع برای صفحات بعدی تکمیل می‌شود
+        }
+
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                changeLanguage(this.dataset.lang);
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -242,6 +242,18 @@ app.get('/compare', async (req, res) => {
   }
 });
 
+// صفحه تماس با ما
+app.get('/contact', async (req, res) => {
+  try {
+    const lang = req.query.lang || 'fa';
+    console.log('📞 Contact page requested, lang:', lang);
+    res.render('contact', { title: 'ارتباط با ما', lang, user: null });
+  } catch (error) {
+    console.error('❌ Error loading contact page:', error);
+    res.status(500).send('خطا در بارگذاری صفحه تماس');
+  }
+});
+
 // ============= Error Handler =============
 app.use((err, req, res, next) => {
   console.error('❌ Server error:', err.stack);
