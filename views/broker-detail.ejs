@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
-        <%= broker.display_name.fa %> - بررسی تخصصی | PhoenixTrade
+        <%= broker.name %>
     </title>
     <!-- فونت سمیم -->
     <link rel="stylesheet" href="/css/fonts.css">
@@ -502,8 +502,12 @@
     <script>
         const slug = window.location.pathname.split('/').pop();
 
+        function compareSingleBroker(id) {
+            window.location.href = `/compare?ids=${id}`;
+        }
+
         function loadBrokerDetails() {
-            fetch(`/api/brokers/${slug}/features`)
+            fetch(`/api/brokers/${slug}`)
                 .then(res => res.json())
                 .then(result => {
                     if (result.success) {
@@ -518,92 +522,62 @@
                 });
         }
 
-        function displayBroker(data) {
-            const broker = data.broker;
-            const features = data.features;
-
+        function displayBroker(broker) {
             const stars = '★'.repeat(Math.floor(broker.rating)) + '☆'.repeat(5 - Math.floor(broker.rating));
 
-            let featuresHtml = '';
-            const categories = {
-                general: 'ویژگی‌های عمومی',
-                trading: 'ویژگی‌های معاملاتی',
-                account: 'ویژگی‌های حساب',
-                support: 'پشتیبانی'
-            };
+            // ویژگی‌های اصلی بروکر از خود مدل Broker
+            const features = [
+                { title: 'سال تأسیس', value: broker.foundedYear || '-' },
+                { title: 'تعداد کاربران', value: broker.usersCount || '۰' },
+                { title: 'اسپرد', value: broker.spread || '-' },
+                { title: 'حداکثر لوریج', value: broker.leverage || '-' },
+                { title: 'حداقل سپرده', value: broker.minDeposit || '-' }
+            ];
 
-            // گروه‌بندی ویژگی‌ها بر اساس دسته
-            const groupedFeatures = {};
+            let featuresHtml = `
+        <div class="features-section">
+            <h2 class="section-title">ویژگی‌های بروکر</h2>
+            <div class="features-grid">
+    `;
+
             features.forEach(f => {
-                if (!groupedFeatures[f.category]) {
-                    groupedFeatures[f.category] = [];
-                }
-                groupedFeatures[f.category].push(f);
+                featuresHtml += `
+            <div class="feature-card">
+                <div class="feature-title">${f.title}</div>
+                <div class="feature-value">${f.value}</div>
+            </div>
+        `;
             });
 
-            // ساخت HTML برای هر دسته
-            for (const [category, catFeatures] of Object.entries(groupedFeatures)) {
-                featuresHtml += `
-                    <div class="features-section">
-                        <h2 class="section-title">${categories[category] || category}</h2>
-                        <div class="features-grid">
-                `;
-
-                catFeatures.forEach(f => {
-                    let valueHtml = '';
-
-                    if (f.dataType === 'boolean') {
-                        const isTrue = f.value === 'true';
-                        valueHtml = `<span class="feature-boolean ${isTrue ? '' : 'false'}">${isTrue ? 'بله' : 'خیر'}</span>`;
-                    } else if (f.dataType === 'number' || f.dataType === 'rating') {
-                        valueHtml = `
-                            <span class="feature-value">${f.value}</span>
-                            ${f.unit ? `<span class="feature-unit">${f.unit}</span>` : ''}
-                        `;
-                    } else {
-                        valueHtml = `<span class="feature-value">${f.value}</span>`;
-                    }
-
-                    featuresHtml += `
-                        <div class="feature-card">
-                            <div class="feature-title">${f.title.fa}</div>
-                            <div>${valueHtml}</div>
-                        </div>
-                    `;
-                });
-
-                featuresHtml += `</div></div>`;
-            }
+            featuresHtml += `</div></div>`;
 
             const html = `
-                <div class="broker-header">
-                    <div class="broker-header-content">
-                        <div class="broker-logo">
-                            ${broker.logo ? `<img src="${broker.logo}" style="width:100%; height:100%; object-fit:cover;">` : '📊'}
-                        </div>
-                        <div class="broker-info">
-                            <h1 class="broker-name">${broker.display_name.fa}</h1>
-                            <div class="broker-rating">
-                                <span class="stars">${stars}</span>
-                                <span class="rating-value">(${broker.rating})</span>
-                            </div>
-                            <div class="broker-actions">
-                                <a href="${broker.registerLink || '#'}" class="btn btn-primary" target="_blank">
-                                    ثبت‌نام و دریافت جایزه
-                                </a>
-                                <a href="/compare?ids=${broker.id}" class="btn btn-secondary">
-                                    مقایسه با دیگران
-                                </a>
-                            </div>
-                        </div>
+        <div class="broker-header">
+            <div class="broker-header-content">
+                <div class="broker-logo">
+                    ${broker.logo ? `<img src="${broker.logo}" style="width:100%; height:100%; object-fit:cover;">` : '📊'}
+                </div>
+                <div class="broker-info">
+                    <h1 class="broker-name">${broker.display_name_fa || broker.name}</h1>
+                    <div class="broker-rating">
+                        <span class="stars">${stars}</span>
+                        <span class="rating-value">(${broker.rating})</span>
+                    </div>
+                    <div class="broker-actions">
+                        <a href="${broker.registerLink || '#'}" class="btn btn-primary" target="_blank">
+                            ثبت‌نام و دریافت جایزه
+                        </a>
+                        <a href="/compare?ids=${broker.id}" class="btn btn-secondary" onclick="event.preventDefault(); compareSingleBroker(${broker.id})">                            مقایسه با دیگران
+                        </a>
                     </div>
                 </div>
-                ${featuresHtml}
-            `;
+            </div>
+        </div>
+        ${featuresHtml}
+    `;
 
             document.getElementById('broker-container').innerHTML = html;
         }
-
         function showError() {
             document.getElementById('broker-container').innerHTML = `
                 <div class="features-section" style="text-align: center; padding: 100px;">
@@ -616,6 +590,7 @@
 
         document.addEventListener('DOMContentLoaded', loadBrokerDetails);
     </script>
+
 </body>
 
 </html>

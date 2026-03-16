@@ -82,81 +82,6 @@ router.get('/brokers', async (req, res) => {
 });
 
 /**
- * @route   GET /api/broker-features
- * @desc    دریافت لیست همه ویژگی‌ها
- * @access  Public
- */
-router.get('/broker-features', async (req, res) => {
-  try {
-    const features = await BrokerFeature.findAll({
-      where: { showInComparison: true },
-      order: [['category', 'ASC'], ['displayOrder', 'ASC']]
-    });
-
-    res.json({ success: true, data: features });
-  } catch (error) {
-    console.error('❌ Error fetching broker features:', error);
-    res.status(500).json({ success: false, error: error.message });
-  }
-});
-
-/**
- * @route   GET /api/brokers/:slug/features
- * @desc    دریافت ویژگی‌های یک بروکر
- * @access  Public
- */
-router.get('/brokers/:slug/features', async (req, res) => {
-  try {
-    const broker = await Broker.findOne({
-      where: { slug: req.params.slug, isActive: true }
-    });
-
-    if (!broker) {
-      return res.status(404).json({ success: false, error: 'بروکر یافت نشد' });
-    }
-
-    const featureValues = await BrokerFeatureValue.findAll({
-      where: { brokerId: broker.id },
-      include: [{ model: BrokerFeature, as: 'feature' }]
-    });
-
-    const formattedFeatures = featureValues.map(fv => ({
-      key: fv.feature.key,
-      title: {
-        fa: fv.feature.title_fa,
-        en: fv.feature.title_en,
-        ar: fv.feature.title_ar
-      },
-      value: fv.value,
-      dataType: fv.feature.dataType,
-      unit: fv.feature.unit,
-      category: fv.feature.category
-    }));
-
-    res.json({
-      success: true,
-      data: {
-        broker: {
-          id: broker.id,
-          name: broker.name,
-          display_name: {
-            fa: broker.display_name_fa,
-            en: broker.display_name_en,
-            ar: broker.display_name_ar
-          },
-          logo: broker.logo,
-          rating: broker.rating
-        },
-        features: formattedFeatures
-      }
-    });
-  } catch (error) {
-    console.error('❌ Error fetching broker features:', error);
-    res.status(500).json({ success: false, error: error.message });
-  }
-});
-
-/**
  * @route   GET /api/brokers/compare
  * @desc    مقایسه چند بروکر
  * @access  Public
@@ -170,44 +95,23 @@ router.get('/brokers/compare', async (req, res) => {
       where: { id: brokerIds, isActive: true }
     });
 
-    const features = await BrokerFeature.findAll({
-      where: { showInComparison: true },
-      order: [['category', 'ASC'], ['displayOrder', 'ASC']]
-    });
-
-    const featureValues = await BrokerFeatureValue.findAll({
-      where: { brokerId: brokerIds }
-    });
-
     // ساختاردهی داده‌ها برای مقایسه
     const comparisonData = {
       brokers: brokers.map(b => ({
         id: b.id,
         name: b.name,
-        display_name: {
-          fa: b.display_name_fa,
-          en: b.display_name_en,
-          ar: b.display_name_ar
-        },
+        display_name_fa: b.display_name_fa,
+        display_name_en: b.display_name_en,
+        display_name_ar: b.display_name_ar,
         logo: b.logo,
-        rating: b.rating
-      })),
-      features: features.map(f => ({
-        id: f.id,
-        key: f.key,
-        title: {
-          fa: f.title_fa,
-          en: f.title_en,
-          ar: f.title_ar
-        },
-        dataType: f.dataType,
-        unit: f.unit,
-        category: f.category
-      })),
-      values: featureValues.map(v => ({
-        brokerId: v.brokerId,
-        featureId: v.featureId,
-        value: v.value
+        rating: b.rating,
+        foundedYear: b.foundedYear,
+        usersCount: b.usersCount,
+        spread: b.spread,
+        leverage: b.leverage,
+        minDeposit: b.minDeposit,
+        registerLink: b.registerLink,
+        regulations: JSON.parse(b.regulations || '[]')
       }))
     };
 

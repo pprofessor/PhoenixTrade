@@ -457,63 +457,7 @@ const Broker = sequelize.define('Broker', {
 
 }, { timestamps: true });
 
-// ============= مدل BrokerFeature (ویژگی‌های بروکر) =============
-const BrokerFeature = sequelize.define('BrokerFeature', {
-  id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
-
-  // نام ویژگی (برای شناسایی)
-  key: { type: Sequelize.STRING(50), allowNull: false, unique: true }, // مثلاً 'spread', 'leverage', 'minDeposit'
-
-  // عنوان ویژگی به سه زبان
-  title_fa: { type: Sequelize.STRING(100), allowNull: false },
-  title_en: { type: Sequelize.STRING(100), allowNull: false },
-  title_ar: { type: Sequelize.STRING(100), allowNull: false },
-
-  // نوع داده برای نمایش و فیلتر
-  dataType: {
-    type: Sequelize.ENUM('text', 'number', 'boolean', 'rating'),
-    defaultValue: 'text'
-  },
-
-  // واحد اندازه‌گیری (برای اعداد)
-  unit: { type: Sequelize.STRING(20), defaultValue: '' }, // مثلاً 'pip', '$', 'x'
-
-  // دسته‌بندی ویژگی
-  category: {
-    type: Sequelize.ENUM('general', 'trading', 'account', 'support'),
-    defaultValue: 'general'
-  },
-
-  // ترتیب نمایش
-  displayOrder: { type: Sequelize.INTEGER, defaultValue: 0 },
-
-  // آیا این ویژگی در مقایسه نمایش داده شود؟
-  showInComparison: { type: Sequelize.BOOLEAN, defaultValue: true },
-
-  // آیا این ویژگی قابل فیلتر است؟
-  filterable: { type: Sequelize.BOOLEAN, defaultValue: false }
-
-}, { timestamps: true });
-
-// ============= مدل BrokerFeatureValue (مقادیر ویژگی‌های بروکر) =============
-const BrokerFeatureValue = sequelize.define('BrokerFeatureValue', {
-  id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
-
-  brokerId: { type: Sequelize.INTEGER, allowNull: false },
-  featureId: { type: Sequelize.INTEGER, allowNull: false },
-
-  // مقدار ذخیره شده (می‌تواند متن، عدد، بولی، JSON و ... باشد)
-  value: { type: Sequelize.TEXT, allowNull: false }
-
-}, { timestamps: true });
-
 // ============= ارتباطات =============
-// ارتباطات BrokerFeature و BrokerFeatureValue
-Broker.hasMany(BrokerFeatureValue, { foreignKey: 'brokerId', as: 'featureValues' });
-BrokerFeatureValue.belongsTo(Broker, { foreignKey: 'brokerId', as: 'broker' });
-
-BrokerFeature.hasMany(BrokerFeatureValue, { foreignKey: 'featureId', as: 'values' });
-BrokerFeatureValue.belongsTo(BrokerFeature, { foreignKey: 'featureId', as: 'feature' });
 
 // ============= مدل EducationalContent (محتوای آموزشی) =============
 const EducationalContent = sequelize.define('EducationalContent', {

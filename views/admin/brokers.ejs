@@ -449,7 +449,6 @@
                                     <td>${broker.order || 0}</td>
                                     <td>
     <button class="btn-icon" onclick="editBroker(${broker.id})" title="ویرایش"><i class="fas fa-edit"></i></button>
-    <button class="btn-icon" onclick="manageFeatures(${broker.id})" title="تنظیم ویژگی‌ها"><i class="fas fa-sliders-h"></i></button>
     <button class="btn-icon danger" onclick="deleteBroker(${broker.id})" title="حذف"><i class="fas fa-trash"></i></button>
 </td>
                                 </tr>`;
@@ -698,20 +697,26 @@
 
             // ============= تغییر زبان در فرم =============
             function switchLang(lang) {
-                document.querySelectorAll('.lang-section').forEach(section => {
-                    section.style.display = 'none';
+                // مخفی کردن تمام محتوای زبان‌ها
+                document.querySelectorAll('.lang-content').forEach(el => {
+                    if (el) el.style.display = 'none';
                 });
 
-                document.querySelector(`.lang-section[data-lang="${lang}"]`).style.display = 'block';
-
-                document.querySelectorAll('.lang-tab').forEach(tab => {
-                    tab.classList.remove('active');
+                // نمایش محتوای زبان انتخاب شده
+                document.querySelectorAll('.lang-' + lang).forEach(el => {
+                    if (el) el.style.display = '';
                 });
 
-                const activeTab = Array.from(document.querySelectorAll('.lang-tab')).find(
-                    tab => tab.textContent.includes(lang === 'fa' ? 'فارسی' : lang === 'en' ? 'English' : 'عربي')
-                );
-                if (activeTab) activeTab.classList.add('active');
+                // غیرفعال کردن کلاس active از تمام دکمه‌ها
+                document.querySelectorAll('.lang-btn').forEach(btn => {
+                    if (btn) btn.classList.remove('active');
+                });
+
+                // فعال کردن دکمه انتخاب شده
+                const activeBtn = document.querySelector('.lang-btn[data-lang="' + lang + '"]');
+                if (activeBtn) {
+                    activeBtn.classList.add('active');
+                }
             }
 
             // ============= نمایش پیام =============

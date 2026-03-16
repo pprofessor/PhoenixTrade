@@ -86,7 +86,7 @@
             backdrop-filter: blur(20px) saturate(180%);
             border-radius: 60px;
             margin: 20px auto;
-            padding: 12px 35px;
+            padding: 10px 30px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
                 0 0 0 1px rgba(255, 255, 255, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.15);
@@ -210,7 +210,7 @@
         }
 
         /* جدول مقایسه */
-        .comparison-table {
+        .comparison-wrapper {
             background: rgba(10, 40, 25, 0.25);
             backdrop-filter: blur(15px) saturate(180%);
             border-radius: 30px;
@@ -220,51 +220,60 @@
             overflow-x: auto;
         }
 
-        .comparison-grid {
-            display: grid;
-            grid-template-columns: 250px repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1px;
-            background: rgba(255, 215, 0, 0.2);
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
         }
 
-        .comparison-cell {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .comparison-table th {
+            background: rgba(255, 215, 0, 0.15);
+            color: #ffd700;
+            padding: 20px;
             text-align: center;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #ffd700;
         }
 
-        .comparison-cell.header {
-            background: rgba(255, 215, 0, 0.1);
-            color: #ffd700;
-            font-weight: bold;
+        .comparison-table td {
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+            vertical-align: middle;
         }
 
-        .comparison-cell.category {
-            background: rgba(255, 215, 0, 0.05);
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .feature-name {
             color: #ffd700;
             font-weight: bold;
+            background: rgba(0, 0, 0, 0.2);
         }
 
         .broker-logo-small {
-            width: 50px;
-            height: 50px;
-            border-radius: 10px;
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
             margin-bottom: 10px;
+            object-fit: cover;
         }
 
-        .rating-stars-small {
+        .rating-stars {
             color: #ffd700;
-            font-size: 0.9rem;
+            font-size: 1rem;
+            margin-top: 5px;
         }
 
         .feature-boolean {
             display: inline-block;
-            padding: 3px 10px;
+            padding: 4px 12px;
             border-radius: 20px;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
         }
 
         .feature-boolean.true {
@@ -279,15 +288,20 @@
             border: 1px solid #dc3545;
         }
 
-        .back-link {
-            display: inline-block;
-            margin: 20px 0;
-            color: #ffd700;
-            text-decoration: none;
+        .feature-value {
+            font-size: 1rem;
+            color: #fff;
         }
 
-        .back-link:hover {
-            text-decoration: underline;
+        .category-header {
+            background: rgba(255, 215, 0, 0.05);
+        }
+
+        .category-header td {
+            color: #ffd700;
+            font-weight: bold;
+            font-size: 1.1rem;
+            padding: 15px 20px;
         }
 
         .loading {
@@ -304,6 +318,24 @@
             text-align: center;
             padding: 100px;
             color: #dc3545;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 100px;
+            color: #aaa;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin: 20px 0;
+            color: #ffd700;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
         }
 
         .footer {
@@ -342,6 +374,23 @@
             padding-top: 20px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             color: rgba(255, 255, 255, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .comparison-table th,
+            .comparison-table td {
+                padding: 12px;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
@@ -389,7 +438,7 @@
         <div id="comparison-container">
             <div class="loading">
                 <i class="fas fa-spinner fa-spin"></i>
-                <p style="margin-top: 20px;">در حال بارگذاری اطلاعات...</p>
+                <p style="margin-top: 20px;">در حال بارگذاری اطلاعات مقایسه...</p>
             </div>
         </div>
 
@@ -413,7 +462,9 @@
                     <h3>تماس با ما</h3>
                     <p><i class="fas fa-envelope"></i> info@phoenixtrade.info</p>
                     <p><i class="fas fa-phone"></i> ۰۲۱-۱۲۳۴۵۶۷۸</p>
-                    <p><i class="fab fa-telegram"></i> @PhoenixTradeBot</p>
+                    <a href="https://t.me/PhoenixTradeBot" target="_blank">
+                        <i class="fab fa-telegram"></i> @PhoenixTradeBot
+                    </a>
                 </div>
                 <div class="footer-section">
                     <h3>شبکه‌های اجتماعی</h3>
@@ -429,19 +480,15 @@
     </footer>
 
     <script>
-        // دریافت ids از URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const ids = urlParams.get('ids') || '';
+        function getQueryParam(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
 
         function loadComparison() {
+            const ids = getQueryParam('ids');
             if (!ids) {
-                document.getElementById('comparison-container').innerHTML = `
-                    <div class="error-message">
-                        <i class="fas fa-exclamation-circle" style="font-size: 3rem;"></i>
-                        <p style="margin-top: 20px;">هیچ بروکری برای مقایسه انتخاب نشده است</p>
-                        <a href="/brokers" style="display: inline-block; margin-top: 20px; padding: 10px 30px; background: #ffd700; color: #0a3825; text-decoration: none; border-radius: 30px;">مشاهده بروکرها</a>
-                    </div>
-                `;
+                showError('آی‌دی بروکرها مشخص نشده است');
                 return;
             }
 
@@ -451,97 +498,118 @@
                     if (result.success) {
                         displayComparison(result.data);
                     } else {
-                        showError();
+                        showError(result.error || 'خطا در بارگذاری اطلاعات');
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    showError();
+                    showError('خطا در ارتباط با سرور');
                 });
         }
 
         function displayComparison(data) {
-            const { brokers, features, values } = data;
+            const brokers = data.brokers || [];
 
             if (brokers.length === 0) {
-                showError();
+                showError('هیچ بروکری برای مقایسه یافت نشد');
                 return;
             }
 
-            let html = '<div class="comparison-table"><div class="comparison-grid">';
+            // ایجاد هدر جدول
+            let html = `
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>ویژگی</th>
+        `;
 
-            // ردیف عنوان بروکرها
-            html += '<div class="comparison-cell header">ویژگی‌ها</div>';
+            brokers.forEach(broker => {
+                html += `<th>${broker.display_name_fa || broker.name}</th>`;
+            });
+
+            html += `</thead><tbody>`;
+
+            // ردیف لوگو
+            html += `<tr><td>لوگو</td>`;
+            brokers.forEach(broker => {
+                html += `<td class="logo-cell">${broker.logo ? `<img src="${broker.logo}" style="max-width:100px;">` : '📊'}</td>`;
+            });
+            html += `</tr>`;
+
+            // ردیف امتیاز
+            html += `<tr><td>امتیاز</td>`;
             brokers.forEach(broker => {
                 const stars = '★'.repeat(Math.floor(broker.rating)) + '☆'.repeat(5 - Math.floor(broker.rating));
-                html += `
-                    <div class="comparison-cell header">
-                        <div>
-                            ${broker.logo ? `<img src="${broker.logo}" class="broker-logo-small">` : ''}
-                            <div style="font-weight: bold; margin: 5px 0;">${broker.display_name.fa}</div>
-                            <div class="rating-stars-small">${stars} (${broker.rating})</div>
-                        </div>
-                    </div>
-                `;
+                html += `<td><span class="stars">${stars}</span> (${broker.rating})</td>`;
             });
+            html += `</tr>`;
 
-            // گروه‌بندی ویژگی‌ها بر اساس دسته
-            const groupedFeatures = {};
-            features.forEach(f => {
-                if (!groupedFeatures[f.category]) {
-                    groupedFeatures[f.category] = [];
-                }
-                groupedFeatures[f.category].push(f);
+            // ردیف سال تأسیس
+            html += `<tr><td>سال تأسیس</td>`;
+            brokers.forEach(broker => {
+                html += `<td>${broker.foundedYear || '-'}</td>`;
             });
+            html += `</tr>`;
 
-            const categoryNames = {
-                general: 'ویژگی‌های عمومی',
-                trading: 'ویژگی‌های معاملاتی',
-                account: 'ویژگی‌های حساب',
-                support: 'پشتیبانی'
-            };
+            // ردیف تعداد کاربران
+            html += `<tr><td>تعداد کاربران</td>`;
+            brokers.forEach(broker => {
+                html += `<td>${broker.usersCount || '۰'}</td>`;
+            });
+            html += `</tr>`;
 
-            // نمایش ویژگی‌ها
-            for (const [category, catFeatures] of Object.entries(groupedFeatures)) {
-                // ردیف عنوان دسته
-                html += `<div class="comparison-cell category" colspan="${brokers.length + 1}">${categoryNames[category] || category}</div>`;
+            // ردیف اسپرد
+            html += `<tr><td>اسپرد</td>`;
+            brokers.forEach(broker => {
+                html += `<td>${broker.spread || '-'}</td>`;
+            });
+            html += `</tr>`;
 
-                catFeatures.forEach(feature => {
-                    html += `<div class="comparison-cell">${feature.title.fa}</div>`;
+            // ردیف لوریج
+            html += `<tr><td>حداکثر لوریج</td>`;
+            brokers.forEach(broker => {
+                html += `<td>${broker.leverage || '-'}</td>`;
+            });
+            html += `</tr>`;
 
-                    brokers.forEach(broker => {
-                        const value = values.find(v => v.brokerId === broker.id && v.featureId === feature.id);
-                        let valueHtml = '-';
+            // ردیف حداقل سپرده
+            html += `<tr><td>حداقل سپرده</td>`;
+            brokers.forEach(broker => {
+                html += `<td>${broker.minDeposit || '-'}</td>`;
+            });
+            html += `</tr>`;
 
-                        if (value) {
-                            if (feature.dataType === 'boolean') {
-                                const isTrue = value.value === 'true';
-                                valueHtml = `<span class="feature-boolean ${isTrue ? 'true' : 'false'}">${isTrue ? 'بله' : 'خیر'}</span>`;
-                            } else if (feature.dataType === 'number' || feature.dataType === 'rating') {
-                                valueHtml = `${value.value} ${feature.unit || ''}`;
-                            } else {
-                                valueHtml = value.value;
-                            }
-                        }
+            // ردیف رگوله‌ها
+            html += `<tr><td>رگوله‌ها</td>`;
+            brokers.forEach(broker => {
+                const regs = broker.regulations || [];
+                html += `<td>${Array.isArray(regs) ? regs.join('، ') : regs}</td>`;
+            });
+            html += `</tr>`;
 
-                        html += `<div class="comparison-cell">${valueHtml}</div>`;
-                    });
-                });
-            }
+            // ردیف لینک ثبت‌نام
+            html += `<tr><td>ثبت‌نام</td>`;
+            brokers.forEach(broker => {
+                html += `<td><a href="${broker.registerLink || '#'}" target="_blank" class="btn btn-primary">ثبت‌نام</a></td>`;
+            });
+            html += `</tr>`;
 
-            html += '</div></div>';
+            html += `</tbody></table>`;
+
             document.getElementById('comparison-container').innerHTML = html;
         }
 
-        function showError() {
+        function showError(message) {
             document.getElementById('comparison-container').innerHTML = `
-                <div class="error-message">
-                    <i class="fas fa-exclamation-triangle" style="font-size: 3rem;"></i>
-                    <p style="margin-top: 20px;">خطا در بارگذاری اطلاعات مقایسه</p>
-                </div>
-            `;
+            <div class="error-message">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p>${message}</p>
+                <a href="/brokers" class="btn btn-primary">بازگشت به لیست بروکرها</a>
+            </div>
+        `;
         }
 
+        // بارگذاری اطلاعات هنگام لود صفحه
         document.addEventListener('DOMContentLoaded', loadComparison);
     </script>
 </body>
