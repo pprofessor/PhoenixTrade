@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
+    <title data-fa="<%= title || 'محتوای آموزشی' %> - PhoenixTrade"
+        data-en="<%= title || 'Educational Content' %> - PhoenixTrade"
+        data-ar="<%= title || 'محتوى تعليمي' %> - PhoenixTrade">
         <%= title || 'محتوای آموزشی' %> - PhoenixTrade
     </title>
     <!-- فونت سمیم -->
@@ -224,6 +226,7 @@
             gap: 20px;
             color: rgba(255, 255, 255, 0.7);
             font-size: 0.9rem;
+            flex-wrap: wrap;
         }
 
         .content-meta i {
@@ -307,42 +310,82 @@
             color: #dc3545;
         }
 
+        /* ===== فوتر (دقیقاً مثل صفحه اصلی) ===== */
         .footer {
             background: rgba(0, 20, 10, 0.35);
             backdrop-filter: blur(20px) saturate(180%);
-            padding: 60px 0 30px;
-            margin-top: 100px;
+            padding: 40px 0 20px;
+            margin-top: 60px;
             border-top: 1px solid rgba(255, 255, 255, 0.15);
         }
 
         .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-section {
+            margin-bottom: 30px;
         }
 
         .footer-section h3 {
             color: #ffd700;
             margin-bottom: 20px;
+            font-size: 1.2rem;
         }
 
-        .footer-section a {
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
             color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            display: block;
-            margin-bottom: 10px;
         }
 
-        .footer-section a:hover {
+        .contact-info a {
             color: #ffd700;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .contact-info a:hover {
+            text-decoration: underline;
+        }
+
+        .awards {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .award {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: #ffd700;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            transition: all 0.3s;
+        }
+
+        .award:hover {
+            transform: scale(1.1);
+            border-color: #ffd700;
         }
 
         .copyright {
             text-align: center;
-            margin-top: 40px;
+            margin-top: 20px;
             padding-top: 20px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
         }
 
         @media (max-width: 768px) {
@@ -358,28 +401,31 @@
             .content-wrapper {
                 padding: 30px;
             }
+
+            .footer-content {
+                padding: 0 20px;
+            }
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <!-- هدر -->
+        <!-- هدر (سه‌زبانه شده) -->
         <header class="header">
             <div class="header-content">
                 <a href="/" style="text-decoration: none;">
                     <div class="logo">
                         <div class="logo-icon">🦅</div>
-                        <span class="logo-text">ققنوس</span>
+                        <span class="logo-text" data-fa="ققنوس" data-en="Phoenix" data-ar="العنقاء">ققنوس</span>
                     </div>
                 </a>
 
                 <ul class="nav-menu">
-                    <li><a href="/">صفحه اصلی</a></li>
-                    <li><a href="/brokers">بروکرها</a></li>
-                    <li><a href="/education">آموزش</a></li>
-                    <li><a href="/markets">بازارها</a></li>
-                    <li><a href="/contact">ارتباط با ما</a></li>
+                    <li><a href="/" data-fa="صفحه اصلی" data-en="Home" data-ar="الرئيسية">صفحه اصلی</a></li>
+                    <li><a href="/brokers" data-fa="بروکرها" data-en="Brokers" data-ar="الوسطاء">بروکرها</a></li>
+                    <li><a href="/education" data-fa="آموزش" data-en="Education" data-ar="التعليم">آموزش</a></li>
+                    <li><a href="/markets" data-fa="بازارها" data-en="Markets" data-ar="الأسواق">بازارها</a></li>
                 </ul>
 
                 <div class="header-actions">
@@ -391,7 +437,7 @@
 
                     <a href="https://t.me/PhoenixTradeBot" class="telegram-link" target="_blank">
                         <i class="fab fa-telegram-plane"></i>
-                        کانال تلگرام
+                        <span data-fa="کانال تلگرام" data-en="Telegram" data-ar="تيليجرام">کانال تلگرام</span>
                     </a>
                 </div>
             </div>
@@ -401,50 +447,58 @@
         <div class="content-wrapper" id="content-container">
             <div class="loading">
                 <i class="fas fa-spinner fa-spin"></i>
-                <p style="margin-top: 20px;">در حال بارگذاری...</p>
+                <p style="margin-top: 20px;" data-fa="در حال بارگذاری..." data-en="Loading..."
+                    data-ar="جاري التحميل...">در حال بارگذاری...</p>
             </div>
         </div>
 
         <!-- دکمه بازگشت -->
-        <a href="/education" class="back-link">
+        <a href="/education" class="back-link" data-fa="بازگشت به لیست آموزش‌ها" data-en="Back to Education List"
+            data-ar="العودة إلى قائمة التعليم">
             <i class="fas fa-arrow-right"></i> بازگشت به لیست آموزش‌ها
         </a>
     </div>
 
-    <!-- فوتر -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>دسترسی سریع</h3>
-                    <a href="/">صفحه اصلی</a>
-                    <a href="/brokers">بروکرها</a>
-                    <a href="/education">آموزش</a>
-                    <a href="/markets">بازارها</a>
-                </div>
-                <div class="footer-section">
-                    <h3>تماس با ما</h3>
-                    <p><i class="fas fa-envelope"></i> info@phoenixtrade.info</p>
-                    <p><i class="fas fa-phone"></i> ۰۲۱-۱۲۳۴۵۶۷۸</p>
-                    <p><i class="fab fa-telegram"></i> @PhoenixTradeBot</p>
-                </div>
-                <div class="footer-section">
-                    <h3>شبکه‌های اجتماعی</h3>
-                    <a href="#"><i class="fab fa-telegram"></i> تلگرام</a>
-                    <a href="#"><i class="fab fa-instagram"></i> اینستاگرام</a>
-                    <a href="#"><i class="fab fa-twitter"></i> توییتر</a>
-                </div>
-            </div>
-            <div class="copyright">
-                <p>© ۲۰۲۶ تمامی حقوق برای ققنوس محفوظ است</p>
-            </div>
-        </div>
-    </footer>
+    <!-- فوتر (دقیقاً مثل صفحه اصلی) -->
+    <%- include('footer') %>
 
     <script>
         // دریافت slug از URL
         const pathParts = window.location.pathname.split('/');
         const slug = pathParts[pathParts.length - 1];
+        let currentLang = 'fa';
+        let currentContent = null;
+
+        // ============= تابع تغییر زبان =============
+        function changeLanguage(lang) {
+            currentLang = lang;
+
+            // تغییر عنوان صفحه
+            const titleElement = document.querySelector('title');
+            const newTitle = titleElement.getAttribute('data-' + lang);
+            if (newTitle) {
+                titleElement.textContent = newTitle;
+            }
+
+            // تغییر متن المنت‌های دارای data-*
+            document.querySelectorAll('[data-' + lang + ']').forEach(element => {
+                const translation = element.getAttribute('data-' + lang);
+                if (translation) {
+                    element.textContent = translation;
+                }
+            });
+
+            // تغییر کلاس دکمه‌های زبان
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.lang-btn[data-lang="${lang}"]`).classList.add('active');
+
+            // نمایش مجدد محتوا با زبان جدید
+            if (currentContent) {
+                displayContent(currentContent);
+            }
+        }
 
         // بارگذاری محتوا
         async function loadContent() {
@@ -453,38 +507,8 @@
                 const result = await response.json();
 
                 if (result.success) {
-                    const content = result.data;
-                    const container = document.getElementById('content-container');
-
-                    let categoryText = '';
-                    switch (content.category) {
-                        case 'basic': categoryText = 'مبتدی'; break;
-                        case 'strategy': categoryText = 'استراتژی'; break;
-                        case 'technical': categoryText = 'تحلیل تکنیکال'; break;
-                        case 'fundamental': categoryText = 'تحلیل بنیادی'; break;
-                        default: categoryText = content.category;
-                    }
-
-                    const date = new Date(content.createdAt).toLocaleDateString('fa-IR');
-
-                    container.innerHTML = `
-                        <div class="content-header">
-                            <h1 class="content-title">${content.title_fa}</h1>
-                            <div class="content-meta">
-                                <span><i class="fas fa-calendar"></i> ${date}</span>
-                                <span><i class="fas fa-eye"></i> ${content.viewCount || 0} بازدید</span>
-                                <span><i class="fas fa-tag"></i> <span class="category-badge">${categoryText}</span></span>
-                            </div>
-                        </div>
-                        
-                        ${content.featuredImage ?
-                            `<img src="${content.featuredImage}" alt="${content.title_fa}" class="featured-image">` :
-                            ''}
-                        
-                        <div class="content-body">
-                            ${content.content_fa || 'محتوایی وجود ندارد'}
-                        </div>
-                    `;
+                    currentContent = result.data;
+                    displayContent(currentContent);
                 } else {
                     showError();
                 }
@@ -494,8 +518,59 @@
             }
         }
 
+        function displayContent(content) {
+            const container = document.getElementById('content-container');
+
+            let categoryText = '';
+            switch (content.category) {
+                case 'basic': categoryText = 'مبتدی'; break;
+                case 'strategy': categoryText = 'استراتژی'; break;
+                case 'technical': categoryText = 'تحلیل تکنیکال'; break;
+                case 'fundamental': categoryText = 'تحلیل بنیادی'; break;
+                default: categoryText = content.category;
+            }
+
+            // انتخاب عنوان بر اساس زبان
+            let title = content.title_fa;
+            if (currentLang === 'en' && content.title_en) {
+                title = content.title_en;
+            } else if (currentLang === 'ar' && content.title_ar) {
+                title = content.title_ar;
+            }
+
+            // انتخاب محتوا بر اساس زبان
+            let contentBody = content.content_fa || '';
+            if (currentLang === 'en' && content.content_en) {
+                contentBody = content.content_en;
+            } else if (currentLang === 'ar' && content.content_ar) {
+                contentBody = content.content_ar;
+            }
+
+            const date = new Date(content.createdAt).toLocaleDateString('fa-IR');
+
+            container.innerHTML = `
+                <div class="content-header">
+                    <h1 class="content-title">${title}</h1>
+                    <div class="content-meta">
+                        <span><i class="fas fa-calendar"></i> ${date}</span>
+                        <span><i class="fas fa-eye"></i> ${content.viewCount || 0} بازدید</span>
+                        <span><i class="fas fa-tag"></i> <span class="category-badge">${categoryText}</span></span>
+                    </div>
+                </div>
+                
+                ${content.featuredImage ?
+                    `<img src="${content.featuredImage}" alt="${title}" class="featured-image">` :
+                    ''}
+                
+                <div class="content-body">
+                    ${contentBody || 'محتوایی وجود ندارد'}
+                </div>
+            `;
+        }
+
         function showError() {
-            document.getElementById('content-container').innerHTML = `
+            const container = document.getElementById('content-container');
+            container.innerHTML = `
                 <div class="error-message">
                     <i class="fas fa-exclamation-triangle" style="font-size: 3rem;"></i>
                     <p style="margin-top: 20px;">محتوا یافت نشد</p>
@@ -512,7 +587,17 @@
             `;
         }
 
-        document.addEventListener('DOMContentLoaded', loadContent);
+        // ============= رویدادهای زبان =============
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                changeLanguage(this.dataset.lang);
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadContent();
+            changeLanguage('fa');
+        });
     </script>
 </body>
 

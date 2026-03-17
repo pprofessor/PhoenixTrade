@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لیست بروکرها - PhoenixTrade</title>
+    <title data-fa="لیست بروکرها - PhoenixTrade" data-en="Brokers List - PhoenixTrade"
+        data-ar="قائمة الوسطاء - PhoenixTrade">لیست بروکرها - PhoenixTrade</title>
     <!-- فونت سمیم -->
     <link rel="stylesheet" href="/css/fonts.css">
     <!-- Font Awesome -->
@@ -432,64 +433,109 @@
             color: #dc3545;
         }
 
+        /* ===== فوتر (مثل صفحه اصلی) ===== */
         .footer {
             background: rgba(0, 20, 10, 0.35);
             backdrop-filter: blur(20px) saturate(180%);
-            padding: 60px 0 30px;
-            margin-top: 100px;
+            padding: 40px 0 20px;
+            margin-top: 60px;
             border-top: 1px solid rgba(255, 255, 255, 0.15);
         }
 
         .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-section {
+            margin-bottom: 30px;
         }
 
         .footer-section h3 {
             color: #ffd700;
             margin-bottom: 20px;
+            font-size: 1.2rem;
         }
 
-        .footer-section a {
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
             color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            display: block;
-            margin-bottom: 10px;
         }
 
-        .footer-section a:hover {
+        .contact-info a {
             color: #ffd700;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .contact-info a:hover {
+            text-decoration: underline;
+        }
+
+        .awards {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .award {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: #ffd700;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            transition: all 0.3s;
+        }
+
+        .award:hover {
+            transform: scale(1.1);
+            border-color: #ffd700;
         }
 
         .copyright {
             text-align: center;
-            margin-top: 40px;
+            margin-top: 20px;
             padding-top: 20px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                padding: 0 20px;
+            }
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <!-- هدر -->
+        <!-- هدر (سه‌زبانه شده) -->
         <header class="header">
             <div class="header-content">
                 <a href="/" style="text-decoration: none;">
                     <div class="logo">
                         <div class="logo-icon">🦅</div>
-                        <span class="logo-text">ققنوس</span>
+                        <span class="logo-text" data-fa="ققنوس" data-en="Phoenix" data-ar="العنقاء">ققنوس</span>
                     </div>
                 </a>
 
                 <ul class="nav-menu">
-                    <li><a href="/">صفحه اصلی</a></li>
-                    <li><a href="/brokers">بروکرها</a></li>
-                    <li><a href="/education">آموزش</a></li>
-                    <li><a href="/markets">بازارها</a></li>
-                    <li><a href="/contact">ارتباط با ما</a></li>
+                    <li><a href="/" data-fa="صفحه اصلی" data-en="Home" data-ar="الرئيسية">صفحه اصلی</a></li>
+                    <li><a href="/brokers" data-fa="بروکرها" data-en="Brokers" data-ar="الوسطاء">بروکرها</a></li>
+                    <li><a href="/education" data-fa="آموزش" data-en="Education" data-ar="التعليم">آموزش</a></li>
+                    <li><a href="/markets" data-fa="بازارها" data-en="Markets" data-ar="الأسواق">بازارها</a></li>
                 </ul>
 
                 <div class="header-actions">
@@ -501,15 +547,18 @@
 
                     <a href="https://t.me/PhoenixTradeBot" class="telegram-link" target="_blank">
                         <i class="fab fa-telegram-plane"></i>
-                        کانال تلگرام
+                        <span data-fa="کانال تلگرام" data-en="Telegram" data-ar="تيليجرام">کانال تلگرام</span>
                     </a>
                 </div>
             </div>
         </header>
 
-        <!-- عنوان صفحه -->
-        <h1 class="page-title">بروکرهای معتبر</h1>
-        <p class="page-subtitle">مقایسه و انتخاب بهترین بروکر برای معاملات شما</p>
+        <!-- عنوان صفحه (سه‌زبانه شده) -->
+        <h1 class="page-title" data-fa="بروکرهای معتبر" data-en="Trusted Brokers" data-ar="وسطاء موثوقون">بروکرهای معتبر
+        </h1>
+        <p class="page-subtitle" data-fa="مقایسه و انتخاب بهترین بروکر برای معاملات شما"
+            data-en="Compare and choose the best broker for your trades" data-ar="قارن واختر أفضل وسيط لصفقاتك">مقایسه و
+            انتخاب بهترین بروکر برای معاملات شما</p>
 
         <!-- بخش فیلتر -->
         <div class="filter-section">
@@ -541,40 +590,37 @@
         </div>
     </div>
 
-    <!-- فوتر -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>دسترسی سریع</h3>
-                    <a href="/">صفحه اصلی</a>
-                    <a href="/brokers">بروکرها</a>
-                    <a href="/education">آموزش</a>
-                    <a href="/markets">بازارها</a>
-                </div>
-                <div class="footer-section">
-                    <h3>تماس با ما</h3>
-                    <p><i class="fas fa-envelope"></i> info@phoenixtrade.info</p>
-                    <p><i class="fas fa-phone"></i> ۰۲۱-۱۲۳۴۵۶۷۸</p>
-                    <p><i class="fab fa-telegram"></i> @PhoenixTradeBot</p>
-                </div>
-                <div class="footer-section">
-                    <h3>شبکه‌های اجتماعی</h3>
-                    <a href="#"><i class="fab fa-telegram"></i> تلگرام</a>
-                    <a href="#"><i class="fab fa-instagram"></i> اینستاگرام</a>
-                    <a href="#"><i class="fab fa-twitter"></i> توییتر</a>
-                </div>
-            </div>
-            <div class="copyright">
-                <p>© ۲۰۲۶ تمامی حقوق برای ققنوس محفوظ است</p>
-            </div>
-        </div>
-    </footer>
+    <!-- فوتر (مثل صفحه اصلی) -->
+    <%- include('footer') %>
 
     <script>
         let allBrokers = [];
         let selectedBrokers = [];
+        let currentLang = 'fa';
 
+        // ============= تابع تغییر زبان =============
+        function changeLanguage(lang) {
+            currentLang = lang;
+
+            // تغییر متن المنت‌های دارای data-*
+            document.querySelectorAll('[data-' + lang + ']').forEach(element => {
+                const translation = element.getAttribute('data-' + lang);
+                if (translation) element.textContent = translation;
+            });
+
+            // تغییر کلاس دکمه‌های زبان
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.lang-btn[data-lang="${lang}"]`).classList.add('active');
+
+            // نمایش مجدد بروکرها با زبان جدید
+            if (allBrokers.length > 0) {
+                displayBrokers(allBrokers);
+            }
+        }
+
+        // ============= بارگذاری بروکرها =============
         function loadBrokers() {
             fetch('/api/brokers')
                 .then(res => res.json())
@@ -611,6 +657,14 @@
                 const stars = '★'.repeat(Math.floor(broker.rating)) + '☆'.repeat(5 - Math.floor(broker.rating));
                 const regulations = JSON.parse(broker.regulations || '[]');
 
+                // انتخاب نام بروکر بر اساس زبان
+                let brokerName = broker.display_name_fa || broker.name;
+                if (currentLang === 'en' && broker.display_name_en) {
+                    brokerName = broker.display_name_en;
+                } else if (currentLang === 'ar' && broker.display_name_ar) {
+                    brokerName = broker.display_name_ar;
+                }
+
                 html += `
                     <div class="broker-card">
                         <div class="broker-header">
@@ -618,7 +672,7 @@
                                 ${broker.logo ? `<img src="${broker.logo}">` : '📊'}
                             </div>
                             <div class="broker-info">
-                                <h3>${broker.display_name_fa || broker.name}</h3>
+                                <h3>${brokerName}</h3>
                                 <div class="broker-rating">
                                     <span class="stars">${stars}</span>
                                     <span>(${broker.rating})</span>
@@ -628,31 +682,31 @@
                         
                         <div class="broker-features">
                             <div class="broker-feature">
-                                <span class="feature-label">سال تأسیس:</span>
+                                <span class="feature-label">${currentLang === 'fa' ? 'سال تأسیس' : currentLang === 'en' ? 'Founded' : 'تأسس'}:</span>
                                 <span>${broker.foundedYear || '-'}</span>
                             </div>
                             <div class="broker-feature">
-                                <span class="feature-label">کاربران:</span>
+                                <span class="feature-label">${currentLang === 'fa' ? 'کاربران' : currentLang === 'en' ? 'Users' : 'المستخدمين'}:</span>
                                 <span>${broker.usersCount || '۰'}</span>
                             </div>
                             <div class="broker-feature">
-                                <span class="feature-label">اسپرد:</span>
+                                <span class="feature-label">${currentLang === 'fa' ? 'اسپرد' : currentLang === 'en' ? 'Spread' : 'السبريد'}:</span>
                                 <span>${broker.spread || '-'}</span>
                             </div>
                             <div class="broker-feature">
-                                <span class="feature-label">اهرم:</span>
+                                <span class="feature-label">${currentLang === 'fa' ? 'اهرم' : currentLang === 'en' ? 'Leverage' : 'الرافعة'}:</span>
                                 <span>${broker.leverage || '-'}</span>
                             </div>
                         </div>
                         
                         <div class="broker-actions">
-                            <a href="/brokers/${broker.slug}" class="btn btn-secondary">جزئیات</a>
-                            <a href="${broker.registerLink || '#'}" class="btn btn-primary" target="_blank">ثبت‌نام</a>
+                            <a href="/brokers/${broker.slug}" class="btn btn-secondary">${currentLang === 'fa' ? 'جزئیات' : currentLang === 'en' ? 'Details' : 'التفاصيل'}</a>
+                            <a href="${broker.registerLink || '#'}" class="btn btn-primary" target="_blank">${currentLang === 'fa' ? 'ثبت‌نام' : currentLang === 'en' ? 'Register' : 'تسجيل'}</a>
                         </div>
                         
                         <div class="compare-checkbox">
                             <input type="checkbox" value="${broker.id}" onchange="toggleCompare(${broker.id}, this.checked)">
-                            <label>انتخاب برای مقایسه</label>
+                            <label>${currentLang === 'fa' ? 'انتخاب برای مقایسه' : currentLang === 'en' ? 'Select to compare' : 'اختر للمقارنة'}</label>
                         </div>
                     </div>
                 `;
@@ -667,7 +721,9 @@
                 if (selectedBrokers.length < 4) {
                     selectedBrokers.push(id);
                 } else {
-                    alert('حداکثر می‌توانید ۴ بروکر را مقایسه کنید');
+                    alert(currentLang === 'fa' ? 'حداکثر می‌توانید ۴ بروکر را مقایسه کنید' :
+                        currentLang === 'en' ? 'You can compare up to 4 brokers' :
+                            'يمكنك مقارنة حتى ٤ وسطاء');
                     event.target.checked = false;
                     return;
                 }
@@ -684,7 +740,9 @@
             const link = document.getElementById('compare-link');
 
             if (selectedBrokers.length > 0) {
-                countSpan.textContent = `${selectedBrokers.length} بروکر انتخاب شده`;
+                countSpan.textContent = currentLang === 'fa' ? `${selectedBrokers.length} بروکر انتخاب شده` :
+                    currentLang === 'en' ? `${selectedBrokers.length} brokers selected` :
+                        `${selectedBrokers.length} وسطاء مختارون`;
                 link.href = `/compare?ids=${selectedBrokers.join(',')}`;
                 bar.style.display = 'flex';
             } else {
@@ -694,10 +752,12 @@
 
         function searchBrokers() {
             const query = document.getElementById('search-input').value.toLowerCase();
-            const filtered = allBrokers.filter(b =>
-                (b.display_name_fa || b.name).toLowerCase().includes(query) ||
-                b.name.toLowerCase().includes(query)
-            );
+            const filtered = allBrokers.filter(b => {
+                const nameFa = (b.display_name_fa || b.name).toLowerCase();
+                const nameEn = (b.display_name_en || '').toLowerCase();
+                const nameAr = (b.display_name_ar || '').toLowerCase();
+                return nameFa.includes(query) || nameEn.includes(query) || nameAr.includes(query) || b.name.toLowerCase().includes(query);
+            });
             displayBrokers(filtered);
         }
 
@@ -731,12 +791,24 @@
             document.getElementById('brokers-container').innerHTML = `
                 <div class="error-message">
                     <i class="fas fa-exclamation-triangle" style="font-size: 3rem;"></i>
-                    <p style="margin-top: 20px;">خطا در بارگذاری بروکرها</p>
+                    <p style="margin-top: 20px;">${currentLang === 'fa' ? 'خطا در بارگذاری بروکرها' :
+                    currentLang === 'en' ? 'Error loading brokers' :
+                        'خطأ في تحميل الوسطاء'}</p>
                 </div>
             `;
         }
 
-        document.addEventListener('DOMContentLoaded', loadBrokers);
+        // ============= رویدادهای زبان =============
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                changeLanguage(this.dataset.lang);
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadBrokers();
+            changeLanguage('fa');
+        });
     </script>
 </body>
 

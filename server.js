@@ -134,6 +134,22 @@ app.get('/api/market-prices', async (req, res) => {
   }
 });
 
+// ============= Middleware برای ارسال تنظیمات فوتر به تمام ویوها =============
+const footerController = require('./controllers/footerController');
+
+app.use(async (req, res, next) => {
+  try {
+    const footerSettings = await footerController.getSettings();
+    res.locals.footerSettings = footerSettings;
+    res.locals.req = req; // برای دسترسی به req.query در ویوها
+    next();
+  } catch (error) {
+    console.error('Error loading footer settings:', error);
+    res.locals.footerSettings = null;
+    next();
+  }
+});
+
 // ============= Routes =============
 const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');

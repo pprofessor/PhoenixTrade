@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %> - PhoenixTrade
+    </title>
+    <link rel="stylesheet" href="/css/fonts.css">
+    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* ===== استایل‌های اختصاصی مدیریت فوتر ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Samim', 'Vazir', 'Tahoma', sans-serif;
+            background: linear-gradient(165deg, #0a3825 0%, #1a4f33 30%, #2e6b49 60%, #1a4f33 100%);
+            min-height: 100vh;
+            color: #ffffff;
+        }
+
+        .main-content {
+            margin-right: 280px;
+            padding: 20px;
+            max-width: calc(100% - 280px);
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            width: 100%;
+        }
+
+        .header h1 {
+            color: #ffd700;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* ===== کارت‌های بخش‌ها ===== */
+        .section-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .section-card:hover {
+            border-color: #ffd700;
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.1);
+        }
+
+        .section-title {
+            color: #ffd700;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+            padding-bottom: 10px;
+        }
+
+        .section-title i {
+            font-size: 1.3rem;
+        }
+
+        /* ===== فرم‌ها ===== */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #ffd700;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            font-family: 'Samim', 'Vazir', 'Tahoma', sans-serif;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #ffd700;
+            background: rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* ===== دکمه‌ها ===== */
+        .btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(255, 215, 0, 0.1);
+            color: #ffd700;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            font-family: 'Samim', 'Vazir', 'Tahoma', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background: #ffd700;
+            color: #0a2f1f;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .btn-primary {
+            background: #ffd700;
+            color: #0a2f1f;
+            font-weight: bold;
+        }
+
+        .btn-primary:hover {
+            background: #e6c200;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: rgba(220, 53, 69, 0.2);
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background: #dc3545;
+            color: white;
+            border-color: #dc3545;
+        }
+
+        .btn-sm {
+            padding: 6px 15px;
+            font-size: 0.85rem;
+        }
+
+        /* ===== آیتم‌های داینامیک ===== */
+        .items-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .item-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            transition: all 0.3s;
+        }
+
+        .item-row:hover {
+            border-color: #ffd700;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .item-row input[type="text"] {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+
+        .item-row input[type="text"]:focus {
+            outline: none;
+            border-color: #ffd700;
+        }
+
+        .item-row select {
+            width: 100px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            color: #fff;
+            padding: 8px;
+            border-radius: 6px;
+        }
+
+        .item-row select:focus {
+            outline: none;
+            border-color: #ffd700;
+        }
+
+        .icon-preview {
+            width: 30px;
+            text-align: center;
+            color: #ffd700;
+            font-size: 1.2rem;
+        }
+
+        /* ===== پیش‌نمایش آوارد ===== */
+        .award-preview {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 215, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .award-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-upload {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        /* ===== راهنما ===== */
+        .help-text {
+            color: #aaa;
+            font-size: 0.8rem;
+            margin-top: 10px;
+            padding: 8px 12px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+            border-right: 3px solid #ffd700;
+        }
+
+        /* ===== آلرت‌ها ===== */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert-success {
+            background: rgba(40, 167, 69, 0.2);
+            border: 1px solid #28a745;
+            color: #28a745;
+        }
+
+        .alert-danger {
+            background: rgba(220, 53, 69, 0.2);
+            border: 1px solid #dc3545;
+            color: #dc3545;
+        }
+
+        /* ===== مودال آپلود ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #1a2f2a;
+            padding: 30px;
+            border-radius: 16px;
+            max-width: 400px;
+            width: 90%;
+            border: 1px solid #ffd700;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content h3 {
+            color: #ffd700;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .modal-content input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 6px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        /* ===== شبکه‌های اجتماعی ===== */
+        .social-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        /* ===== کپی‌رایت سه‌زبانه ===== */
+        .copyright-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        /* ===== تولتیپ ===== */
+        .social-hint {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #ffd700;
+            font-size: 0.9rem;
+            font-style: italic;
+            opacity: 0.8;
+        }
+
+        .social-hint i {
+            margin-left: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                margin-right: 0;
+                max-width: 100%;
+            }
+
+            .item-row {
+                flex-wrap: wrap;
+            }
+
+            .copyright-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- سایدبار -->
+    <%- include('../sidebar', { activePage: 'footer' }) %>
+
+        <div class="main-content">
+            <div class="header">
+                <h1>
+                    <i class="fas fa-shoe-prints"></i>
+                    <%= title %>
+                </h1>
+            </div>
+
+            <!-- نمایش پیغام‌ها -->
+            <% if (req.query.success) { %>
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle"></i>
+                    تنظیمات با موفقیت ذخیره شد
+                </div>
+                <% } %>
+                    <% if (req.query.error) { %>
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            خطا در ذخیره تنظیمات
+                        </div>
+                        <% } %>
+
+                            <form action="/pprofessor/footer/save" method="POST" id="footer-form">
+                                <!-- ===== بخش ایمیل ===== -->
+                                <div class="section-card">
+                                    <div class="section-title">
+                                        <i class="fas fa-envelope"></i>
+                                        <span>ایمیل</span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>
+                                            <i class="fas fa-envelope" style="margin-left: 5px;"></i>
+                                            آدرس ایمیل
+                                        </label>
+                                        <input type="email" name="email" class="form-control"
+                                            value="<%= footer.email %>" placeholder="info@phoenixtrade.info" dir="ltr">
+                                    </div>
+                                </div>
+
+                                <!-- ===== بخش شماره‌های تماس ===== -->
+                                <div class="section-card">
+                                    <div class="section-title">
+                                        <i class="fas fa-phone"></i>
+                                        <span>شماره‌های تماس</span>
+                                    </div>
+                                    <div class="items-container" id="phones-container">
+                                        <% if (footer.phones && footer.phones.length> 0) { %>
+                                            <% footer.phones.forEach((phone, index)=> { %>
+                                                <div class="item-row phone-item">
+                                                    <i class="fas <%= phone.icon || 'fa-phone' %> icon-preview"></i>
+                                                    <input type="text" name="phones[]" class="form-control"
+                                                        value="<%= phone.number %>" placeholder="شماره تماس" dir="ltr">
+                                                    <select name="phone_icon_<%= index %>" class="form-control">
+                                                        <option value="fa-phone" <%=phone.icon==='fa-phone' ? 'selected'
+                                                            : '' %>>📞 تلفن</option>
+                                                        <option value="fa-mobile-alt" <%=phone.icon==='fa-mobile-alt'
+                                                            ? 'selected' : '' %>>📱 موبایل</option>
+                                                        <option value="fa-fax" <%=phone.icon==='fa-fax' ? 'selected'
+                                                            : '' %>>📠 فکس</option>
+                                                    </select>
+                                                    <button type="button" class="btn btn-danger btn-sm"
+                                                        onclick="removeItem(this)">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                                <% }); %>
+                                                    <% } else { %>
+                                                        <div class="item-row phone-item">
+                                                            <i class="fas fa-phone icon-preview"></i>
+                                                            <input type="text" name="phones[]" class="form-control"
+                                                                placeholder="شماره تماس" dir="ltr">
+                                                            <select name="phone_icon_0" class="form-control">
+                                                                <option value="fa-phone" selected>📞 تلفن</option>
+                                                                <option value="fa-mobile-alt">📱 موبایل</option>
+                                                                <option value="fa-fax">📠 فکس</option>
+                                                            </select>
+                                                        </div>
+                                                        <% } %>
+                                    </div>
+                                    <button type="button" class="btn btn-sm" onclick="addPhone()">
+                                        <i class="fas fa-plus"></i> افزودن شماره جدید
+                                    </button>
+                                    <div class="help-text">
+                                        <i class="fas fa-info-circle"></i>
+                                        می‌توانید چندین شماره تماس با انواع مختلف اضافه کنید
+                                    </div>
+                                </div>
+
+                                <!-- ===== بخش شبکه‌های اجتماعی ===== -->
+                                <div class="section-card">
+                                    <div class="section-title">
+                                        <i class="fas fa-share-alt"></i>
+                                        <span>شبکه‌های اجتماعی</span>
+                                    </div>
+
+                                    <!-- متن راهنما -->
+                                    <div class="social-hint">
+                                        <i class="fas fa-heart"></i>
+                                        از طریق شبکه‌های اجتماعی به آسانی به ما بپیوندید
+                                    </div>
+
+                                    <div class="social-grid">
+                                        <div class="form-group">
+                                            <label><i class="fab fa-telegram"></i> تلگرام</label>
+                                            <input type="url" name="social_telegram" class="form-control"
+                                                value="<%= footer.social.telegram || '' %>"
+                                                placeholder="اختیاری - https://t.me/..." dir="ltr">
+                                        </div>
+                                        <div class="form-group">
+                                            <label><i class="fab fa-instagram"></i> اینستاگرام</label>
+                                            <input type="url" name="social_instagram" class="form-control"
+                                                value="<%= footer.social.instagram || '' %>"
+                                                placeholder="اختیاری - https://instagram.com/..." dir="ltr">
+                                        </div>
+                                        <div class="form-group">
+                                            <label><i class="fab fa-whatsapp"></i> واتساپ</label>
+                                            <input type="url" name="social_whatsapp" class="form-control"
+                                                value="<%= footer.social.whatsapp || '' %>"
+                                                placeholder="اختیاری - https://wa.me/..." dir="ltr">
+                                        </div>
+                                        <div class="form-group">
+                                            <label><i class="fab fa-twitter"></i> توییتر</label>
+                                            <input type="url" name="social_twitter" class="form-control"
+                                                value="<%= footer.social.twitter || '' %>"
+                                                placeholder="اختیاری - https://twitter.com/..." dir="ltr">
+                                        </div>
+                                    </div>
+                                    <div class="help-text">
+                                        <i class="fas fa-info-circle"></i>
+                                        پر کردن لینک‌ها اختیاری است. در صورت خالی بودن، آن شبکه اجتماعی نمایش داده
+                                        نمی‌شود.
+                                    </div>
+                                </div>
+
+                                <!-- ===== بخش آواردها و مدال‌ها ===== -->
+                                <div class="section-card">
+                                    <div class="section-title">
+                                        <i class="fas fa-trophy"></i>
+                                        <span>آواردها و مدال‌ها</span>
+                                    </div>
+                                    <div class="items-container" id="awards-container">
+                                        <% if (footer.awards && footer.awards.length> 0) { %>
+                                            <% footer.awards.forEach((award, index)=> { %>
+                                                <div class="item-row award-item" data-index="<%= index %>">
+                                                    <div class="award-preview" id="award-preview-<%= index %>">
+                                                        <% if (award.image) { %>
+                                                            <img src="<%= award.image %>" alt="award">
+                                                            <% } else { %>
+                                                                <%= award.emoji || '🏆' %>
+                                                                    <% } %>
+                                                    </div>
+                                                    <input type="text" name="award_titles[]" class="form-control"
+                                                        value="<%= award.title %>" placeholder="عنوان آوارد"
+                                                        style="flex: 2;">
+                                                    <input type="text" name="award_emojis[]" class="form-control"
+                                                        style="width: 70px;" value="<%= award.emoji || '🏆' %>"
+                                                        placeholder="ایموجی">
+                                                    <input type="hidden" name="award_images[]"
+                                                        id="award-image-<%= index %>" value="<%= award.image || '' %>">
+                                                    <div class="image-upload">
+                                                        <button type="button" class="btn btn-sm"
+                                                            onclick="uploadAwardImage(<%= index %>)">
+                                                            <i class="fas fa-image"></i>
+                                                        </button>
+                                                    </div>
+                                                    <button type="button" class="btn btn-danger btn-sm"
+                                                        onclick="removeItem(this)">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                                <% }); %>
+                                                    <% } else { %>
+                                                        <div class="item-row award-item" data-index="0">
+                                                            <div class="award-preview" id="award-preview-0">🏆</div>
+                                                            <input type="text" name="award_titles[]"
+                                                                class="form-control" placeholder="عنوان آوارد"
+                                                                style="flex: 2;">
+                                                            <input type="text" name="award_emojis[]"
+                                                                class="form-control" style="width: 70px;" value="🏆"
+                                                                placeholder="ایموجی">
+                                                            <input type="hidden" name="award_images[]"
+                                                                id="award-image-0" value="">
+                                                            <div class="image-upload">
+                                                                <button type="button" class="btn btn-sm"
+                                                                    onclick="uploadAwardImage(0)">
+                                                                    <i class="fas fa-image"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <% } %>
+                                    </div>
+                                    <button type="button" class="btn btn-sm" onclick="addAward()">
+                                        <i class="fas fa-plus"></i> افزودن آوارد جدید
+                                    </button>
+                                    <div class="help-text">
+                                        <i class="fas fa-info-circle"></i>
+                                        می‌توانید از ایموجی یا تصویر استفاده کنید. اگر تصویر آپلود شود، ایموجی نادیده
+                                        گرفته می‌شود.
+                                    </div>
+                                </div>
+
+                                <!-- ===== بخش کپی‌رایت سه‌زبانه ===== -->
+                                <div class="section-card">
+                                    <div class="section-title">
+                                        <i class="fas fa-copyright"></i>
+                                        <span>متن کپی‌رایت (سه‌زبانه)</span>
+                                    </div>
+                                    <div class="copyright-grid">
+                                        <div class="form-group">
+                                            <label>🇮🇷 فارسی</label>
+                                            <input type="text" name="copyright_fa" class="form-control"
+                                                value="<%= footer.copyright_fa %>"
+                                                placeholder="© ۲۰۲۶ تمامی حقوق برای ققنوس محفوظ است">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>🇬🇧 English</label>
+                                            <input type="text" name="copyright_en" class="form-control"
+                                                value="<%= footer.copyright_en %>"
+                                                placeholder="© 2026 All rights reserved for Phoenix" dir="ltr">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>🇸🇦 العربية</label>
+                                            <input type="text" name="copyright_ar" class="form-control"
+                                                value="<%= footer.copyright_ar %>"
+                                                placeholder="© ٢٠٢٦ جميع الحقوق محفوظة للعنقاء" dir="rtl">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- دکمه‌های فرم -->
+                                <div style="display: flex; gap: 10px; margin-top: 30px; margin-bottom: 50px;">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save"></i> ذخیره تنظیمات
+                                    </button>
+                                    <a href="/pprofessor/dashboard" class="btn">
+                                        <i class="fas fa-times"></i> انصراف
+                                    </a>
+                                </div>
+                            </form>
+        </div>
+
+        <!-- مودال آپلود تصویر -->
+        <div class="modal" id="upload-modal">
+            <div class="modal-content">
+                <h3><i class="fas fa-cloud-upload-alt"></i> آپلود تصویر آوارد</h3>
+                <input type="file" id="award-image-file" accept="image/*">
+                <div class="modal-buttons">
+                    <button class="btn btn-primary" onclick="uploadImage()">
+                        <i class="fas fa-upload"></i> آپلود
+                    </button>
+                    <button class="btn" onclick="closeUploadModal()">
+                        <i class="fas fa-times"></i> انصراف
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // ============= متغیرهای سراسری =============
+            let currentAwardIndex = 0;
+            let awardCounter = <%= footer.awards ?footer.awards.length: 1 %>;
+
+            // ============= مدیریت شماره‌های تماس =============
+            function addPhone() {
+                const container = document.getElementById('phones-container');
+                const index = container.children.length;
+                const html = `
+                <div class="item-row phone-item">
+                    <i class="fas fa-phone icon-preview"></i>
+                    <input type="text" name="phones[]" class="form-control" placeholder="شماره تماس" dir="ltr">
+                    <select name="phone_icon_${index}" class="form-control">
+                        <option value="fa-phone" selected>📞 تلفن</option>
+                        <option value="fa-mobile-alt">📱 موبایل</option>
+                        <option value="fa-fax">📠 فکس</option>
+                    </select>
+                    <button type="button" class="btn btn-danger btn-sm" onclick="removeItem(this)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+                container.insertAdjacentHTML('beforeend', html);
+            }
+
+            // ============= مدیریت آواردها =============
+            function addAward() {
+                const container = document.getElementById('awards-container');
+                const index = awardCounter++;
+                const html = `
+                <div class="item-row award-item" data-index="${index}">
+                    <div class="award-preview" id="award-preview-${index}">🏆</div>
+                    <input type="text" name="award_titles[]" class="form-control" placeholder="عنوان آوارد" style="flex: 2;">
+                    <input type="text" name="award_emojis[]" class="form-control" style="width: 70px;" value="🏆" placeholder="ایموجی">
+                    <input type="hidden" name="award_images[]" id="award-image-${index}" value="">
+                    <div class="image-upload">
+                        <button type="button" class="btn btn-sm" onclick="uploadAwardImage(${index})">
+                            <i class="fas fa-image"></i>
+                        </button>
+                    </div>
+                    <button type="button" class="btn btn-danger btn-sm" onclick="removeItem(this)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+                container.insertAdjacentHTML('beforeend', html);
+            }
+
+            // ============= حذف آیتم =============
+            function removeItem(btn) {
+                if (confirm('آیا از حذف این آیتم اطمینان دارید؟')) {
+                    const row = btn.closest('.item-row');
+                    if (row) {
+                        row.remove();
+                    }
+                }
+            }
+
+            // ============= آپلود تصویر آوارد =============
+            function uploadAwardImage(index) {
+                currentAwardIndex = index;
+                document.getElementById('upload-modal').classList.add('active');
+            }
+
+            function closeUploadModal() {
+                document.getElementById('upload-modal').classList.remove('active');
+                document.getElementById('award-image-file').value = '';
+            }
+
+            function uploadImage() {
+                const fileInput = document.getElementById('award-image-file');
+                const file = fileInput.files[0];
+
+                if (!file) {
+                    alert('لطفاً یک فایل انتخاب کنید');
+                    return;
+                }
+
+                // بررسی حجم فایل (حداکثر 2 مگابایت)
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('حجم فایل نباید بیشتر از 2 مگابایت باشد');
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('image', file);
+
+                fetch('/pprofessor/footer/upload-award', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            // ذخیره آدرس تصویر در فیلد مخفی
+                            document.getElementById(`award-image-${currentAwardIndex}`).value = data.url;
+
+                            // به‌روزرسانی پیش‌نمایش
+                            const preview = document.getElementById(`award-preview-${currentAwardIndex}`);
+                            preview.innerHTML = `<img src="${data.url}" style="width:100%; height:100%; object-fit:cover;">`;
+
+                            closeUploadModal();
+                            showToast('تصویر با موفقیت آپلود شد', 'success');
+                        } else {
+                            showToast('خطا در آپلود تصویر', 'error');
+                        }
+                    })
+                    .catch(() => {
+                        showToast('خطا در ارتباط با سرور', 'error');
+                    });
+            }
+
+            // ============= نمایش پیغام =============
+            function showToast(message, type) {
+                const toast = document.createElement('div');
+                toast.className = `alert alert-${type}`;
+                toast.style.position = 'fixed';
+                toast.style.top = '20px';
+                toast.style.left = '50%';
+                toast.style.transform = 'translateX(-50%)';
+                toast.style.zIndex = '9999';
+                toast.style.minWidth = '300px';
+                toast.style.textAlign = 'center';
+                toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle'}"></i> ${message}`;
+
+                document.body.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.remove();
+                }, 3000);
+            }
+
+            // ============= پیش‌نمایش آپلود =============
+            document.addEventListener('DOMContentLoaded', function () {
+                // بستن مودال با کلیک روی پس‌زمینه
+                const modal = document.getElementById('upload-modal');
+                modal.addEventListener('click', function (e) {
+                    if (e.target === this) {
+                        closeUploadModal();
+                    }
+                });
+
+                // بستن مودال با کلید ESC
+                document.addEventListener('keydown', function (e) {
+                    if (e.key === 'Escape' && modal.classList.contains('active')) {
+                        closeUploadModal();
+                    }
+                });
+            });
+        </script>
+</body>
+
+</html>

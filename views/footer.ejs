@@ -1,0 +1,421 @@
+<!-- ===== views/footer.ejs ===== -->
+<footer class="footer">
+    <div class="container">
+        <!-- ردیف اول: دو ستون -->
+        <div class="footer-main">
+            <!-- ستون راست: تماس با ما (شامل اطلاعات تماس و شبکه‌های اجتماعی) -->
+            <div class="footer-section contact-section">
+                <h3 data-fa="تماس با ما" data-en="Contact Us" data-ar="اتصل بنا">تماس با ما</h3>
+                <div class="contact-info" id="footer-contact">
+                    <!-- ایمیل -->
+                    <% if (footerSettings && footerSettings.email) { %>
+                        <p class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>
+                                <%= footerSettings.email %>
+                            </span>
+                        </p>
+                        <% } else { %>
+                            <p class="contact-item">
+                                <i class="fas fa-envelope"></i>
+                                <span>info@phoenixtrade.info</span>
+                            </p>
+                            <% } %>
+
+                                <!-- شماره‌های تماس -->
+                                <% if (footerSettings && footerSettings.phones && footerSettings.phones.length> 0) { %>
+                                    <% footerSettings.phones.forEach(phone=> { %>
+                                        <p class="contact-item">
+                                            <i class="fas <%= phone.icon || 'fa-phone' %>"></i>
+                                            <span>
+                                                <%= phone.number %>
+                                            </span>
+                                        </p>
+                                        <% }); %>
+                                            <% } else { %>
+                                                <p class="contact-item">
+                                                    <i class="fas fa-phone"></i>
+                                                    <span>۰۲۱-۱۲۳۴۵۶۷۸</span>
+                                                </p>
+                                                <% } %>
+
+                                                    <!-- شبکه‌های اجتماعی (در همان ستون) -->
+                                                    <div class="social-links" id="footer-social">
+                                                        <% if (footerSettings && footerSettings.social) { %>
+                                                            <% if (footerSettings.social.telegram) { %>
+                                                                <a href="<%= footerSettings.social.telegram %>"
+                                                                    target="_blank" class="social-link"
+                                                                    title="Telegram">
+                                                                    <i class="fab fa-telegram"></i>
+                                                                    <span data-fa="تلگرام" data-en="Telegram"
+                                                                        data-ar="تيليجرام">تلگرام</span>
+                                                                </a>
+                                                                <% } %>
+                                                                    <% if (footerSettings.social.instagram) { %>
+                                                                        <a href="<%= footerSettings.social.instagram %>"
+                                                                            target="_blank" class="social-link"
+                                                                            title="Instagram">
+                                                                            <i class="fab fa-instagram"></i>
+                                                                            <span data-fa="اینستاگرام"
+                                                                                data-en="Instagram"
+                                                                                data-ar="انستغرام">اینستاگرام</span>
+                                                                        </a>
+                                                                        <% } %>
+                                                                            <% if (footerSettings.social.whatsapp) { %>
+                                                                                <a href="<%= footerSettings.social.whatsapp %>"
+                                                                                    target="_blank" class="social-link"
+                                                                                    title="WhatsApp">
+                                                                                    <i class="fab fa-whatsapp"></i>
+                                                                                    <span data-fa="واتساپ"
+                                                                                        data-en="WhatsApp"
+                                                                                        data-ar="واتساب">واتساپ</span>
+                                                                                </a>
+                                                                                <% } %>
+                                                                                    <% if
+                                                                                        (footerSettings.social.twitter)
+                                                                                        { %>
+                                                                                        <a href="<%= footerSettings.social.twitter %>"
+                                                                                            target="_blank"
+                                                                                            class="social-link"
+                                                                                            title="Twitter">
+                                                                                            <i
+                                                                                                class="fab fa-twitter"></i>
+                                                                                            <span data-fa="توییتر"
+                                                                                                data-en="Twitter"
+                                                                                                data-ar="تويتر">توییتر</span>
+                                                                                        </a>
+                                                                                        <% } %>
+                                                                                            <% } else { %>
+                                                                                                <a href="#"
+                                                                                                    class="social-link"
+                                                                                                    target="_blank">
+                                                                                                    <i
+                                                                                                        class="fab fa-telegram"></i>
+                                                                                                    <span
+                                                                                                        data-fa="تلگرام"
+                                                                                                        data-en="Telegram"
+                                                                                                        data-ar="تيليجرام">تلگرام</span>
+                                                                                                </a>
+                                                                                                <a href="#"
+                                                                                                    class="social-link"
+                                                                                                    target="_blank">
+                                                                                                    <i
+                                                                                                        class="fab fa-instagram"></i>
+                                                                                                    <span
+                                                                                                        data-fa="اینستاگرام"
+                                                                                                        data-en="Instagram"
+                                                                                                        data-ar="انستغرام">اینستاگرام</span>
+                                                                                                </a>
+                                                                                                <a href="#"
+                                                                                                    class="social-link"
+                                                                                                    target="_blank">
+                                                                                                    <i
+                                                                                                        class="fab fa-twitter"></i>
+                                                                                                    <span
+                                                                                                        data-fa="توییتر"
+                                                                                                        data-en="Twitter"
+                                                                                                        data-ar="تويتر">توییتر</span>
+                                                                                                </a>
+                                                                                                <% } %>
+                                                    </div>
+                </div>
+            </div>
+
+            <!-- ستون چپ: درباره ما / لینک‌های سریع (برای تعادل بصری) -->
+            <div class="footer-section about-section">
+                <h3 data-fa="درباره ققنوس" data-en="About Phoenix" data-ar="حول العنقاء">درباره ققنوس</h3>
+                <div class="about-text">
+                    <p data-fa="مرجع تخصصی آموزش فارکس و مقایسه بروکرها"
+                        data-en="Professional Forex education and brokers comparison"
+                        data-ar="تعليم فوركس احترافي ومقارنة الوسطاء">
+                        مرجع تخصصی آموزش فارکس و مقایسه بروکرها
+                    </p>
+                    <div class="quick-links">
+                        <a href="/about" data-fa="درباره ما" data-en="About Us" data-ar="معلومات عنا">درباره ما</a>
+                        <a href="/terms" data-fa="قوانین" data-en="Terms" data-ar="الشروط">قوانین</a>
+                        <a href="/privacy" data-fa="حریم خصوصی" data-en="Privacy" data-ar="الخصوصية">حریم خصوصی</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ردیف دوم: آواردها و مدال‌ها (خطی و وسط‌چین) -->
+        <% if (footerSettings && footerSettings.awards && footerSettings.awards.length> 0) { %>
+            <div class="awards-row">
+                <div class="awards-container">
+                    <% footerSettings.awards.forEach(award=> { %>
+                        <div class="award-item" title="<%= award.title %>">
+                            <% if (award.image) { %>
+                                <img src="<%= award.image %>" alt="<%= award.title %>" class="award-image">
+                                <% } else { %>
+                                    <span class="award-emoji">
+                                        <%= award.emoji || '🏆' %>
+                                    </span>
+                                    <% } %>
+                                        <span class="award-title">
+                                            <%= award.title %>
+                                        </span>
+                        </div>
+                        <% }); %>
+                </div>
+            </div>
+            <% } else { %>
+                <div class="awards-row">
+                    <div class="awards-container">
+                        <div class="award-item" title="FCA Regulated">
+                            <span class="award-emoji">🏆</span>
+                            <span class="award-title">FCA Regulated</span>
+                        </div>
+                        <div class="award-item" title="CySEC Regulated">
+                            <span class="award-emoji">🏅</span>
+                            <span class="award-title">CySEC Regulated</span>
+                        </div>
+                        <div class="award-item" title="Best Broker 2024">
+                            <span class="award-emoji">⭐</span>
+                            <span class="award-title">Best Broker 2024</span>
+                        </div>
+                        <div class="award-item" title="International Forex Award">
+                            <span class="award-emoji">🌍</span>
+                            <span class="award-title">International Forex Award</span>
+                        </div>
+                    </div>
+                </div>
+                <% } %>
+
+                    <!-- ردیف سوم: کپی‌رایت -->
+                    <div class="copyright" id="footer-copyright">
+                        <% if (footerSettings && footerSettings.copyright) { %>
+                            <p data-fa="<%= footerSettings.copyright.fa %>" data-en="<%= footerSettings.copyright.en %>"
+                                data-ar="<%= footerSettings.copyright.ar %>">
+                                <%= footerSettings.copyright.fa %>
+                            </p>
+                            <% } else { %>
+                                <p data-fa="© ۲۰۲۶ تمامی حقوق برای ققنوس محفوظ است"
+                                    data-en="© 2026 All rights reserved for Phoenix"
+                                    data-ar="© ٢٠٢٦ جميع الحقوق محفوظة للعنقاء">
+                                    © ۲۰۲۶ تمامی حقوق برای ققنوس محفوظ است
+                                </p>
+                                <% } %>
+                    </div>
+    </div>
+</footer>
+
+<style>
+    .footer {
+        background: rgba(0, 20, 10, 0.35);
+        backdrop-filter: blur(20px) saturate(180%);
+        padding: 40px 0 20px;
+        margin-top: 60px;
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
+        direction: rtl;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    /* ===== ردیف اول: دو ستون ===== */
+    .footer-main {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        margin-bottom: 40px;
+    }
+
+    .footer-section h3 {
+        color: #ffd700;
+        margin-bottom: 20px;
+        font-size: 1.2rem;
+        text-align: center;
+    }
+
+    /* ستون تماس با ما */
+    .contact-info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .contact-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: rgba(255, 255, 255, 0.8);
+        justify-content: center;
+        width: 100%;
+    }
+
+    .contact-item i {
+        color: #ffd700;
+        width: 20px;
+        font-size: 1.1rem;
+    }
+
+    .contact-item span {
+        text-align: center;
+    }
+
+    /* شبکه‌های اجتماعی */
+    .social-links {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 10px;
+    }
+
+    .social-link {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        transition: all 0.3s;
+        padding: 5px 10px;
+        border-radius: 30px;
+        background: rgba(255, 215, 0, 0.05);
+    }
+
+    .social-link:hover {
+        color: #ffd700;
+        transform: translateY(-3px);
+        background: rgba(255, 215, 0, 0.1);
+    }
+
+    .social-link i {
+        font-size: 1.2rem;
+    }
+
+    /* ستون درباره ما */
+    .about-text {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        color: rgba(255, 255, 255, 0.8);
+        text-align: center;
+    }
+
+    .quick-links {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .quick-links a {
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+
+    .quick-links a:hover {
+        color: #ffd700;
+    }
+
+    /* ===== ردیف دوم: آواردها (خطی) ===== */
+    .awards-row {
+        margin: 30px 0;
+        padding: 20px 0;
+        border-top: 1px solid rgba(255, 215, 0, 0.1);
+        border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+    }
+
+    .awards-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+        flex-wrap: wrap;
+    }
+
+    .award-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 5px 15px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 30px;
+        border: 1px solid rgba(255, 215, 0, 0.2);
+        transition: all 0.3s;
+    }
+
+    .award-item:hover {
+        transform: translateY(-3px);
+        border-color: #ffd700;
+        background: rgba(255, 215, 0, 0.1);
+    }
+
+    .award-emoji {
+        font-size: 1.3rem;
+    }
+
+    .award-image {
+        width: 24px;
+        height: 24px;
+        object-fit: contain;
+        border-radius: 50%;
+    }
+
+    .award-title {
+        color: #ffd700;
+        font-size: 0.9rem;
+    }
+
+    /* ===== ردیف سوم: کپی‌رایت ===== */
+    .copyright {
+        text-align: center;
+        margin-top: 20px;
+        padding-top: 20px;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.9rem;
+    }
+
+    /* ===== ریسپانسیو ===== */
+    @media (max-width: 768px) {
+        .footer-main {
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        .awards-container {
+            gap: 15px;
+        }
+
+        .award-item {
+            padding: 3px 10px;
+        }
+
+        .social-links {
+            gap: 10px;
+        }
+
+        .social-link span {
+            display: none;
+            /* در موبایل فقط آیکون نشان داده شود */
+        }
+
+        .social-link {
+            padding: 8px;
+        }
+
+        .social-link i {
+            font-size: 1.3rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .awards-container {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .award-item {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>

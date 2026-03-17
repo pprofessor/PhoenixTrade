@@ -234,6 +234,44 @@ router.put('/api/webapp/pages/:id', isAuthenticated, webappController.updatePage
 router.delete('/api/webapp/pages/:id', isAuthenticated, webappController.deletePage);
 router.patch('/api/webapp/pages/:id/toggle', isAuthenticated, webappController.togglePageStatus);
 
+// ============= مدیریت فوتر =============
+const footerController = require('../controllers/footerController');
+
+// صفحه مدیریت فوتر
+router.get('/footer', isAuthenticated, footerController.index);
+
+// ذخیره تنظیمات فوتر
+router.post('/footer/save', isAuthenticated, footerController.save);
+
+// آپلود تصویر آوارد (از multer قبلی استفاده کن)
+const awardStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/awards/');
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const ext = path.extname(file.originalname);
+    cb(null, 'award-' + uniqueSuffix + ext);
+  }
+});
+
+const awardUpload = multer({
+  storage: awardStorage,
+  limits: { fileSize: 2 * 1024 * 1024 }, // 2MB
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = /jpeg|jpg|png|gif|svg/;
+    const ext = path.extname(file.originalname).toLowerCase().substring(1);
+    if (allowedTypes.test(ext)) {
+      cb(null, true);
+    } else {
+      cb(new Error('فقط تصاویر مجاز هستند'));
+    }
+  }
+});
+
+router.post('/footer/upload-award', isAuthenticated, awardUpload.single('image'), footerController.uploadAwardImage);
+
+router.post('/footer/upload-award', isAuthenticated, awardUpload.single('image'), footerController.uploadAwardImage);
 // ============= API مدیا =============
 router.get('/api/webapp/media', isAuthenticated, webappController.getMedia);
 router.post('/api/webapp/media/upload', isAuthenticated, upload.single('file'), webappController.uploadMedia);

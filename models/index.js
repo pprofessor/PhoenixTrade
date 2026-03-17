@@ -595,6 +595,29 @@ const SiteSettings = sequelize.define('SiteSettings', {
 
 }, { timestamps: true });
 
+// ============= مدل FooterSettings (تنظیمات فوتر) =============
+const FooterSettings = sequelize.define('FooterSettings', {
+  id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+
+  // ایمیل
+  email: { type: Sequelize.STRING(100), defaultValue: 'info@phoenixtrade.info' },
+
+  // شماره‌های تماس (JSON array)
+  phones: { type: Sequelize.TEXT, defaultValue: '[]' }, // [{ number: "021-12345678", icon: "fa-phone" }]
+
+  // لینک‌های اجتماعی (JSON object)
+  social: { type: Sequelize.TEXT, defaultValue: '{}' }, // { telegram: "https://t.me/...", instagram: "...", whatsapp: "..." }
+
+  // آواردها و مدال‌ها (JSON array)
+  awards: { type: Sequelize.TEXT, defaultValue: '[]' }, // [{ title: "FCA Regulated", emoji: "🏆", image: "/uploads/award1.png" }]
+
+  // متن کپی‌رایت (سه‌زبانه)
+  copyright_fa: { type: Sequelize.STRING(200), defaultValue: '© ۲۰۲۶ تمامی حقوق برای ققنوس محفوظ است' },
+  copyright_en: { type: Sequelize.STRING(200), defaultValue: '© 2026 All rights reserved for Phoenix' },
+  copyright_ar: { type: Sequelize.STRING(200), defaultValue: '© ٢٠٢٦ جميع الحقوق محفوظة للعنقاء' }
+
+}, { timestamps: true });
+
 // ============= تعریف ارتباطات =============
 Category.hasMany(Lesson, { foreignKey: 'categoryId', as: 'lessons' });
 Lesson.belongsTo(Category, { foreignKey: 'categoryId', as: 'category' });
@@ -772,5 +795,6 @@ module.exports = {
   WebappFormEntry,
   WebappUser,
   WebappSetting,
+  FooterSettings,
   syncDatabase
 };
