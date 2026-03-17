@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({ 
+const upload = multer({
   storage: storage,
   limits: { fileSize: 50 * 1024 * 1024 }, // 50MB
   fileFilter: (req, file, cb) => {
@@ -40,11 +40,11 @@ const botIndex = async (req, res) => {
     // ساختن ساختار درختی
     const menuTree = [];
     const menuMap = {};
-    
+
     allMenus.forEach(menu => {
       menuMap[menu.id] = { ...menu.toJSON(), children: [] };
     });
-    
+
     allMenus.forEach(menu => {
       if (menu.parentId) {
         if (menuMap[menu.parentId]) {
@@ -60,15 +60,15 @@ const botIndex = async (req, res) => {
       where: { isActive: true }
     });
 
-    // دریافت صفحات وب‌اپ
+    // دریافت صفحات وب‌اپ - اصلاح شده: استفاده از title_fa به جای title
     let webappPages = [];
     try {
       webappPages = await WebappPage.findAll({
         where: { isActive: true },
-        attributes: ['id', 'title', 'slug'],
-        order: [['title', 'ASC']]
+        attributes: ['id', 'title_fa', 'slug'], // اصلاح: title_fa به جای title
+        order: [['title_fa', 'ASC']] // اصلاح: title_fa به جای title
       });
-      console.log(`✅ ${webappPages.length}"Page Not Found"`);
+      console.log(`✅ ${webappPages.length} صفحه وب‌اپ دریافت شد`);
     } catch (err) {
       console.error('❌ Error In Web Page Recieve', err.message);
     }
@@ -110,7 +110,7 @@ const getMenus = async (req, res) => {
 const createMenu = async (req, res) => {
   try {
     console.log('📝 ایجاد منوی جدید:', req.body);
-    
+
     const menuData = {
       text: req.body.text,
       emoji: req.body.emoji || null,
@@ -123,15 +123,15 @@ const createMenu = async (req, res) => {
       media_url: req.body.media_url || null,
       media_type: req.body.media_type || null
     };
-    
+
     const menu = await BotMenu.create(menuData);
-    
+
     console.log('✅ منو ایجاد شد، ID:', menu.id);
-    
+
     const newMenu = await BotMenu.findByPk(menu.id, {
       include: [{ model: BotMenu, as: 'children' }]
     });
-    
+
     res.status(201).json(newMenu);
   } catch (error) {
     console.error('❌ خطا در ایجاد منو:', error);
@@ -141,14 +141,14 @@ const createMenu = async (req, res) => {
 
 const updateMenu = async (req, res) => {
   try {
-    console.log('📝 ویرایش منو ID:', req.params.id, req.body);
-    
+    console.log('📝 ویرایش منو ID:', req.params.id, 'فایل:', req.file ? 'دارد' : 'ندارد');
+
     const menu = await BotMenu.findByPk(req.params.id);
     if (!menu) {
       return res.status(404).json({ error: 'منو یافت نشد' });
     }
-    
-    await menu.update({
+
+    const updateData = {
       text: req.body.text,
       emoji: req.body.emoji || null,
       parentId: req.body.parentId || null,
@@ -158,14 +158,22 @@ const updateMenu = async (req, res) => {
       button_url: req.body.button_url || null,
       media_url: req.body.media_url || null,
       media_type: req.body.media_type || null
-    });
-    
+    };
+
+    // اگر فایلی آپلود شده، آدرس آن را هم ذخیره کن
+    if (req.file) {
+      updateData.media_url = '/uploads/' + req.file.filename;
+      updateData.media_type = req.file.mimetype.split('/')[0];
+    }
+
+    await menu.update(updateData);
+
     console.log('✅ منو ویرایش شد');
-    
+
     const updatedMenu = await BotMenu.findByPk(menu.id, {
       include: [{ model: BotMenu, as: 'children' }]
     });
-    
+
     res.json(updatedMenu);
   } catch (error) {
     console.error('❌ خطا در ویرایش منو:', error);
@@ -177,12 +185,12 @@ const deleteMenu = async (req, res) => {
   try {
     const menu = await BotMenu.findByPk(req.params.id);
     if (!menu) return res.status(404).json({ error: 'منو یافت نشد' });
-    
+
     const children = await BotMenu.findAll({ where: { parentId: menu.id } });
     if (children.length > 0) {
       return res.status(400).json({ error: 'این منو زیرمنو دارد. ابتدا زیرمنوها را حذف کنید.' });
     }
-    
+
     await menu.destroy();
     res.json({ success: true });
   } catch (error) {
@@ -206,14 +214,14 @@ const updateMessage = async (req, res) => {
   try {
     const message = await BotMessage.findByPk(req.params.id);
     if (!message) return res.status(404).json({ error: 'پیام یافت نشد' });
-    
+
     await message.update({
       text: req.body.text,
       media: req.body.media,
       buttons: req.body.buttons,
       isActive: req.body.isActive
     });
-    
+
     res.json(message);
   } catch (error) {
     res.status(500).json({ error: error.message });
