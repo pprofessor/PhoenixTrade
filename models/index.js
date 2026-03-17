@@ -595,6 +595,38 @@ const SiteSettings = sequelize.define('SiteSettings', {
 
 }, { timestamps: true });
 
+// ============= مدل HeaderSettings (تنظیمات هدر) =============
+const HeaderSettings = sequelize.define('HeaderSettings', {
+  id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+
+  // لوگو
+  logo_text_fa: { type: Sequelize.STRING(100), defaultValue: 'ققنوس' },
+  logo_text_en: { type: Sequelize.STRING(100), defaultValue: 'Phoenix' },
+  logo_text_ar: { type: Sequelize.STRING(100), defaultValue: 'العنقاء' },
+  logo_icon: { type: Sequelize.STRING(10), defaultValue: '🦅' },
+  logo_image: { type: Sequelize.STRING(500), defaultValue: '' }, // مسیر تصویر لوگو (اختیاری)
+
+  // لینک تلگرام
+  telegram_link: { type: Sequelize.STRING(500), defaultValue: 'https://t.me/PhoenixTradeBot' },
+  telegram_text_fa: { type: Sequelize.STRING(100), defaultValue: 'کانال تلگرام' },
+  telegram_text_en: { type: Sequelize.STRING(100), defaultValue: 'Telegram' },
+  telegram_text_ar: { type: Sequelize.STRING(100), defaultValue: 'تيليجرام' },
+
+  // تنظیمات منو
+  menu_items: { type: Sequelize.TEXT, defaultValue: '[]' }, // JSON array منوها
+
+  // تنظیمات ظاهری
+  header_style: { type: Sequelize.ENUM('default', 'transparent', 'colored'), defaultValue: 'default' },
+  sticky_header: { type: Sequelize.BOOLEAN, defaultValue: true },
+  show_lang_selector: { type: Sequelize.BOOLEAN, defaultValue: true },
+
+  // رنگ‌بندی
+  background_color: { type: Sequelize.STRING(20), defaultValue: 'rgba(10, 40, 25, 0.25)' },
+  text_color: { type: Sequelize.STRING(20), defaultValue: '#ffffff' },
+  hover_color: { type: Sequelize.STRING(20), defaultValue: '#ffd700' }
+
+}, { timestamps: true });
+
 // ============= مدل FooterSettings (تنظیمات فوتر) =============
 const FooterSettings = sequelize.define('FooterSettings', {
   id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
@@ -796,5 +828,6 @@ module.exports = {
   WebappUser,
   WebappSetting,
   FooterSettings,
+  HeaderSettings,
   syncDatabase
 };

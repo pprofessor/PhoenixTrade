@@ -82,123 +82,6 @@
             z-index: 10;
         }
 
-        .header {
-            position: sticky;
-            top: 20px;
-            z-index: 100;
-            background: rgba(10, 40, 25, 0.25);
-            backdrop-filter: blur(20px) saturate(180%);
-            border-radius: 60px;
-            margin: 20px auto;
-            padding: 12px 35px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
-                0 0 0 1px rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo-icon {
-            width: 45px;
-            height: 45px;
-            background: linear-gradient(135deg, #ffd700, #b8860b);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.6rem;
-            color: #0a3825;
-            box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
-        }
-
-        .logo-text {
-            font-size: 1.7rem;
-            font-weight: bold;
-            background: linear-gradient(135deg, #ffd700, #ffe68f);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .nav-menu {
-            display: flex;
-            gap: 25px;
-            list-style: none;
-            flex-wrap: wrap;
-        }
-
-        .nav-menu a {
-            text-decoration: none;
-            color: #ffffff;
-            font-weight: 500;
-            transition: all 0.3s;
-            padding: 8px 18px;
-            border-radius: 40px;
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(5px);
-            font-size: 0.95rem;
-        }
-
-        .nav-menu a:hover {
-            background: rgba(255, 215, 0, 0.25);
-            color: #ffd700;
-            transform: translateY(-3px);
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .lang-selector {
-            display: flex;
-            gap: 5px;
-            background: rgba(0, 0, 0, 0.25);
-            padding: 4px;
-            border-radius: 40px;
-        }
-
-        .lang-btn {
-            padding: 5px 12px;
-            border: none;
-            background: transparent;
-            border-radius: 40px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: all 0.3s;
-            color: #ffffff;
-        }
-
-        .lang-btn.active {
-            background: #ffd700;
-            color: #0a3825;
-        }
-
-        .telegram-link {
-            background: linear-gradient(135deg, #27a7e7, #0f7bc0);
-            color: white;
-            padding: 8px 20px;
-            border-radius: 40px;
-            text-decoration: none;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
         /* عنوان صفحه */
         .page-title {
             text-align: center;
@@ -369,90 +252,7 @@
             color: #0a3825;
         }
 
-        /* ===== فوتر جدید (مثل صفحه اصلی) ===== */
-        .footer {
-            background: rgba(0, 20, 10, 0.35);
-            backdrop-filter: blur(20px) saturate(180%);
-            padding: 40px 0 20px;
-            margin-top: 60px;
-            border-top: 1px solid rgba(255, 255, 255, 0.15);
-        }
-
-        .footer-content {
-            max-width: 600px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .footer-section {
-            margin-bottom: 30px;
-        }
-
-        .footer-section h3 {
-            color: #ffd700;
-            margin-bottom: 20px;
-            font-size: 1.2rem;
-        }
-
-        .contact-info {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .contact-info a {
-            color: #ffd700;
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-
-        .contact-info a:hover {
-            text-decoration: underline;
-        }
-
-        .awards {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 20px;
-        }
-
-        .award {
-            width: 60px;
-            height: 60px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            color: #ffd700;
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            transition: all 0.3s;
-        }
-
-        .award:hover {
-            transform: scale(1.1);
-            border-color: #ffd700;
-        }
-
-        .copyright {
-            text-align: center;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.9rem;
-        }
-
         @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                gap: 15px;
-            }
-
             .page-title {
                 font-size: 2rem;
             }
@@ -460,229 +260,167 @@
             .education-grid {
                 grid-template-columns: 1fr;
             }
-
-            .footer-content {
-                padding: 0 20px;
-            }
         }
     </style>
+
+    <script src="/js/i18n.js"></script>
 </head>
 
 <body>
     <div class="container">
-        <!-- هدر (سه‌زبانه شده) -->
-        <header class="header">
-            <div class="header-content">
-                <a href="/" style="text-decoration: none;">
-                    <div class="logo">
-                        <div class="logo-icon">🦅</div>
-                        <span class="logo-text" data-fa="ققنوس" data-en="Phoenix" data-ar="العنقاء">ققنوس</span>
-                    </div>
-                </a>
+        <!-- هدر -->
+        <%- include('header') %>
 
-                <ul class="nav-menu">
-                    <li><a href="/" data-fa="صفحه اصلی" data-en="Home" data-ar="الرئيسية">صفحه اصلی</a></li>
-                    <li><a href="/brokers" data-fa="بروکرها" data-en="Brokers" data-ar="الوسطاء">بروکرها</a></li>
-                    <li><a href="/education" data-fa="آموزش" data-en="Education" data-ar="التعليم">آموزش</a></li>
-                    <li><a href="/markets" data-fa="بازارها" data-en="Markets" data-ar="الأسواق">بازارها</a></li>
-                </ul>
+            <!-- عنوان صفحه (سه‌زبانه شده) -->
+            <h1 class="page-title" data-fa="آموزش‌های فارکس" data-en="Forex Education" data-ar="تعليم الفوركس">آموزش‌های
+                فارکس</h1>
 
-                <div class="header-actions">
-                    <div class="lang-selector">
-                        <button class="lang-btn active" data-lang="fa">FA</button>
-                        <button class="lang-btn" data-lang="en">EN</button>
-                        <button class="lang-btn" data-lang="ar">AR</button>
-                    </div>
+            <!-- فیلتر دسته‌بندی (سه‌زبانه شده) -->
+            <div class="category-filter" id="category-filter">
+                <button class="filter-btn active" data-category="all" data-fa="همه" data-en="All"
+                    data-ar="الكل">همه</button>
+                <button class="filter-btn" data-category="basic" data-fa="مبتدی" data-en="Beginner"
+                    data-ar="مبتدئ">مبتدی</button>
+                <button class="filter-btn" data-category="strategy" data-fa="استراتژی" data-en="Strategy"
+                    data-ar="استراتيجية">استراتژی</button>
+                <button class="filter-btn" data-category="technical" data-fa="تحلیل تکنیکال" data-en="Technical"
+                    data-ar="تحليل فني">تحلیل تکنیکال</button>
+                <button class="filter-btn" data-category="fundamental" data-fa="تحلیل بنیادی" data-en="Fundamental"
+                    data-ar="تحليل أساسي">تحلیل بنیادی</button>
+            </div>
 
-                    <a href="https://t.me/PhoenixTradeBot" class="telegram-link" target="_blank">
-                        <i class="fab fa-telegram-plane"></i>
-                        <span data-fa="کانال تلگرام" data-en="Telegram" data-ar="تيليجرام">کانال تلگرام</span>
-                    </a>
+            <!-- گرید آموزش‌ها -->
+            <div id="education-container">
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p style="margin-top: 20px;" data-fa="در حال بارگذاری..." data-en="Loading..."
+                        data-ar="جاري التحميل...">در حال بارگذاری...</p>
                 </div>
             </div>
-        </header>
 
-        <!-- عنوان صفحه (سه‌زبانه شده) -->
-        <h1 class="page-title" data-fa="آموزش‌های فارکس" data-en="Forex Education" data-ar="تعليم الفوركس">آموزش‌های
-            فارکس</h1>
-
-        <!-- فیلتر دسته‌بندی (سه‌زبانه شده) -->
-        <div class="category-filter" id="category-filter">
-            <button class="filter-btn active" data-category="all" data-fa="همه" data-en="All"
-                data-ar="الكل">همه</button>
-            <button class="filter-btn" data-category="basic" data-fa="مبتدی" data-en="Beginner"
-                data-ar="مبتدئ">مبتدی</button>
-            <button class="filter-btn" data-category="strategy" data-fa="استراتژی" data-en="Strategy"
-                data-ar="استراتيجية">استراتژی</button>
-            <button class="filter-btn" data-category="technical" data-fa="تحلیل تکنیکال" data-en="Technical"
-                data-ar="تحليل فني">تحلیل تکنیکال</button>
-            <button class="filter-btn" data-category="fundamental" data-fa="تحلیل بنیادی" data-en="Fundamental"
-                data-ar="تحليل أساسي">تحلیل بنیادی</button>
-        </div>
-
-        <!-- گرید آموزش‌ها -->
-        <div id="education-container">
-            <div class="loading">
-                <i class="fas fa-spinner fa-spin"></i>
-                <p style="margin-top: 20px;" data-fa="در حال بارگذاری..." data-en="Loading..."
-                    data-ar="جاري التحميل...">در حال بارگذاری...</p>
-            </div>
-        </div>
-
-        <!-- صفحه‌بندی -->
-        <div class="pagination" id="pagination"></div>
+            <!-- صفحه‌بندی -->
+            <div class="pagination" id="pagination"></div>
     </div>
 
-    <!-- فوتر (مثل صفحه اصلی) -->
+    <!-- فوتر -->
     <%- include('footer') %>
 
-    <script>
-        let currentPage = 1;
-        let currentCategory = 'all';
-        let currentLang = 'fa';
-        const itemsPerPage = 9;
-        let allContents = [];
+        <script>
+            let currentPage = 1;
+            let currentCategory = 'all';
+            const itemsPerPage = 9;
+            let allContents = [];
 
-        // ============= تابع تغییر زبان =============
-        function changeLanguage(lang) {
-            currentLang = lang;
+            // ============= بارگذاری محتوا =============
+            async function loadContents(page = 1, category = 'all') {
+                try {
+                    let url = `/api/education?limit=${itemsPerPage}&page=${page}`;
+                    if (category !== 'all') {
+                        url += `&category=${category}`;
+                    }
 
-            // تغییر عنوان صفحه
-            const titleElement = document.querySelector('title');
-            const newTitle = titleElement.getAttribute('data-' + lang);
-            if (newTitle) {
-                titleElement.textContent = newTitle;
-            }
+                    const response = await fetch(url);
+                    const result = await response.json();
 
-            // تغییر متن المنت‌های دارای data-*
-            document.querySelectorAll('[data-' + lang + ']').forEach(element => {
-                const translation = element.getAttribute('data-' + lang);
-                if (translation) {
-                    element.textContent = translation;
-                }
-            });
-
-            // تغییر کلاس دکمه‌های زبان
-            document.querySelectorAll('.lang-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.querySelector(`.lang-btn[data-lang="${lang}"]`).classList.add('active');
-
-            // نمایش مجدد محتوا با زبان جدید
-            if (allContents.length > 0) {
-                displayContents(allContents);
-            }
-        }
-
-        // بارگذاری محتوا
-        async function loadContents(page = 1, category = 'all') {
-            try {
-                let url = `/api/education?limit=${itemsPerPage}&page=${page}`;
-                if (category !== 'all') {
-                    url += `&category=${category}`;
-                }
-
-                const response = await fetch(url);
-                const result = await response.json();
-
-                if (result.success) {
-                    allContents = result.data;
-                    displayContents(allContents);
-                    setupPagination(result.pagination);
-                } else {
+                    if (result.success) {
+                        allContents = result.data;
+                        displayContents(allContents);
+                        setupPagination(result.pagination);
+                    } else {
+                        showError();
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
                     showError();
                 }
-            } catch (error) {
-                console.error('Error:', error);
-                showError();
             }
-        }
 
-        // نمایش محتوا
-        function displayContents(contents) {
-            const container = document.getElementById('education-container');
+            // ============= نمایش محتوا =============
+            function displayContents(contents) {
+                const container = document.getElementById('education-container');
+                const currentLang = window.currentLang || 'fa';
 
-            if (contents.length === 0) {
-                container.innerHTML = `
+                if (contents.length === 0) {
+                    container.innerHTML = `
                     <div class="no-content">
                         <i class="fas fa-book-open" style="font-size: 3rem; color: #ffd700;"></i>
                         <p style="margin-top: 20px;">${currentLang === 'fa' ? 'هیچ محتوای آموزشی یافت نشد' :
-                        currentLang === 'en' ? 'No educational content found' :
-                            'لم يتم العثور على محتوى تعليمي'}</p>
+                            currentLang === 'en' ? 'No educational content found' :
+                                'لم يتم العثور على محتوى تعليمي'}</p>
                     </div>
                 `;
-                return;
-            }
-
-            let html = '<div class="education-grid">';
-
-            contents.forEach(item => {
-                let categoryText = '';
-                let categoryEn = '';
-                let categoryAr = '';
-
-                switch (item.category) {
-                    case 'basic':
-                        categoryText = 'مبتدی';
-                        categoryEn = 'Beginner';
-                        categoryAr = 'مبتدئ';
-                        break;
-                    case 'strategy':
-                        categoryText = 'استراتژی';
-                        categoryEn = 'Strategy';
-                        categoryAr = 'استراتيجية';
-                        break;
-                    case 'technical':
-                        categoryText = 'تحلیل تکنیکال';
-                        categoryEn = 'Technical Analysis';
-                        categoryAr = 'تحليل فني';
-                        break;
-                    case 'fundamental':
-                        categoryText = 'تحلیل بنیادی';
-                        categoryEn = 'Fundamental Analysis';
-                        categoryAr = 'تحليل أساسي';
-                        break;
-                    default:
-                        categoryText = item.category;
-                        categoryEn = item.category;
-                        categoryAr = item.category;
+                    return;
                 }
 
-                // انتخاب عنوان بر اساس زبان
-                let title = item.title_fa;
-                if (currentLang === 'en' && item.title_en) {
-                    title = item.title_en;
-                } else if (currentLang === 'ar' && item.title_ar) {
-                    title = item.title_ar;
-                }
+                let html = '<div class="education-grid">';
 
-                // انتخاب خلاصه بر اساس زبان
-                let excerpt = item.excerpt_fa || '';
-                if (currentLang === 'en' && item.excerpt_en) {
-                    excerpt = item.excerpt_en;
-                } else if (currentLang === 'ar' && item.excerpt_ar) {
-                    excerpt = item.excerpt_ar;
-                }
+                contents.forEach(item => {
+                    let categoryText = '';
+                    let categoryEn = '';
+                    let categoryAr = '';
 
-                if (!excerpt && item.content_fa) {
-                    excerpt = item.content_fa.substring(0, 150) + '...';
-                }
+                    switch (item.category) {
+                        case 'basic':
+                            categoryText = 'مبتدی';
+                            categoryEn = 'Beginner';
+                            categoryAr = 'مبتدئ';
+                            break;
+                        case 'strategy':
+                            categoryText = 'استراتژی';
+                            categoryEn = 'Strategy';
+                            categoryAr = 'استراتيجية';
+                            break;
+                        case 'technical':
+                            categoryText = 'تحلیل تکنیکال';
+                            categoryEn = 'Technical Analysis';
+                            categoryAr = 'تحليل فني';
+                            break;
+                        case 'fundamental':
+                            categoryText = 'تحلیل بنیادی';
+                            categoryEn = 'Fundamental Analysis';
+                            categoryAr = 'تحليل أساسي';
+                            break;
+                        default:
+                            categoryText = item.category;
+                            categoryEn = item.category;
+                            categoryAr = item.category;
+                    }
 
-                // انتخاب دسته‌بندی بر اساس زبان
-                let displayCategory = categoryText;
-                if (currentLang === 'en') {
-                    displayCategory = categoryEn;
-                } else if (currentLang === 'ar') {
-                    displayCategory = categoryAr;
-                }
+                    // انتخاب عنوان بر اساس زبان
+                    let title = item.title_fa;
+                    if (currentLang === 'en' && item.title_en) {
+                        title = item.title_en;
+                    } else if (currentLang === 'ar' && item.title_ar) {
+                        title = item.title_ar;
+                    }
 
-                const date = new Date(item.createdAt).toLocaleDateString(
-                    currentLang === 'fa' ? 'fa-IR' :
-                        currentLang === 'en' ? 'en-US' :
-                            'ar-SA'
-                );
+                    // انتخاب خلاصه بر اساس زبان
+                    let excerpt = item.excerpt_fa || '';
+                    if (currentLang === 'en' && item.excerpt_en) {
+                        excerpt = item.excerpt_en;
+                    } else if (currentLang === 'ar' && item.excerpt_ar) {
+                        excerpt = item.excerpt_ar;
+                    }
 
-                html += `
+                    if (!excerpt && item.content_fa) {
+                        excerpt = item.content_fa.substring(0, 150) + '...';
+                    }
+
+                    // انتخاب دسته‌بندی بر اساس زبان
+                    let displayCategory = categoryText;
+                    if (currentLang === 'en') {
+                        displayCategory = categoryEn;
+                    } else if (currentLang === 'ar') {
+                        displayCategory = categoryAr;
+                    }
+
+                    const date = new Date(item.createdAt).toLocaleDateString(
+                        currentLang === 'fa' ? 'fa-IR' :
+                            currentLang === 'en' ? 'en-US' :
+                                'ar-SA'
+                    );
+
+                    html += `
                     <div class="education-card">
                         <div class="card-header">
                             <h2 class="card-title">${title}</h2>
@@ -696,97 +434,97 @@
                         </div>
                         <div class="card-excerpt">
                             ${excerpt || (currentLang === 'fa' ? 'برای مشاهده محتوا کلیک کنید' :
-                        currentLang === 'en' ? 'Click to view content' :
-                            'انقر لعرض المحتوى')}
+                            currentLang === 'en' ? 'Click to view content' :
+                                'انقر لعرض المحتوى')}
                         </div>
                         <div class="card-footer">
                             <a href="/education/${item.slug}" class="read-more">
                                 ${currentLang === 'fa' ? 'ادامه مطلب' :
-                        currentLang === 'en' ? 'Read More' :
-                            'اقرأ المزيد'} <i class="fas fa-arrow-left"></i>
+                            currentLang === 'en' ? 'Read More' :
+                                'اقرأ المزيد'} <i class="fas fa-arrow-left"></i>
                             </a>
                             <span class="view-count">${item.viewCount || 0} ${currentLang === 'fa' ? 'بازدید' :
-                        currentLang === 'en' ? 'views' :
-                            'مشاهدة'}</span>
+                            currentLang === 'en' ? 'views' :
+                                'مشاهدة'}</span>
                         </div>
                     </div>
                 `;
-            });
+                });
 
-            html += '</div>';
-            container.innerHTML = html;
-        }
-
-        // صفحه‌بندی
-        function setupPagination(pagination) {
-            const paginationContainer = document.getElementById('pagination');
-            if (!pagination || pagination.totalPages <= 1) {
-                paginationContainer.innerHTML = '';
-                return;
+                html += '</div>';
+                container.innerHTML = html;
             }
 
-            let html = '';
-            for (let i = 1; i <= pagination.totalPages; i++) {
-                html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+            // ============= صفحه‌بندی =============
+            function setupPagination(pagination) {
+                const paginationContainer = document.getElementById('pagination');
+                if (!pagination || pagination.totalPages <= 1) {
+                    paginationContainer.innerHTML = '';
+                    return;
+                }
+
+                let html = '';
+                for (let i = 1; i <= pagination.totalPages; i++) {
+                    html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+                }
+                paginationContainer.innerHTML = html;
             }
-            paginationContainer.innerHTML = html;
-        }
 
-        // تغییر صفحه
-        function changePage(page) {
-            currentPage = page;
-            loadContents(currentPage, currentCategory);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+            // ============= تغییر صفحه =============
+            function changePage(page) {
+                currentPage = page;
+                loadContents(currentPage, currentCategory);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
 
-        // تغییر دسته‌بندی
-        function changeCategory(category) {
-            currentCategory = category;
-            currentPage = 1;
+            // ============= تغییر دسته‌بندی =============
+            function changeCategory(category) {
+                currentCategory = category;
+                currentPage = 1;
 
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.querySelector(`[data-category="${category}"]`).classList.add('active');
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelector(`[data-category="${category}"]`).classList.add('active');
 
-            loadContents(currentPage, currentCategory);
-        }
+                loadContents(currentPage, currentCategory);
+            }
 
-        // نمایش خطا
-        function showError() {
-            const container = document.getElementById('education-container');
-            const errorMsg = currentLang === 'fa' ? 'خطا در بارگذاری محتوا' :
-                currentLang === 'en' ? 'Error loading content' :
-                    'خطأ في تحميل المحتوى';
+            // ============= نمایش خطا =============
+            function showError() {
+                const container = document.getElementById('education-container');
+                const currentLang = window.currentLang || 'fa';
+                const errorMsg = currentLang === 'fa' ? 'خطا در بارگذاری محتوا' :
+                    currentLang === 'en' ? 'Error loading content' :
+                        'خطأ في تحميل المحتوى';
 
-            container.innerHTML = `
+                container.innerHTML = `
                 <div class="error-message">
                     <i class="fas fa-exclamation-triangle" style="font-size: 3rem;"></i>
                     <p style="margin-top: 20px;">${errorMsg}</p>
                 </div>
             `;
-        }
+            }
 
-        // رویداد کلیک فیلترها
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', function () {
-                changeCategory(this.dataset.category);
+            // ============= گوش دادن به رویداد تغییر زبان =============
+            document.addEventListener('languageChanged', function (e) {
+                if (allContents.length > 0) {
+                    displayContents(allContents);
+                }
             });
-        });
 
-        // رویدادهای زبان
-        document.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.addEventListener('click', function () {
-                changeLanguage(this.dataset.lang);
+            // ============= رویداد کلیک فیلترها =============
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    changeCategory(this.dataset.category);
+                });
             });
-        });
 
-        // بارگذاری اولیه
-        document.addEventListener('DOMContentLoaded', () => {
-            loadContents(currentPage, currentCategory);
-            changeLanguage('fa');
-        });
-    </script>
+            // ============= بارگذاری اولیه =============
+            document.addEventListener('DOMContentLoaded', () => {
+                loadContents(currentPage, currentCategory);
+            });
+        </script>
 </body>
 
 </html>

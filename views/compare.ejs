@@ -393,42 +393,13 @@
             }
         }
     </style>
-</head>
+
+    <script src="/js/i18n.js"></script></head>
 
 <body>
     <div class="container">
         <!-- هدر -->
-        <header class="header">
-            <div class="header-content">
-                <a href="/" style="text-decoration: none;">
-                    <div class="logo">
-                        <div class="logo-icon">🦅</div>
-                        <span class="logo-text">ققنوس</span>
-                    </div>
-                </a>
-
-                <ul class="nav-menu">
-                    <li><a href="/">صفحه اصلی</a></li>
-                    <li><a href="/brokers">بروکرها</a></li>
-                    <li><a href="/education">آموزش</a></li>
-                    <li><a href="/markets">بازارها</a></li>
-                    <li><a href="/contact">ارتباط با ما</a></li>
-                </ul>
-
-                <div class="header-actions">
-                    <div class="lang-selector">
-                        <button class="lang-btn active" data-lang="fa">FA</button>
-                        <button class="lang-btn" data-lang="en">EN</button>
-                        <button class="lang-btn" data-lang="ar">AR</button>
-                    </div>
-
-                    <a href="https://t.me/PhoenixTradeBot" class="telegram-link" target="_blank">
-                        <i class="fab fa-telegram-plane"></i>
-                        کانال تلگرام
-                    </a>
-                </div>
-            </div>
-        </header>
+        <%- include('header') %>
 
         <!-- عنوان صفحه -->
         <h1 class="page-title">مقایسه بروکرها</h1>

@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ارتباط با ما - PhoenixTrade</title>
+    <title data-fa="ارتباط با ما - PhoenixTrade" data-en="Contact Us - PhoenixTrade" data-ar="اتصل بنا - PhoenixTrade">
+        ارتباط با ما - PhoenixTrade</title>
     <!-- فونت سمیم -->
     <link rel="stylesheet" href="/css/fonts.css">
     <!-- Font Awesome -->
@@ -76,124 +77,6 @@
             padding: 0 20px;
             position: relative;
             z-index: 10;
-        }
-
-        /* ===== هدر ===== */
-        .header {
-            position: sticky;
-            top: 20px;
-            z-index: 100;
-            background: rgba(10, 40, 25, 0.25);
-            backdrop-filter: blur(20px) saturate(180%);
-            border-radius: 60px;
-            margin: 20px auto;
-            padding: 10px 30px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
-                0 0 0 1px rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo-icon {
-            width: 45px;
-            height: 45px;
-            background: linear-gradient(135deg, #ffd700, #b8860b);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.6rem;
-            color: #0a3825;
-            box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
-        }
-
-        .logo-text {
-            font-size: 1.7rem;
-            font-weight: bold;
-            background: linear-gradient(135deg, #ffd700, #ffe68f);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .nav-menu {
-            display: flex;
-            gap: 25px;
-            list-style: none;
-            flex-wrap: wrap;
-        }
-
-        .nav-menu a {
-            text-decoration: none;
-            color: #ffffff;
-            font-weight: 500;
-            transition: all 0.3s;
-            padding: 8px 18px;
-            border-radius: 40px;
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(5px);
-            font-size: 0.95rem;
-        }
-
-        .nav-menu a:hover {
-            background: rgba(255, 215, 0, 0.25);
-            color: #ffd700;
-            transform: translateY(-3px);
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .lang-selector {
-            display: flex;
-            gap: 5px;
-            background: rgba(0, 0, 0, 0.25);
-            padding: 4px;
-            border-radius: 40px;
-        }
-
-        .lang-btn {
-            padding: 5px 12px;
-            border: none;
-            background: transparent;
-            border-radius: 40px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: all 0.3s;
-            color: #ffffff;
-        }
-
-        .lang-btn.active {
-            background: #ffd700;
-            color: #0a3825;
-        }
-
-        .telegram-link {
-            background: linear-gradient(135deg, #27a7e7, #0f7bc0);
-            color: white;
-            padding: 8px 20px;
-            border-radius: 40px;
-            text-decoration: none;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
         /* ===== عنوان صفحه ===== */
@@ -323,85 +206,6 @@
             color: #ffd700;
         }
 
-        /* ===== فوتر ===== */
-        .footer {
-            background: rgba(0, 20, 10, 0.35);
-            backdrop-filter: blur(20px) saturate(180%);
-            padding: 40px 0 20px;
-            margin-top: 80px;
-            border-top: 1px solid rgba(255, 255, 255, 0.15);
-        }
-
-        .footer-content {
-            max-width: 600px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .footer-section {
-            margin-bottom: 30px;
-        }
-
-        .footer-section h3 {
-            color: #ffd700;
-            margin-bottom: 20px;
-            font-size: 1.2rem;
-        }
-
-        .contact-info-footer {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .contact-info-footer a {
-            color: #ffd700;
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-
-        .contact-info-footer a:hover {
-            text-decoration: underline;
-        }
-
-        .awards {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 20px;
-        }
-
-        .award {
-            width: 60px;
-            height: 60px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            color: #ffd700;
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            transition: all 0.3s;
-        }
-
-        .award:hover {
-            transform: scale(1.1);
-            border-color: #ffd700;
-        }
-
-        .copyright {
-            text-align: center;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.9rem;
-        }
-
-        /* ===== ریسپانسیو ===== */
         @media (max-width: 768px) {
             .contact-content {
                 grid-template-columns: 1fr;
@@ -418,156 +222,153 @@
             }
         }
     </style>
+
+    <script src="/js/i18n.js"></script>
 </head>
 
 <body>
     <div class="container">
         <!-- ===== هدر ===== -->
-        <header class="header">
-            <div class="header-content">
-                <a href="/" style="text-decoration: none;">
-                    <div class="logo">
-                        <div class="logo-icon">🦅</div>
-                        <span class="logo-text">ققنوس</span>
-                    </div>
-                </a>
+        <%- include('header') %>
 
-                <ul class="nav-menu">
-                    <li><a href="/">صفحه اصلی</a></li>
-                    <li><a href="/brokers">بروکرها</a></li>
-                    <li><a href="/education">آموزش</a></li>
-                    <li><a href="/markets">بازارها</a></li>
-                    <li><a href="/contact" style="background: rgba(255,215,0,0.2); color:#ffd700;">ارتباط با ما</a></li>
-                </ul>
-
-                <div class="header-actions">
-                    <div class="lang-selector">
-                        <button class="lang-btn active" data-lang="fa">FA</button>
-                        <button class="lang-btn" data-lang="en">EN</button>
-                        <button class="lang-btn" data-lang="ar">AR</button>
-                    </div>
-
-                    <a href="https://t.me/PhoenixTradeBot" class="telegram-link" target="_blank">
-                        <i class="fab fa-telegram-plane"></i>
-                        <span>کانال تلگرام</span>
-                    </a>
-                </div>
-            </div>
-        </header>
-
-        <!-- ===== عنوان صفحه ===== -->
-        <div class="page-header">
-            <h1 class="page-title">ارتباط با ما</h1>
-            <p class="page-subtitle">ما همیشه آماده پاسخگویی به سوالات شما هستیم</p>
-        </div>
-
-        <!-- ===== محتوای اصلی ===== -->
-        <div class="contact-content">
-            <!-- بخش راست - سابقه شرکت -->
-            <div class="contact-card">
-                <h2 class="card-title">درباره ققنوس</h2>
-                <div class="history-text">
-                    <span class="history-highlight">✧ از سال ۲۰۱۷ در کنار شما هستیم ✧</span>
-
-                    <p>شرکت ققنوس (PhoenixTrade) از سال ۲۰۱۷ فعالیت خود را در زمینه آموزش و ارائه خدمات تحلیلی بازارهای
-                        مالی آغاز کرد. ما با تیمی از تحلیلگران و معامله‌گران حرفه‌ای، مسیر موفقیت را برای هزاران
-                        معامله‌گر هموار کرده‌ایم.</p>
-
-                    <p>هدف ما ایجاد یک پلتفرم جامع و قابل اعتماد برای معامله‌گران فارسی‌زبان است تا بتوانند با دسترسی به
-                        بهترین منابع آموزشی، تحلیل‌های دقیق و معرفی بروکرهای معتبر، به موفقیت در بازارهای مالی دست
-                        یابند.</p>
-
-                    <p>در این سال‌ها با ارائه بیش از ۵۰۰ مطلب آموزشی، ده‌ها وبینار زنده و تحلیل‌های روزانه، همراه
-                        معامله‌گران بوده‌ایم و افتخار می‌کنیم که بخشی از مسیر موفقیت آنها بوده‌ایم.</p>
-                </div>
-
-                <div style="display: flex; gap: 15px; justify-content: center; margin-top: 30px;">
-                    <div class="award" title="بهترین پلتفرم آموزشی ۲۰۲۳">🏆</div>
-                    <div class="award" title="تیم برتر تحلیل ۲۰۲۴">⭐</div>
-                    <div class="award" title="بیش از ۵۰۰۰ کاربر فعال">🌍</div>
-                </div>
+            <!-- ===== عنوان صفحه (سه‌زبانه) ===== -->
+            <div class="page-header">
+                <h1 class="page-title" data-fa="ارتباط با ما" data-en="Contact Us" data-ar="اتصل بنا">ارتباط با ما</h1>
+                <p class="page-subtitle" data-fa="ما همیشه آماده پاسخگویی به سوالات شما هستیم"
+                    data-en="We are always ready to answer your questions"
+                    data-ar="نحن دائمًا على استعداد للإجابة على أسئلتكم">ما همیشه آماده پاسخگویی به سوالات شما هستیم</p>
             </div>
 
-            <!-- بخش چپ - اطلاعات تماس -->
-            <div class="contact-card">
-                <h2 class="card-title">راه‌های ارتباطی</h2>
+            <!-- ===== محتوای اصلی ===== -->
+            <div class="contact-content">
+                <!-- بخش راست - سابقه شرکت (سه‌زبانه) -->
+                <div class="contact-card">
+                    <h2 class="card-title" data-fa="درباره ققنوس" data-en="About Phoenix" data-ar="حول العنقاء">درباره
+                        ققنوس</h2>
+                    <div class="history-text">
+                        <span class="history-highlight" data-fa="✧ از سال ۲۰۱۷ در کنار شما هستیم ✧"
+                            data-en="✧ With you since 2017 ✧" data-ar="✧ معكم منذ ٢٠١٧ ✧">✧ از سال ۲۰۱۷ در کنار شما
+                            هستیم ✧</span>
 
-                <div class="contact-info">
-                    <!-- ایمیل -->
-                    <div class="info-item">
-                        <div class="info-icon">
-                            <i class="fas fa-envelope"></i>
-                        </div>
-                        <div class="info-details">
-                            <div class="info-label">ایمیل شرکت</div>
-                            <div class="info-value">
-                                <a href="mailto:info@phoenixtrade.info" class="info-link">
-                                    info@phoenixtrade.info
-                                </a>
-                            </div>
-                            <div style="color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-top: 5px;">
-                                کلیک کنید تا در برنامه ایمیل باز شود
-                            </div>
-                        </div>
+                        <p data-fa="شرکت ققنوس (PhoenixTrade) از سال ۲۰۱۷ فعالیت خود را در زمینه آموزش و ارائه خدمات تحلیلی بازارهای مالی آغاز کرد. ما با تیمی از تحلیلگران و معامله‌گران حرفه‌ای، مسیر موفقیت را برای هزاران معامله‌گر هموار کرده‌ایم."
+                            data-en="PhoenixTrade started its activities in 2017 in the field of education and providing analytical services for financial markets. With a team of professional analysts and traders, we have paved the way to success for thousands of traders."
+                            data-ar="بدأت شركة العنقاء (PhoenixTrade) أنشطتها في عام ٢٠١٧ في مجال التعليم وتقديم الخدمات التحليلية للأسواق المالية. مع فريق من المحللين والمتداولين المحترفين، مهدنا طريق النجاح لآلاف المتداولين.">
+                            شرکت ققنوس (PhoenixTrade) از سال ۲۰۱۷ فعالیت خود را در زمینه آموزش و ارائه خدمات تحلیلی
+                            بازارهای مالی آغاز کرد. ما با تیمی از تحلیلگران و معامله‌گران حرفه‌ای، مسیر موفقیت را برای
+                            هزاران معامله‌گر هموار کرده‌ایم.
+                        </p>
+
+                        <p data-fa="هدف ما ایجاد یک پلتفرم جامع و قابل اعتماد برای معامله‌گران فارسی‌زبان است تا بتوانند با دسترسی به بهترین منابع آموزشی، تحلیل‌های دقیق و معرفی بروکرهای معتبر، به موفقیت در بازارهای مالی دست یابند."
+                            data-en="Our goal is to create a comprehensive and reliable platform for Persian-speaking traders to achieve success in financial markets by accessing the best educational resources, accurate analyses, and introduction of reputable brokers."
+                            data-ar="هدفنا إنشاء منصة شاملة وموثوقة للمتداولين الناطقين بالفارسية لتحقيق النجاح في الأسواق المالية من خلال الوصول إلى أفضل الموارد التعليمية والتحليلات الدقيقة وتقديم وسطاء موثوقين.">
+                            هدف ما ایجاد یک پلتفرم جامع و قابل اعتماد برای معامله‌گران فارسی‌زبان است تا بتوانند با
+                            دسترسی به بهترین منابع آموزشی، تحلیل‌های دقیق و معرفی بروکرهای معتبر، به موفقیت در بازارهای
+                            مالی دست یابند.
+                        </p>
+
+                        <p data-fa="در این سال‌ها با ارائه بیش از ۵۰۰ مطلب آموزشی، ده‌ها وبینار زنده و تحلیل‌های روزانه، همراه معامله‌گران بوده‌ایم و افتخار می‌کنیم که بخشی از مسیر موفقیت آنها بوده‌ایم."
+                            data-en="Over the years, we have been with traders by providing more than 500 educational articles, dozens of live webinars, and daily analyses, and we are proud to have been part of their success path."
+                            data-ar="على مر السنين، كنا مع المتداولين من خلال تقديم أكثر من ٥٠٠ مقالة تعليمية وعشرات الندوات المباشرة والتحليلات اليومية، ونفتخر بأننا كنا جزءًا من طريق نجاحهم.">
+                            در این سال‌ها با ارائه بیش از ۵۰۰ مطلب آموزشی، ده‌ها وبینار زنده و تحلیل‌های روزانه، همراه
+                            معامله‌گران بوده‌ایم و افتخار می‌کنیم که بخشی از مسیر موفقیت آنها بوده‌ایم.
+                        </p>
                     </div>
 
-                    <!-- تلگرام -->
-                    <div class="info-item">
-                        <div class="info-icon" style="background: linear-gradient(135deg, #27a7e7, #0f7bc0);">
-                            <i class="fab fa-telegram-plane"></i>
-                        </div>
-                        <div class="info-details">
-                            <div class="info-label">ربات تلگرام</div>
-                            <div class="info-value">
-                                <a href="https://t.me/PhoenixTradeBot" target="_blank" class="info-link">
-                                    @PhoenixTradeBot
-                                </a>
-                            </div>
-                            <div style="color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-top: 5px;">
-                                کلیک کنید تا در تلگرام باز شود
-                            </div>
-                        </div>
+                    <div style="display: flex; gap: 15px; justify-content: center; margin-top: 30px;">
+                        <div class="award" title="بهترین پلتفرم آموزشی ۲۰۲۳" data-fa="بهترین پلتفرم آموزشی ۲۰۲۳"
+                            data-en="Best Educational Platform 2023" data-ar="أفضل منصة تعليمية ٢٠٢٣">🏆</div>
+                        <div class="award" title="تیم برتر تحلیل ۲۰۲۴" data-fa="تیم برتر تحلیل ۲۰۲۴"
+                            data-en="Top Analysis Team 2024" data-ar="فريق التحليل المتميز ٢٠٢٤">⭐</div>
+                        <div class="award" title="بیش از ۵۰۰۰ کاربر فعال" data-fa="بیش از ۵۰۰۰ کاربر فعال"
+                            data-en="5000+ Active Users" data-ar="أكثر من ٥٠٠٠ مستخدم نشط">🌍</div>
                     </div>
+                </div>
 
-                    <!-- کانال تلگرام -->
-                    <div class="info-item">
-                        <div class="info-icon" style="background: linear-gradient(135deg, #27a7e7, #0f7bc0);">
-                            <i class="fab fa-telegram"></i>
-                        </div>
-                        <div class="info-details">
-                            <div class="info-label">کانال تلگرام</div>
-                            <div class="info-value">
-                                <a href="https://t.me/phoenixtrade_channel" target="_blank" class="info-link">
-                                    @phoenixtrade_channel
-                                </a>
+                <!-- بخش چپ - اطلاعات تماس (سه‌زبانه) -->
+                <div class="contact-card">
+                    <h2 class="card-title" data-fa="راه‌های ارتباطی" data-en="Contact Information"
+                        data-ar="معلومات الاتصال">راه‌های ارتباطی</h2>
+
+                    <div class="contact-info">
+                        <!-- ایمیل -->
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-envelope"></i>
                             </div>
-                            <div style="color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-top: 5px;">
-                                عضویت در کانال آموزشی
+                            <div class="info-details">
+                                <div class="info-label" data-fa="ایمیل شرکت" data-en="Company Email"
+                                    data-ar="البريد الإلكتروني للشركة">ایمیل شرکت</div>
+                                <div class="info-value">
+                                    <a href="mailto:info@phoenixtrade.info" class="info-link">
+                                        info@phoenixtrade.info
+                                    </a>
+                                </div>
+                                <div style="color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-top: 5px;"
+                                    data-fa="کلیک کنید تا در برنامه ایمیل باز شود" data-en="Click to open in email app"
+                                    data-ar="انقر لفتح في تطبيق البريد الإلكتروني">
+                                    کلیک کنید تا در برنامه ایمیل باز شود
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ربات تلگرام -->
+                        <div class="info-item">
+                            <div class="info-icon" style="background: linear-gradient(135deg, #27a7e7, #0f7bc0);">
+                                <i class="fab fa-telegram-plane"></i>
+                            </div>
+                            <div class="info-details">
+                                <div class="info-label" data-fa="ربات تلگرام" data-en="Telegram Bot"
+                                    data-ar="بوت تيليجرام">ربات تلگرام</div>
+                                <div class="info-value">
+                                    <a href="https://t.me/PhoenixTradeBot" target="_blank" class="info-link">
+                                        @PhoenixTradeBot
+                                    </a>
+                                </div>
+                                <div style="color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-top: 5px;"
+                                    data-fa="کلیک کنید تا در تلگرام باز شود" data-en="Click to open in Telegram"
+                                    data-ar="انقر لفتح في تيليجرام">
+                                    کلیک کنید تا در تلگرام باز شود
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- کانال تلگرام -->
+                        <div class="info-item">
+                            <div class="info-icon" style="background: linear-gradient(135deg, #27a7e7, #0f7bc0);">
+                                <i class="fab fa-telegram"></i>
+                            </div>
+                            <div class="info-details">
+                                <div class="info-label" data-fa="کانال تلگرام" data-en="Telegram Channel"
+                                    data-ar="قناة تيليجرام">کانال تلگرام</div>
+                                <div class="info-value">
+                                    <a href="https://t.me/phoenixtrade_channel" target="_blank" class="info-link">
+                                        @phoenixtrade_channel
+                                    </a>
+                                </div>
+                                <div style="color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-top: 5px;"
+                                    data-fa="عضویت در کانال آموزشی" data-en="Join our educational channel"
+                                    data-ar="انضم إلى قناتنا التعليمية">
+                                    عضویت در کانال آموزشی
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
     </div>
 
     <!-- ===== فوتر ===== -->
     <%- include('footer') %>
 
-    <script>
-        // ============= تغییر زبان =============
-        function changeLanguage(lang) {
-            // این تابع برای صفحات بعدی تکمیل می‌شود
-        }
-
-        document.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.addEventListener('click', function () {
-                document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                changeLanguage(this.dataset.lang);
+        <script>
+            // ============= گوش دادن به رویداد تغییر زبان =============
+            document.addEventListener('languageChanged', function (e) {
+                // این تابع برای به‌روزرسانی احتمالی محتوای داینامیک در آینده استفاده می‌شود
+                console.log('Language changed to:', e.detail.language);
             });
-        });
-    </script>
+
+            // ============= رویداد کلیک دکمه‌های زبان در i18n.js مدیریت می‌شود =============
+        </script>
 </body>
 
 </html>

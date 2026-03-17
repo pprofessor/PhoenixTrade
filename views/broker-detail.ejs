@@ -4,8 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        <%= broker.name %>
+    <title data-fa="<%= broker.name %> - بررسی تخصصی | PhoenixTrade"
+        data-en="<%= broker.name %> - Professional Review | PhoenixTrade"
+        data-ar="<%= broker.name %> - مراجعة احترافية | PhoenixTrade">
+        <%= broker.name %> - بررسی تخصصی | PhoenixTrade
     </title>
     <!-- فونت سمیم -->
     <link rel="stylesheet" href="/css/fonts.css">
@@ -80,123 +82,6 @@
             z-index: 10;
         }
 
-        .header {
-            position: sticky;
-            top: 20px;
-            z-index: 100;
-            background: rgba(10, 40, 25, 0.25);
-            backdrop-filter: blur(20px) saturate(180%);
-            border-radius: 60px;
-            margin: 20px auto;
-            padding: 12px 35px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
-                0 0 0 1px rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo-icon {
-            width: 45px;
-            height: 45px;
-            background: linear-gradient(135deg, #ffd700, #b8860b);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.6rem;
-            color: #0a3825;
-            box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
-        }
-
-        .logo-text {
-            font-size: 1.7rem;
-            font-weight: bold;
-            background: linear-gradient(135deg, #ffd700, #ffe68f);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .nav-menu {
-            display: flex;
-            gap: 25px;
-            list-style: none;
-            flex-wrap: wrap;
-        }
-
-        .nav-menu a {
-            text-decoration: none;
-            color: #ffffff;
-            font-weight: 500;
-            transition: all 0.3s;
-            padding: 8px 18px;
-            border-radius: 40px;
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(5px);
-            font-size: 0.95rem;
-        }
-
-        .nav-menu a:hover {
-            background: rgba(255, 215, 0, 0.25);
-            color: #ffd700;
-            transform: translateY(-3px);
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .lang-selector {
-            display: flex;
-            gap: 5px;
-            background: rgba(0, 0, 0, 0.25);
-            padding: 4px;
-            border-radius: 40px;
-        }
-
-        .lang-btn {
-            padding: 5px 12px;
-            border: none;
-            background: transparent;
-            border-radius: 40px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: all 0.3s;
-            color: #ffffff;
-        }
-
-        .lang-btn.active {
-            background: #ffd700;
-            color: #0a3825;
-        }
-
-        .telegram-link {
-            background: linear-gradient(135deg, #27a7e7, #0f7bc0);
-            color: white;
-            padding: 8px 20px;
-            border-radius: 40px;
-            text-decoration: none;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
         /* بخش اصلی */
         .broker-header {
             background: rgba(10, 40, 25, 0.25);
@@ -225,6 +110,13 @@
             font-size: 3rem;
             color: #0a3825;
             box-shadow: 0 20px 40px rgba(255, 215, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .broker-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .broker-info {
@@ -370,42 +262,10 @@
             color: #ffd700;
         }
 
-        .footer {
-            background: rgba(0, 20, 10, 0.35);
-            backdrop-filter: blur(20px) saturate(180%);
-            padding: 60px 0 30px;
-            margin-top: 100px;
-            border-top: 1px solid rgba(255, 255, 255, 0.15);
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-        }
-
-        .footer-section h3 {
-            color: #ffd700;
-            margin-bottom: 20px;
-        }
-
-        .footer-section a {
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        .footer-section a:hover {
-            color: #ffd700;
-        }
-
-        .copyright {
+        .error-message {
             text-align: center;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.6);
+            padding: 100px;
+            color: #dc3545;
         }
 
         @media (max-width: 768px) {
@@ -423,147 +283,188 @@
             }
         }
     </style>
+
+    <script src="/js/i18n.js"></script>
 </head>
 
 <body>
     <div class="container">
         <!-- هدر -->
-        <header class="header">
-            <div class="header-content">
-                <a href="/" style="text-decoration: none;">
-                    <div class="logo">
-                        <div class="logo-icon">🦅</div>
-                        <span class="logo-text">ققنوس</span>
-                    </div>
-                </a>
+        <%- include('header') %>
 
-                <ul class="nav-menu">
-                    <li><a href="/">صفحه اصلی</a></li>
-                    <li><a href="/brokers">بروکرها</a></li>
-                    <li><a href="/education">آموزش</a></li>
-                    <li><a href="/markets">بازارها</a></li>
-                    <li><a href="/contact">ارتباط با ما</a></li>
-                </ul>
-
-                <div class="header-actions">
-                    <div class="lang-selector">
-                        <button class="lang-btn active" data-lang="fa">FA</button>
-                        <button class="lang-btn" data-lang="en">EN</button>
-                        <button class="lang-btn" data-lang="ar">AR</button>
-                    </div>
-
-                    <a href="https://t.me/PhoenixTradeBot" class="telegram-link" target="_blank">
-                        <i class="fab fa-telegram-plane"></i>
-                        کانال تلگرام
-                    </a>
+            <!-- محتوای اصلی -->
+            <div id="broker-container">
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p style="margin-top: 20px;" data-fa="در حال بارگذاری اطلاعات بروکر..."
+                        data-en="Loading broker information..." data-ar="جاري تحميل معلومات الوسيط...">در حال بارگذاری
+                        اطلاعات بروکر...</p>
                 </div>
             </div>
-        </header>
-
-        <!-- محتوای اصلی -->
-        <div id="broker-container">
-            <div class="loading">
-                <i class="fas fa-spinner fa-spin"></i>
-                <p style="margin-top: 20px;">در حال بارگذاری اطلاعات بروکر...</p>
-            </div>
-        </div>
     </div>
 
     <!-- فوتر -->
     <%- include('footer') %>
 
-    <script>
-        const slug = window.location.pathname.split('/').pop();
+        <script>
+            const slug = window.location.pathname.split('/').pop();
+            let currentBroker = null;
 
-        function compareSingleBroker(id) {
-            window.location.href = `/compare?ids=${id}`;
-        }
+            function compareSingleBroker(id) {
+                window.location.href = `/compare?ids=${id}`;
+            }
 
-        function loadBrokerDetails() {
-            fetch(`/api/brokers/${slug}`)
-                .then(res => res.json())
-                .then(result => {
-                    if (result.success) {
-                        displayBroker(result.data);
-                    } else {
+            function loadBrokerDetails() {
+                fetch(`/api/brokers/${slug}`)
+                    .then(res => res.json())
+                    .then(result => {
+                        if (result.success) {
+                            currentBroker = result.data;
+                            displayBroker(currentBroker);
+                        } else {
+                            showError();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
                         showError();
+                    });
+            }
+
+            function displayBroker(broker) {
+                const currentLang = window.currentLang || 'fa';
+                const stars = '★'.repeat(Math.floor(broker.rating)) + '☆'.repeat(5 - Math.floor(broker.rating));
+
+                // عنوان‌های ویژگی‌ها بر اساس زبان
+                const featureTitles = {
+                    foundedYear: {
+                        fa: 'سال تأسیس',
+                        en: 'Founded',
+                        ar: 'تأسس'
+                    },
+                    usersCount: {
+                        fa: 'تعداد کاربران',
+                        en: 'Users',
+                        ar: 'المستخدمين'
+                    },
+                    spread: {
+                        fa: 'اسپرد',
+                        en: 'Spread',
+                        ar: 'السبريد'
+                    },
+                    leverage: {
+                        fa: 'حداکثر لوریج',
+                        en: 'Max Leverage',
+                        ar: 'الرافعة القصوى'
+                    },
+                    minDeposit: {
+                        fa: 'حداقل سپرده',
+                        en: 'Min Deposit',
+                        ar: 'الحد الأدنى للإيداع'
                     }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showError();
+                };
+
+                // ویژگی‌های اصلی بروکر
+                const features = [
+                    { key: 'foundedYear', value: broker.foundedYear || '-' },
+                    { key: 'usersCount', value: broker.usersCount || '۰' },
+                    { key: 'spread', value: broker.spread || '-' },
+                    { key: 'leverage', value: broker.leverage || '-' },
+                    { key: 'minDeposit', value: broker.minDeposit || '-' }
+                ];
+
+                let featuresHtml = `
+                <div class="features-section">
+                    <h2 class="section-title" data-fa="ویژگی‌های بروکر" 
+                        data-en="Broker Features" 
+                        data-ar="ميزات الوسيط">ویژگی‌های بروکر</h2>
+                    <div class="features-grid">
+            `;
+
+                features.forEach(f => {
+                    const title = featureTitles[f.key][currentLang] || featureTitles[f.key].fa;
+                    featuresHtml += `
+                    <div class="feature-card">
+                        <div class="feature-title">${title}</div>
+                        <div class="feature-value">${f.value}</div>
+                    </div>
+                `;
                 });
-        }
 
-        function displayBroker(broker) {
-            const stars = '★'.repeat(Math.floor(broker.rating)) + '☆'.repeat(5 - Math.floor(broker.rating));
+                featuresHtml += `</div></div>`;
 
-            // ویژگی‌های اصلی بروکر از خود مدل Broker
-            const features = [
-                { title: 'سال تأسیس', value: broker.foundedYear || '-' },
-                { title: 'تعداد کاربران', value: broker.usersCount || '۰' },
-                { title: 'اسپرد', value: broker.spread || '-' },
-                { title: 'حداکثر لوریج', value: broker.leverage || '-' },
-                { title: 'حداقل سپرده', value: broker.minDeposit || '-' }
-            ];
+                // انتخاب نام بروکر بر اساس زبان
+                let brokerName = broker.display_name_fa || broker.name;
+                if (currentLang === 'en' && broker.display_name_en) {
+                    brokerName = broker.display_name_en;
+                } else if (currentLang === 'ar' && broker.display_name_ar) {
+                    brokerName = broker.display_name_ar;
+                }
 
-            let featuresHtml = `
-        <div class="features-section">
-            <h2 class="section-title">ویژگی‌های بروکر</h2>
-            <div class="features-grid">
-    `;
-
-            features.forEach(f => {
-                featuresHtml += `
-            <div class="feature-card">
-                <div class="feature-title">${f.title}</div>
-                <div class="feature-value">${f.value}</div>
-            </div>
-        `;
-            });
-
-            featuresHtml += `</div></div>`;
-
-            const html = `
-        <div class="broker-header">
-            <div class="broker-header-content">
-                <div class="broker-logo">
-                    ${broker.logo ? `<img src="${broker.logo}" style="width:100%; height:100%; object-fit:cover;">` : '📊'}
-                </div>
-                <div class="broker-info">
-                    <h1 class="broker-name">${broker.display_name_fa || broker.name}</h1>
-                    <div class="broker-rating">
-                        <span class="stars">${stars}</span>
-                        <span class="rating-value">(${broker.rating})</span>
-                    </div>
-                    <div class="broker-actions">
-                        <a href="${broker.registerLink || '#'}" class="btn btn-primary" target="_blank">
-                            ثبت‌نام و دریافت جایزه
-                        </a>
-                        <a href="/compare?ids=${broker.id}" class="btn btn-secondary" onclick="event.preventDefault(); compareSingleBroker(${broker.id})">                            مقایسه با دیگران
-                        </a>
+                const html = `
+                <div class="broker-header">
+                    <div class="broker-header-content">
+                        <div class="broker-logo">
+                            ${broker.logo ? `<img src="${broker.logo}" style="width:100%; height:100%; object-fit:cover;">` : '📊'}
+                        </div>
+                        <div class="broker-info">
+                            <h1 class="broker-name">${brokerName}</h1>
+                            <div class="broker-rating">
+                                <span class="stars">${stars}</span>
+                                <span class="rating-value">(${broker.rating})</span>
+                            </div>
+                            <div class="broker-actions">
+                                <a href="${broker.registerLink || '#'}" class="btn btn-primary" target="_blank"
+                                   data-fa="ثبت‌نام و دریافت جایزه" 
+                                   data-en="Register & Get Bonus" 
+                                   data-ar="سجل واحصل على مكافأة">
+                                    ثبت‌نام و دریافت جایزه
+                                </a>
+                                <a href="/compare?ids=${broker.id}" class="btn btn-secondary" 
+                                   onclick="event.preventDefault(); compareSingleBroker(${broker.id})"
+                                   data-fa="مقایسه با دیگران" 
+                                   data-en="Compare with Others" 
+                                   data-ar="قارن مع الآخرين">
+                                    مقایسه با دیگران
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        ${featuresHtml}
-    `;
+                ${featuresHtml}
+            `;
 
-            document.getElementById('broker-container').innerHTML = html;
-        }
-        function showError() {
-            document.getElementById('broker-container').innerHTML = `
+                document.getElementById('broker-container').innerHTML = html;
+            }
+
+            function showError() {
+                const currentLang = window.currentLang || 'fa';
+                const errorMsg = currentLang === 'fa' ? 'خطا در بارگذاری اطلاعات بروکر' :
+                    currentLang === 'en' ? 'Error loading broker information' :
+                        'خطأ في تحميل معلومات الوسيط';
+
+                const backText = currentLang === 'fa' ? 'بازگشت به لیست بروکرها' :
+                    currentLang === 'en' ? 'Back to Brokers List' :
+                        'العودة إلى قائمة الوسطاء';
+
+                document.getElementById('broker-container').innerHTML = `
                 <div class="features-section" style="text-align: center; padding: 100px;">
                     <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #dc3545;"></i>
-                    <p style="margin-top: 20px; color: #dc3545;">خطا در بارگذاری اطلاعات بروکر</p>
-                    <a href="/brokers" style="display: inline-block; margin-top: 20px; padding: 10px 30px; background: #ffd700; color: #0a3825; text-decoration: none; border-radius: 30px;">بازگشت به لیست بروکرها</a>
+                    <p style="margin-top: 20px; color: #dc3545;">${errorMsg}</p>
+                    <a href="/brokers" style="display: inline-block; margin-top: 20px; padding: 10px 30px; background: #ffd700; color: #0a3825; text-decoration: none; border-radius: 30px;">${backText}</a>
                 </div>
             `;
-        }
+            }
 
-        document.addEventListener('DOMContentLoaded', loadBrokerDetails);
-    </script>
+            // گوش دادن به رویداد تغییر زبان
+            document.addEventListener('languageChanged', function (e) {
+                if (currentBroker) {
+                    displayBroker(currentBroker);
+                }
+            });
 
+            document.addEventListener('DOMContentLoaded', loadBrokerDetails);
+        </script>
 </body>
 
 </html>

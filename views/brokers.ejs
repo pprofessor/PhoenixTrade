@@ -79,123 +79,6 @@
             z-index: 10;
         }
 
-        .header {
-            position: sticky;
-            top: 20px;
-            z-index: 100;
-            background: rgba(10, 40, 25, 0.25);
-            backdrop-filter: blur(20px) saturate(180%);
-            border-radius: 60px;
-            margin: 20px auto;
-            padding: 12px 35px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
-                0 0 0 1px rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo-icon {
-            width: 45px;
-            height: 45px;
-            background: linear-gradient(135deg, #ffd700, #b8860b);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.6rem;
-            color: #0a3825;
-            box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
-        }
-
-        .logo-text {
-            font-size: 1.7rem;
-            font-weight: bold;
-            background: linear-gradient(135deg, #ffd700, #ffe68f);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .nav-menu {
-            display: flex;
-            gap: 25px;
-            list-style: none;
-            flex-wrap: wrap;
-        }
-
-        .nav-menu a {
-            text-decoration: none;
-            color: #ffffff;
-            font-weight: 500;
-            transition: all 0.3s;
-            padding: 8px 18px;
-            border-radius: 40px;
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(5px);
-            font-size: 0.95rem;
-        }
-
-        .nav-menu a:hover {
-            background: rgba(255, 215, 0, 0.25);
-            color: #ffd700;
-            transform: translateY(-3px);
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .lang-selector {
-            display: flex;
-            gap: 5px;
-            background: rgba(0, 0, 0, 0.25);
-            padding: 4px;
-            border-radius: 40px;
-        }
-
-        .lang-btn {
-            padding: 5px 12px;
-            border: none;
-            background: transparent;
-            border-radius: 40px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: all 0.3s;
-            color: #ffffff;
-        }
-
-        .lang-btn.active {
-            background: #ffd700;
-            color: #0a3825;
-        }
-
-        .telegram-link {
-            background: linear-gradient(135deg, #27a7e7, #0f7bc0);
-            color: white;
-            padding: 8px 20px;
-            border-radius: 40px;
-            text-decoration: none;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
         .page-title {
             text-align: center;
             font-size: 2.5rem;
@@ -433,239 +316,127 @@
             color: #dc3545;
         }
 
-        /* ===== فوتر (مثل صفحه اصلی) ===== */
-        .footer {
-            background: rgba(0, 20, 10, 0.35);
-            backdrop-filter: blur(20px) saturate(180%);
-            padding: 40px 0 20px;
-            margin-top: 60px;
-            border-top: 1px solid rgba(255, 255, 255, 0.15);
-        }
-
-        .footer-content {
-            max-width: 600px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .footer-section {
-            margin-bottom: 30px;
-        }
-
-        .footer-section h3 {
-            color: #ffd700;
-            margin-bottom: 20px;
-            font-size: 1.2rem;
-        }
-
-        .contact-info {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .contact-info a {
-            color: #ffd700;
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-
-        .contact-info a:hover {
-            text-decoration: underline;
-        }
-
-        .awards {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 20px;
-        }
-
-        .award {
-            width: 60px;
-            height: 60px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            color: #ffd700;
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            transition: all 0.3s;
-        }
-
-        .award:hover {
-            transform: scale(1.1);
-            border-color: #ffd700;
-        }
-
-        .copyright {
-            text-align: center;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.9rem;
-        }
-
         @media (max-width: 768px) {
             .footer-content {
                 padding: 0 20px;
             }
         }
     </style>
+
+    <script src="/js/i18n.js"></script>
 </head>
 
 <body>
     <div class="container">
-        <!-- هدر (سه‌زبانه شده) -->
-        <header class="header">
-            <div class="header-content">
-                <a href="/" style="text-decoration: none;">
-                    <div class="logo">
-                        <div class="logo-icon">🦅</div>
-                        <span class="logo-text" data-fa="ققنوس" data-en="Phoenix" data-ar="العنقاء">ققنوس</span>
-                    </div>
-                </a>
+        <!-- هدر -->
+        <%- include('header') %>
 
-                <ul class="nav-menu">
-                    <li><a href="/" data-fa="صفحه اصلی" data-en="Home" data-ar="الرئيسية">صفحه اصلی</a></li>
-                    <li><a href="/brokers" data-fa="بروکرها" data-en="Brokers" data-ar="الوسطاء">بروکرها</a></li>
-                    <li><a href="/education" data-fa="آموزش" data-en="Education" data-ar="التعليم">آموزش</a></li>
-                    <li><a href="/markets" data-fa="بازارها" data-en="Markets" data-ar="الأسواق">بازارها</a></li>
-                </ul>
+            <!-- عنوان صفحه (سه‌زبانه) -->
+            <h1 class="page-title" data-fa="بروکرهای معتبر" data-en="Trusted Brokers" data-ar="وسطاء موثوقون">بروکرهای
+                معتبر
+            </h1>
+            <p class="page-subtitle" data-fa="مقایسه و انتخاب بهترین بروکر برای معاملات شما"
+                data-en="Compare and choose the best broker for your trades" data-ar="قارن واختر أفضل وسيط لصفقاتك">
+                مقایسه و
+                انتخاب بهترین بروکر برای معاملات شما</p>
 
-                <div class="header-actions">
-                    <div class="lang-selector">
-                        <button class="lang-btn active" data-lang="fa">FA</button>
-                        <button class="lang-btn" data-lang="en">EN</button>
-                        <button class="lang-btn" data-lang="ar">AR</button>
-                    </div>
+            <!-- بخش فیلتر -->
+            <div class="filter-section">
+                <div class="search-box">
+                    <input type="text" id="search-input" class="search-input" data-fa="جستجوی بروکر..."
+                        data-en="Search brokers..." data-ar="بحث عن وسيط..." placeholder="جستجوی بروکر...">
+                    <button class="btn btn-primary" onclick="searchBrokers()" data-fa="جستجو" data-en="Search"
+                        data-ar="بحث">جستجو</button>
+                </div>
 
-                    <a href="https://t.me/PhoenixTradeBot" class="telegram-link" target="_blank">
-                        <i class="fab fa-telegram-plane"></i>
-                        <span data-fa="کانال تلگرام" data-en="Telegram" data-ar="تيليجرام">کانال تلگرام</span>
-                    </a>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" onclick="filterBrokers('all')" data-fa="همه" data-en="All"
+                        data-ar="الكل">همه</button>
+                    <button class="filter-btn" onclick="filterBrokers('featured')" data-fa="بروکرهای ویژه"
+                        data-en="Featured" data-ar="مميز">بروکرهای ویژه</button>
+                    <button class="filter-btn" onclick="sortBrokers('rating')" data-fa="بالاترین امتیاز"
+                        data-en="Top Rated" data-ar="أعلى تقييم">بالاترین امتیاز</button>
+                    <button class="filter-btn" onclick="sortBrokers('order')" data-fa="پیش‌فرض" data-en="Default"
+                        data-ar="افتراضي">پیش‌فرض</button>
                 </div>
             </div>
-        </header>
 
-        <!-- عنوان صفحه (سه‌زبانه شده) -->
-        <h1 class="page-title" data-fa="بروکرهای معتبر" data-en="Trusted Brokers" data-ar="وسطاء موثوقون">بروکرهای معتبر
-        </h1>
-        <p class="page-subtitle" data-fa="مقایسه و انتخاب بهترین بروکر برای معاملات شما"
-            data-en="Compare and choose the best broker for your trades" data-ar="قارن واختر أفضل وسيط لصفقاتك">مقایسه و
-            انتخاب بهترین بروکر برای معاملات شما</p>
-
-        <!-- بخش فیلتر -->
-        <div class="filter-section">
-            <div class="search-box">
-                <input type="text" id="search-input" class="search-input" placeholder="جستجوی بروکر...">
-                <button class="btn btn-primary" onclick="searchBrokers()">جستجو</button>
+            <!-- لیست بروکرها -->
+            <div id="brokers-container">
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p style="margin-top: 20px;" data-fa="در حال بارگذاری بروکرها..." data-en="Loading brokers..."
+                        data-ar="جاري تحميل الوسطاء...">در حال بارگذاری بروکرها...</p>
+                </div>
             </div>
 
-            <div class="filter-buttons">
-                <button class="filter-btn active" onclick="filterBrokers('all')">همه</button>
-                <button class="filter-btn" onclick="filterBrokers('featured')">بروکرهای ویژه</button>
-                <button class="filter-btn" onclick="sortBrokers('rating')">بالاترین امتیاز</button>
-                <button class="filter-btn" onclick="sortBrokers('order')">پیش‌فرض</button>
+            <!-- نوار مقایسه -->
+            <div class="compare-bar" id="compare-bar" style="display: none;">
+                <span id="compare-count" data-fa="۰ بروکر انتخاب شده" data-en="0 brokers selected"
+                    data-ar="٠ وسطاء مختارون">۰ بروکر انتخاب شده</span>
+                <a href="#" id="compare-link" class="btn btn-primary" data-fa="مقایسه" data-en="Compare"
+                    data-ar="مقارنة">مقایسه</a>
             </div>
-        </div>
-
-        <!-- لیست بروکرها -->
-        <div id="brokers-container">
-            <div class="loading">
-                <i class="fas fa-spinner fa-spin"></i>
-                <p style="margin-top: 20px;">در حال بارگذاری بروکرها...</p>
-            </div>
-        </div>
-
-        <!-- نوار مقایسه -->
-        <div class="compare-bar" id="compare-bar" style="display: none;">
-            <span id="compare-count">۰ بروکر انتخاب شده</span>
-            <a href="#" id="compare-link" class="btn btn-primary">مقایسه</a>
-        </div>
     </div>
 
-    <!-- فوتر (مثل صفحه اصلی) -->
+    <!-- فوتر -->
     <%- include('footer') %>
 
-    <script>
-        let allBrokers = [];
-        let selectedBrokers = [];
-        let currentLang = 'fa';
+        <script>
+            let allBrokers = [];
+            let selectedBrokers = [];
 
-        // ============= تابع تغییر زبان =============
-        function changeLanguage(lang) {
-            currentLang = lang;
-
-            // تغییر متن المنت‌های دارای data-*
-            document.querySelectorAll('[data-' + lang + ']').forEach(element => {
-                const translation = element.getAttribute('data-' + lang);
-                if (translation) element.textContent = translation;
-            });
-
-            // تغییر کلاس دکمه‌های زبان
-            document.querySelectorAll('.lang-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.querySelector(`.lang-btn[data-lang="${lang}"]`).classList.add('active');
-
-            // نمایش مجدد بروکرها با زبان جدید
-            if (allBrokers.length > 0) {
-                displayBrokers(allBrokers);
-            }
-        }
-
-        // ============= بارگذاری بروکرها =============
-        function loadBrokers() {
-            fetch('/api/brokers')
-                .then(res => res.json())
-                .then(result => {
-                    if (result.success) {
-                        allBrokers = result.data;
-                        displayBrokers(allBrokers);
-                    } else {
+            // ============= بارگذاری بروکرها =============
+            function loadBrokers() {
+                fetch('/api/brokers')
+                    .then(res => res.json())
+                    .then(result => {
+                        if (result.success) {
+                            allBrokers = result.data;
+                            displayBrokers(allBrokers);
+                        } else {
+                            showError();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
                         showError();
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showError();
-                });
-        }
+                    });
+            }
 
-        function displayBrokers(brokers) {
-            const container = document.getElementById('brokers-container');
+            function displayBrokers(brokers) {
+                const container = document.getElementById('brokers-container');
+                const currentLang = window.currentLang || 'fa';
 
-            if (brokers.length === 0) {
-                container.innerHTML = `
+                if (brokers.length === 0) {
+                    const noBrokersMsg = currentLang === 'fa' ? 'هیچ بروکری یافت نشد' :
+                        currentLang === 'en' ? 'No brokers found' :
+                            'لم يتم العثور على وسطاء';
+
+                    container.innerHTML = `
                     <div class="error-message">
                         <i class="fas fa-info-circle" style="font-size: 3rem;"></i>
-                        <p style="margin-top: 20px;">هیچ بروکری یافت نشد</p>
+                        <p style="margin-top: 20px;">${noBrokersMsg}</p>
                     </div>
                 `;
-                return;
-            }
-
-            let html = '<div class="brokers-grid">';
-
-            brokers.forEach(broker => {
-                const stars = '★'.repeat(Math.floor(broker.rating)) + '☆'.repeat(5 - Math.floor(broker.rating));
-                const regulations = JSON.parse(broker.regulations || '[]');
-
-                // انتخاب نام بروکر بر اساس زبان
-                let brokerName = broker.display_name_fa || broker.name;
-                if (currentLang === 'en' && broker.display_name_en) {
-                    brokerName = broker.display_name_en;
-                } else if (currentLang === 'ar' && broker.display_name_ar) {
-                    brokerName = broker.display_name_ar;
+                    return;
                 }
 
-                html += `
+                let html = '<div class="brokers-grid">';
+
+                brokers.forEach(broker => {
+                    const stars = '★'.repeat(Math.floor(broker.rating)) + '☆'.repeat(5 - Math.floor(broker.rating));
+                    const regulations = JSON.parse(broker.regulations || '[]');
+
+                    // انتخاب نام بروکر بر اساس زبان
+                    let brokerName = broker.display_name_fa || broker.name;
+                    if (currentLang === 'en' && broker.display_name_en) {
+                        brokerName = broker.display_name_en;
+                    } else if (currentLang === 'ar' && broker.display_name_ar) {
+                        brokerName = broker.display_name_ar;
+                    }
+
+                    html += `
                     <div class="broker-card">
                         <div class="broker-header">
                             <div class="broker-logo">
@@ -710,106 +481,125 @@
                         </div>
                     </div>
                 `;
-            });
+                });
 
-            html += '</div>';
-            container.innerHTML = html;
-        }
+                html += '</div>';
+                container.innerHTML = html;
+            }
 
-        function toggleCompare(id, checked) {
-            if (checked) {
-                if (selectedBrokers.length < 4) {
-                    selectedBrokers.push(id);
+            function toggleCompare(id, checked) {
+                const currentLang = window.currentLang || 'fa';
+
+                if (checked) {
+                    if (selectedBrokers.length < 4) {
+                        selectedBrokers.push(id);
+                    } else {
+                        alert(currentLang === 'fa' ? 'حداکثر می‌توانید ۴ بروکر را مقایسه کنید' :
+                            currentLang === 'en' ? 'You can compare up to 4 brokers' :
+                                'يمكنك مقارنة حتى ٤ وسطاء');
+                        event.target.checked = false;
+                        return;
+                    }
                 } else {
-                    alert(currentLang === 'fa' ? 'حداکثر می‌توانید ۴ بروکر را مقایسه کنید' :
-                        currentLang === 'en' ? 'You can compare up to 4 brokers' :
-                            'يمكنك مقارنة حتى ٤ وسطاء');
-                    event.target.checked = false;
-                    return;
+                    selectedBrokers = selectedBrokers.filter(b => b !== id);
                 }
-            } else {
-                selectedBrokers = selectedBrokers.filter(b => b !== id);
+
+                updateCompareBar();
             }
 
-            updateCompareBar();
-        }
+            function updateCompareBar() {
+                const bar = document.getElementById('compare-bar');
+                const countSpan = document.getElementById('compare-count');
+                const link = document.getElementById('compare-link');
+                const currentLang = window.currentLang || 'fa';
 
-        function updateCompareBar() {
-            const bar = document.getElementById('compare-bar');
-            const countSpan = document.getElementById('compare-count');
-            const link = document.getElementById('compare-link');
-
-            if (selectedBrokers.length > 0) {
-                countSpan.textContent = currentLang === 'fa' ? `${selectedBrokers.length} بروکر انتخاب شده` :
-                    currentLang === 'en' ? `${selectedBrokers.length} brokers selected` :
-                        `${selectedBrokers.length} وسطاء مختارون`;
-                link.href = `/compare?ids=${selectedBrokers.join(',')}`;
-                bar.style.display = 'flex';
-            } else {
-                bar.style.display = 'none';
+                if (selectedBrokers.length > 0) {
+                    const countText = currentLang === 'fa' ? `${selectedBrokers.length} بروکر انتخاب شده` :
+                        currentLang === 'en' ? `${selectedBrokers.length} brokers selected` :
+                            `${selectedBrokers.length} وسطاء مختارون`;
+                    countSpan.textContent = countText;
+                    link.href = `/compare?ids=${selectedBrokers.join(',')}`;
+                    bar.style.display = 'flex';
+                } else {
+                    bar.style.display = 'none';
+                }
             }
-        }
 
-        function searchBrokers() {
-            const query = document.getElementById('search-input').value.toLowerCase();
-            const filtered = allBrokers.filter(b => {
-                const nameFa = (b.display_name_fa || b.name).toLowerCase();
-                const nameEn = (b.display_name_en || '').toLowerCase();
-                const nameAr = (b.display_name_ar || '').toLowerCase();
-                return nameFa.includes(query) || nameEn.includes(query) || nameAr.includes(query) || b.name.toLowerCase().includes(query);
-            });
-            displayBrokers(filtered);
-        }
+            function searchBrokers() {
+                const query = document.getElementById('search-input').value.toLowerCase();
+                const currentLang = window.currentLang || 'fa';
 
-        function filterBrokers(type) {
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-
-            if (type === 'all') {
-                displayBrokers(allBrokers);
-            } else if (type === 'featured') {
-                const filtered = allBrokers.filter(b => b.isFeatured);
+                const filtered = allBrokers.filter(b => {
+                    const nameFa = (b.display_name_fa || b.name).toLowerCase();
+                    const nameEn = (b.display_name_en || '').toLowerCase();
+                    const nameAr = (b.display_name_ar || '').toLowerCase();
+                    return nameFa.includes(query) || nameEn.includes(query) || nameAr.includes(query) || b.name.toLowerCase().includes(query);
+                });
                 displayBrokers(filtered);
             }
-        }
 
-        function sortBrokers(type) {
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+            function filterBrokers(type) {
+                document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                event.target.classList.add('active');
 
-            let sorted = [...allBrokers];
-            if (type === 'rating') {
-                sorted.sort((a, b) => b.rating - a.rating);
-            } else if (type === 'order') {
-                sorted.sort((a, b) => (a.order || 0) - (b.order || 0));
+                if (type === 'all') {
+                    displayBrokers(allBrokers);
+                } else if (type === 'featured') {
+                    const filtered = allBrokers.filter(b => b.isFeatured);
+                    displayBrokers(filtered);
+                }
             }
 
-            displayBrokers(sorted);
-        }
+            function sortBrokers(type) {
+                document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                event.target.classList.add('active');
 
-        function showError() {
-            document.getElementById('brokers-container').innerHTML = `
+                let sorted = [...allBrokers];
+                if (type === 'rating') {
+                    sorted.sort((a, b) => b.rating - a.rating);
+                } else if (type === 'order') {
+                    sorted.sort((a, b) => (a.order || 0) - (b.order || 0));
+                }
+
+                displayBrokers(sorted);
+            }
+
+            function showError() {
+                const currentLang = window.currentLang || 'fa';
+                const errorMsg = currentLang === 'fa' ? 'خطا در بارگذاری بروکرها' :
+                    currentLang === 'en' ? 'Error loading brokers' :
+                        'خطأ في تحميل الوسطاء';
+
+                document.getElementById('brokers-container').innerHTML = `
                 <div class="error-message">
                     <i class="fas fa-exclamation-triangle" style="font-size: 3rem;"></i>
-                    <p style="margin-top: 20px;">${currentLang === 'fa' ? 'خطا در بارگذاری بروکرها' :
-                    currentLang === 'en' ? 'Error loading brokers' :
-                        'خطأ في تحميل الوسطاء'}</p>
+                    <p style="margin-top: 20px;">${errorMsg}</p>
                 </div>
             `;
-        }
+            }
 
-        // ============= رویدادهای زبان =============
-        document.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.addEventListener('click', function () {
-                changeLanguage(this.dataset.lang);
+            // گوش دادن به رویداد تغییر زبان
+            document.addEventListener('languageChanged', function (e) {
+                if (allBrokers.length > 0) {
+                    displayBrokers(allBrokers);
+                    updateCompareBar();
+                }
+
+                // به‌روزرسانی placeholder جستجو
+                const searchInput = document.getElementById('search-input');
+                const currentLang = e.detail.language;
+                const placeholders = {
+                    fa: 'جستجوی بروکر...',
+                    en: 'Search brokers...',
+                    ar: 'بحث عن وسيط...'
+                };
+                searchInput.placeholder = placeholders[currentLang] || placeholders.fa;
             });
-        });
 
-        document.addEventListener('DOMContentLoaded', () => {
-            loadBrokers();
-            changeLanguage('fa');
-        });
-    </script>
+            document.addEventListener('DOMContentLoaded', () => {
+                loadBrokers();
+            });
+        </script>
 </body>
 
 </html>

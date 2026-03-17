@@ -753,39 +753,13 @@
             color: #ffd700;
         }
     </style>
-</head>
+
+    <script src="/js/i18n.js"></script></head>
 
 <body>
     <div class="container">
         <!-- ===== هدر ===== -->
-        <header class="header" id="header-block">
-            <div class="header-content">
-                <div class="logo">
-                    <div class="logo-icon">🦅</div>
-                    <span class="logo-text" data-fa="ققنوس" data-en="Phoenix" data-ar="العنقاء">ققنوس</span>
-                </div>
-
-                <ul class="nav-menu" id="main-menu">
-                    <li><a href="/" data-fa="صفحه اصلی" data-en="Home" data-ar="الرئيسية">صفحه اصلی</a></li>
-                    <li><a href="/brokers" data-fa="بروکرها" data-en="Brokers" data-ar="الوسطاء">بروکرها</a></li>
-                    <li><a href="/education" data-fa="آموزش" data-en="Education" data-ar="التعليم">آموزش</a></li>
-                    <li><a href="/markets" data-fa="بازارها" data-en="Markets" data-ar="الأسواق">بازارها</a></li>
-                </ul>
-
-                <div class="header-actions">
-                    <div class="lang-selector" id="language-selector">
-                        <button class="lang-btn active" data-lang="fa">FA</button>
-                        <button class="lang-btn" data-lang="en">EN</button>
-                        <button class="lang-btn" data-lang="ar">AR</button>
-                    </div>
-
-                    <a href="https://t.me/PhoenixTradeBot" class="telegram-link" id="telegram-link" target="_blank">
-                        <i class="fab fa-telegram-plane"></i>
-                        <span data-fa="کانال تلگرام" data-en="Telegram" data-ar="تيليجرام">کانال تلگرام</span>
-                    </a>
-                </div>
-            </div>
-        </header>
+        <%- include('header') %>
 
         <!-- ===== اسلایدشو ===== -->
         <div class="hero-slider" id="hero-slider">

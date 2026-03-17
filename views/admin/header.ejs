@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %> - PhoenixTrade
+    </title>
+    <link rel="stylesheet" href="/css/fonts.css">
+    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* ===== استایل‌های پایه (مطابق فایل دیتابیس) ===== */
+        .tabs {
+            display: flex;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 0.6rem 1.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 25px;
+            color: #fff;
+            cursor: pointer;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            transition: all 0.2s;
+        }
+
+        .tab:hover {
+            border-color: #ffd700;
+        }
+
+        .tab.active {
+            background: #ffd700;
+            color: #0a2f1f;
+            font-weight: bold;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            width: 100%;
+        }
+
+        .card h3 {
+            color: #ffd700;
+            margin-bottom: 1.2rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        /* ===== فرم‌ها (با الگوی دیتابیس) ===== */
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: #ffd700;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            font-family: 'Samim', 'Vazir', 'Tahoma', sans-serif;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #ffd700;
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* ===== دکمه‌ها (مطابق فایل دیتابیس) ===== */
+        .btn {
+            padding: 0.6rem 1.5rem;
+            border: none;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: rgba(255, 215, 0, 0.1);
+            color: #ffd700;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            background: #ffd700;
+            color: #0a2f1f;
+            transform: translateY(-2px);
+        }
+
+        .btn-sm {
+            padding: 0.3rem 1rem;
+            font-size: 0.8rem;
+        }
+
+        .btn-danger {
+            background: rgba(220, 53, 69, 0.2);
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-success {
+            background: rgba(40, 167, 69, 0.2);
+            border-color: #28a745;
+            color: #28a745;
+        }
+
+        .btn-success:hover {
+            background: #28a745;
+            color: white;
+        }
+
+        /* ===== گریدها ===== */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        /* ===== پیش‌نمایش لوگو (ساده شده) ===== */
+        .logo-preview {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
+        .preview-box {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #ffd700, #b8860b);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #0a3825;
+            overflow: hidden;
+        }
+
+        .preview-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #ffd700, #ffe68f);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* ===== آیتم‌های منو (با الگوی command-item دیتابیس) ===== */
+        .menu-items-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .menu-item-row {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
+        .menu-item-row:hover {
+            border-color: #ffd700;
+        }
+
+        .menu-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
+        .menu-item-title {
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .menu-number {
+            background: rgba(255, 215, 0, 0.1);
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            margin-right: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .checkbox-group {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            margin-top: 0.5rem;
+        }
+
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            accent-color: #ffd700;
+        }
+
+        /* ===== رنگ‌ها (با الگوی دیتابیس) ===== */
+        .color-input {
+            width: 100%;
+            height: 38px;
+            padding: 0.3rem;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            background: rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+        }
+
+        .help-text {
+            color: #aaa;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+            border-right: 3px solid #ffd700;
+        }
+
+        .help-text i {
+            color: #ffd700;
+            margin-left: 0.3rem;
+        }
+
+        /* ===== آلرت‌ها ===== */
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .alert-success {
+            background: rgba(40, 167, 69, 0.2);
+            border: 1px solid #28a745;
+            color: #28a745;
+        }
+
+        .alert-danger {
+            background: rgba(220, 53, 69, 0.2);
+            border: 1px solid #dc3545;
+            color: #dc3545;
+        }
+
+        /* ===== مودال (با الگوی دیتابیس) ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #1a2f2a;
+            padding: 2rem;
+            border-radius: 16px;
+            max-width: 400px;
+            width: 90%;
+            border: 1px solid #ffd700;
+        }
+
+        .modal-content h3 {
+            color: #ffd700;
+            margin-bottom: 1rem;
+        }
+
+        .modal-content input[type="file"] {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 6px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+        }
+
+        /* ===== ریسپانسیو ===== */
+        @media (max-width: 992px) {
+            .grid-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                margin-right: 0;
+                padding: 1rem;
+            }
+
+            .grid-2,
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+
+            .logo-preview {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .checkbox-group {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+
+    <script src="/js/i18n.js"></script>
+</head>
+
+<body>
+    <%- include('../sidebar', { activePage: 'header' }) %>
+
+        <div class="main-content">
+            <div class="header">
+                <h1><i class="fas fa-arrow-up"></i>
+                    <%= title %>
+                </h1>
+            </div>
+
+            <!-- نمایش پیغام‌ها -->
+            <% if (req.query.success) { %>
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle"></i> تنظیمات با موفقیت ذخیره شد
+                </div>
+                <% } %>
+                    <% if (req.query.error) { %>
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle"></i> خطا در ذخیره تنظیمات
+                        </div>
+                        <% } %>
+
+                            <form action="/pprofessor/header/save" method="POST" id="header-form">
+                                <!-- ===== تب‌ها ===== -->
+                                <div class="tabs">
+                                    <div class="tab active" onclick="showTab('logo')">لوگو و برند</div>
+                                    <div class="tab" onclick="showTab('telegram')">لینک تلگرام</div>
+                                    <div class="tab" onclick="showTab('menu')">منوها</div>
+                                    <div class="tab" onclick="showTab('style')">تنظیمات ظاهری</div>
+                                </div>
+
+                                <!-- ===== تب 1: لوگو و برند ===== -->
+                                <div id="tab-logo" class="tab-content active">
+                                    <div class="card">
+                                        <h3><i class="fas fa-star"></i> لوگو و برند</h3>
+
+                                        <!-- پیش‌نمایش لوگو -->
+                                        <div class="logo-preview" id="logo-preview">
+                                            <div class="preview-box" id="logo-preview-box">
+                                                <% if (header.logo_image) { %>
+                                                    <img src="<%= header.logo_image %>" alt="logo">
+                                                    <% } else { %>
+                                                        <%= header.logo_icon || '🦅' %>
+                                                            <% } %>
+                                            </div>
+                                            <div class="preview-text" id="logo-preview-text">
+                                                <%= header.logo_text_fa || 'ققنوس' %>
+                                            </div>
+                                        </div>
+
+                                        <!-- آپلود تصویر لوگو -->
+                                        <div class="form-group">
+                                            <label>تصویر لوگو (اختیاری)</label>
+                                            <div
+                                                style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                                                <button type="button" class="btn btn-sm"
+                                                    onclick="document.getElementById('logo-image').click()">
+                                                    <i class="fas fa-upload"></i> انتخاب تصویر
+                                                </button>
+                                                <input type="file" id="logo-image" accept="image/*"
+                                                    style="display: none;">
+                                                <input type="hidden" name="logo_image" id="logo-image-url"
+                                                    value="<%= header.logo_image || '' %>">
+                                                <% if (header.logo_image) { %>
+                                                    <button type="button" class="btn btn-sm btn-danger"
+                                                        onclick="removeLogo()">
+                                                        <i class="fas fa-times"></i> حذف تصویر
+                                                    </button>
+                                                    <% } %>
+                                            </div>
+                                            <div class="help-text">
+                                                <i class="fas fa-info-circle"></i> اگر تصویر آپلود شود، ایموجی نادیده
+                                                گرفته می‌شود
+                                            </div>
+                                        </div>
+
+                                        <!-- ایموجی لوگو -->
+                                        <div class="form-group">
+                                            <label>ایموجی لوگو</label>
+                                            <input type="text" name="logo_icon" class="form-control"
+                                                value="<%= header.logo_icon || '🦅' %>" placeholder="🦅"
+                                                style="max-width: 100px;">
+                                        </div>
+
+                                        <!-- متن لوگو (سه‌زبانه) -->
+                                        <h4 style="color:#ffd700; margin:1.5rem 0 1rem;">متن لوگو (سه‌زبانه)</h4>
+                                        <div class="grid-3">
+                                            <div class="form-group">
+                                                <label>🇮🇷 فارسی</label>
+                                                <input type="text" name="logo_text_fa" class="form-control"
+                                                    value="<%= header.logo_text_fa %>" placeholder="ققنوس">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>🇬🇧 English</label>
+                                                <input type="text" name="logo_text_en" class="form-control"
+                                                    value="<%= header.logo_text_en %>" placeholder="Phoenix">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>🇸🇦 العربية</label>
+                                                <input type="text" name="logo_text_ar" class="form-control"
+                                                    value="<%= header.logo_text_ar %>" placeholder="العنقاء">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- ===== تب 2: لینک تلگرام ===== -->
+                                <div id="tab-telegram" class="tab-content">
+                                    <div class="card">
+                                        <h3><i class="fab fa-telegram"></i> لینک تلگرام</h3>
+
+                                        <div class="form-group">
+                                            <label>لینک</label>
+                                            <input type="url" name="telegram_link" class="form-control"
+                                                value="<%= header.telegram_link %>"
+                                                placeholder="https://t.me/PhoenixTradeBot" dir="ltr">
+                                        </div>
+
+                                        <h4 style="color:#ffd700; margin:1.5rem 0 1rem;">متن لینک (سه‌زبانه)</h4>
+                                        <div class="grid-3">
+                                            <div class="form-group">
+                                                <label>🇮🇷 فارسی</label>
+                                                <input type="text" name="telegram_text_fa" class="form-control"
+                                                    value="<%= header.telegram_text_fa %>" placeholder="کانال تلگرام">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>🇬🇧 English</label>
+                                                <input type="text" name="telegram_text_en" class="form-control"
+                                                    value="<%= header.telegram_text_en %>" placeholder="Telegram">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>🇸🇦 العربية</label>
+                                                <input type="text" name="telegram_text_ar" class="form-control"
+                                                    value="<%= header.telegram_text_ar %>" placeholder="تيليجرام">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- ===== تب 3: منوها ===== -->
+                                <div id="tab-menu" class="tab-content">
+                                    <div class="card">
+                                        <h3><i class="fas fa-bars"></i> منوها</h3>
+
+                                        <div class="menu-items-container" id="menu-items-container">
+                                            <% if (header.menu_items && header.menu_items.length> 0) { %>
+                                                <% header.menu_items.forEach((item, index)=> { %>
+                                                    <div class="menu-item-row" data-index="<%= index %>">
+                                                        <div class="menu-item-header">
+                                                            <span class="menu-item-title">
+                                                                <i class="fas fa-grip-vertical"
+                                                                    style="margin-left: 0.5rem;"></i>
+                                                                <span class="menu-number">منوی <%= index + 1 %></span>
+                                                            </span>
+                                                            <button type="button" class="btn btn-sm btn-danger"
+                                                                onclick="removeMenuItem(this)">
+                                                                <i class="fas fa-trash"></i> حذف
+                                                            </button>
+                                                        </div>
+                                                        <div class="grid-4">
+                                                            <div class="form-group">
+                                                                <label>🇮🇷 فارسی</label>
+                                                                <input type="text" name="menu_title_fa_<%= index %>"
+                                                                    class="form-control" value="<%= item.title_fa %>"
+                                                                    placeholder="صفحه اصلی">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>🇬🇧 انگلیسی</label>
+                                                                <input type="text" name="menu_title_en_<%= index %>"
+                                                                    class="form-control" value="<%= item.title_en %>"
+                                                                    placeholder="Home">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>🇸🇦 عربی</label>
+                                                                <input type="text" name="menu_title_ar_<%= index %>"
+                                                                    class="form-control" value="<%= item.title_ar %>"
+                                                                    placeholder="الرئيسية">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>لینک</label>
+                                                                <input type="text" name="menu_link_<%= index %>"
+                                                                    class="form-control" value="<%= item.link %>"
+                                                                    placeholder="/" dir="ltr">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>ترتیب</label>
+                                                                <input type="number" name="menu_order_<%= index %>"
+                                                                    class="form-control"
+                                                                    value="<%= item.order || index + 1 %>" min="1">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <div class="checkbox-group">
+                                                                    <label>
+                                                                        <input type="checkbox"
+                                                                            name="menu_active_<%= index %>"
+                                                                            <%=item.isActive ? 'checked' : '' %>> فعال
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <% }); %>
+                                                        <% } else { %>
+                                                            <div class="menu-item-row" data-index="0">
+                                                                <div class="menu-item-header">
+                                                                    <span class="menu-item-title">
+                                                                        <i class="fas fa-grip-vertical"
+                                                                            style="margin-left: 0.5rem;"></i>
+                                                                        <span class="menu-number">منوی ۱</span>
+                                                                    </span>
+                                                                    <button type="button" class="btn btn-sm btn-danger"
+                                                                        onclick="removeMenuItem(this)">
+                                                                        <i class="fas fa-trash"></i> حذف
+                                                                    </button>
+                                                                </div>
+                                                                <div class="grid-4">
+                                                                    <div class="form-group">
+                                                                        <label>🇮🇷 فارسی</label>
+                                                                        <input type="text" name="menu_title_fa_0"
+                                                                            class="form-control"
+                                                                            placeholder="صفحه اصلی">
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label>🇬🇧 انگلیسی</label>
+                                                                        <input type="text" name="menu_title_en_0"
+                                                                            class="form-control" placeholder="Home">
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label>🇸🇦 عربی</label>
+                                                                        <input type="text" name="menu_title_ar_0"
+                                                                            class="form-control" placeholder="الرئيسية">
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label>لینک</label>
+                                                                        <input type="text" name="menu_link_0"
+                                                                            class="form-control" placeholder="/"
+                                                                            dir="ltr">
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label>ترتیب</label>
+                                                                        <input type="number" name="menu_order_0"
+                                                                            class="form-control" value="1" min="1">
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <div class="checkbox-group">
+                                                                            <label>
+                                                                                <input type="checkbox"
+                                                                                    name="menu_active_0" checked> فعال
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <% } %>
+                                        </div>
+
+                                        <button type="button" class="btn btn-sm" onclick="addMenuItem()">
+                                            <i class="fas fa-plus"></i> افزودن آیتم منو
+                                        </button>
+
+                                        <div class="help-text" style="margin-top: 1rem;">
+                                            <i class="fas fa-info-circle"></i>
+                                            می‌توانید منوهای دلخواه خود را اضافه کنید. ترتیب نمایش با شماره ترتیب مشخص
+                                            می‌شود.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- ===== تب 4: تنظیمات ظاهری ===== -->
+                                <div id="tab-style" class="tab-content">
+                                    <div class="card">
+                                        <h3><i class="fas fa-palette"></i> تنظیمات ظاهری</h3>
+
+                                        <div class="grid-2">
+                                            <div class="form-group">
+                                                <label>استایل هدر</label>
+                                                <select name="header_style" class="form-control">
+                                                    <option value="default" <%=header.header_style==='default'
+                                                        ? 'selected' : '' %>>پیش‌فرض</option>
+                                                    <option value="transparent" <%=header.header_style==='transparent'
+                                                        ? 'selected' : '' %>>شفاف</option>
+                                                    <option value="colored" <%=header.header_style==='colored'
+                                                        ? 'selected' : '' %>>رنگی</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <div class="checkbox-group">
+                                                    <label>
+                                                        <input type="checkbox" name="sticky_header"
+                                                            <%=header.sticky_header ? 'checked' : '' %>> چسبنده (sticky)
+                                                    </label>
+                                                    <label>
+                                                        <input type="checkbox" name="show_lang_selector"
+                                                            <%=header.show_lang_selector ? 'checked' : '' %>> نمایش
+                                                        انتخابگر زبان
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="grid-3">
+                                            <div class="form-group">
+                                                <label>رنگ پس‌زمینه</label>
+                                                <input type="color" name="background_color" class="color-input"
+                                                    value="<%= header.background_color.replace('rgba(10, 40, 25, 0.25)', '#0a3825') %>">
+                                                <input type="hidden" name="background_color_rgba"
+                                                    value="<%= header.background_color %>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>رنگ متن</label>
+                                                <input type="color" name="text_color" class="color-input"
+                                                    value="<%= header.text_color || '#ffffff' %>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>رنگ هاور</label>
+                                                <input type="color" name="hover_color" class="color-input"
+                                                    value="<%= header.hover_color || '#ffd700' %>">
+                                            </div>
+                                        </div>
+
+                                        <div class="help-text">
+                                            <i class="fas fa-info-circle"></i>
+                                            برای رنگ‌های شفاف می‌توانید از کد rgba استفاده کنید. مقادیر فعلی:
+                                            <code><%= header.background_color %></code>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- دکمه‌های فرم -->
+                                <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-save"></i> ذخیره تنظیمات
+                                    </button>
+                                    <a href="/pprofessor/dashboard" class="btn">
+                                        <i class="fas fa-times"></i> انصراف
+                                    </a>
+                                </div>
+                            </form>
+        </div>
+
+        <!-- مودال آپلود تصویر -->
+        <div class="modal" id="upload-modal">
+            <div class="modal-content">
+                <h3><i class="fas fa-cloud-upload-alt"></i> آپلود تصویر لوگو</h3>
+                <input type="file" id="logo-image-file" accept="image/*">
+                <div class="modal-buttons">
+                    <button class="btn btn-success" onclick="uploadImage()">
+                        <i class="fas fa-upload"></i> آپلود
+                    </button>
+                    <button class="btn" onclick="closeUploadModal()">
+                        <i class="fas fa-times"></i> انصراف
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // ============= متغیرهای سراسری =============
+            let menuCounter = <%= header.menu_items ?header.menu_items.length: 1 %>;
+
+            // ============= نمایش تب‌ها =============
+            window.showTab = function (tabName) {
+                document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.getElementById('tab-' + tabName).classList.add('active');
+                event.currentTarget.classList.add('active');
+            };
+
+            // ============= مدیریت منوها =============
+            window.addMenuItem = function () {
+                const container = document.getElementById('menu-items-container');
+                const index = menuCounter++;
+
+                const html = `
+                <div class="menu-item-row" data-index="${index}">
+                    <div class="menu-item-header">
+                        <span class="menu-item-title">
+                            <i class="fas fa-grip-vertical" style="margin-left: 0.5rem;"></i>
+                            <span class="menu-number">منوی ${index + 1}</span>
+                        </span>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="removeMenuItem(this)">
+                            <i class="fas fa-trash"></i> حذف
+                        </button>
+                    </div>
+                    <div class="grid-4">
+                        <div class="form-group">
+                            <label>🇮🇷 فارسی</label>
+                            <input type="text" name="menu_title_fa_${index}" class="form-control" placeholder="صفحه اصلی">
+                        </div>
+                        <div class="form-group">
+                            <label>🇬🇧 انگلیسی</label>
+                            <input type="text" name="menu_title_en_${index}" class="form-control" placeholder="Home">
+                        </div>
+                        <div class="form-group">
+                            <label>🇸🇦 عربی</label>
+                            <input type="text" name="menu_title_ar_${index}" class="form-control" placeholder="الرئيسية">
+                        </div>
+                        <div class="form-group">
+                            <label>لینک</label>
+                            <input type="text" name="menu_link_${index}" class="form-control" placeholder="/" dir="ltr">
+                        </div>
+                        <div class="form-group">
+                            <label>ترتیب</label>
+                            <input type="number" name="menu_order_${index}" class="form-control" value="${index + 1}" min="1">
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox-group">
+                                <label>
+                                    <input type="checkbox" name="menu_active_${index}" checked> فعال
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+                container.insertAdjacentHTML('beforeend', html);
+            };
+
+            window.removeMenuItem = function (btn) {
+                if (confirm('آیا از حذف این آیتم منو اطمینان دارید؟')) {
+                    const row = btn.closest('.menu-item-row');
+                    if (row) {
+                        row.remove();
+                    }
+                }
+            };
+
+            // ============= مدیریت آپلود لوگو =============
+            window.uploadImage = function () {
+                const fileInput = document.getElementById('logo-image-file');
+                const file = fileInput.files[0];
+
+                if (!file) {
+                    alert('لطفاً یک فایل انتخاب کنید');
+                    return;
+                }
+
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('حجم فایل نباید بیشتر از 2 مگابایت باشد');
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('image', file);
+
+                fetch('/pprofessor/header/upload-logo', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            document.getElementById('logo-image-url').value = data.url;
+
+                            const previewBox = document.getElementById('logo-preview-box');
+                            previewBox.innerHTML = `<img src="${data.url}" style="width:100%; height:100%; object-fit:cover;">`;
+
+                            closeUploadModal();
+                            showToast('تصویر با موفقیت آپلود شد', 'success');
+                        } else {
+                            showToast('خطا در آپلود تصویر', 'error');
+                        }
+                    })
+                    .catch(() => {
+                        showToast('خطا در ارتباط با سرور', 'error');
+                    });
+            };
+
+            window.closeUploadModal = function () {
+                document.getElementById('upload-modal').classList.remove('active');
+                document.getElementById('logo-image-file').value = '';
+            };
+
+            window.removeLogo = function () {
+                if (confirm('آیا از حذف تصویر لوگو اطمینان دارید؟')) {
+                    document.getElementById('logo-image-url').value = '';
+
+                    const previewBox = document.getElementById('logo-preview-box');
+                    const logoIcon = document.querySelector('input[name="logo_icon"]').value || '🦅';
+                    previewBox.innerHTML = logoIcon;
+
+                    showToast('تصویر لوگو حذف شد', 'success');
+                }
+            };
+
+            // ============= نمایش پیغام =============
+            function showToast(message, type) {
+                const toast = document.createElement('div');
+                toast.className = `alert alert-${type}`;
+                toast.style.position = 'fixed';
+                toast.style.top = '20px';
+                toast.style.left = '50%';
+                toast.style.transform = 'translateX(-50%)';
+                toast.style.zIndex = '9999';
+                toast.style.minWidth = '300px';
+                toast.style.textAlign = 'center';
+                toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle'}"></i> ${message}`;
+
+                document.body.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.remove();
+                }, 3000);
+            }
+
+            // ============= مقداردهی اولیه =============
+            document.addEventListener('DOMContentLoaded', function () {
+                const modal = document.getElementById('upload-modal');
+
+                // باز کردن مودال با کلیک روی دکمه انتخاب تصویر
+                document.getElementById('logo-image').addEventListener('change', function () {
+                    if (this.files.length > 0) {
+                        modal.classList.add('active');
+                    }
+                });
+
+                // بستن مودال با کلیک روی پس‌زمینه
+                modal.addEventListener('click', function (e) {
+                    if (e.target === this) {
+                        closeUploadModal();
+                    }
+                });
+
+                // بستن مودال با کلید ESC
+                document.addEventListener('keydown', function (e) {
+                    if (e.key === 'Escape' && modal.classList.contains('active')) {
+                        closeUploadModal();
+                    }
+                });
+
+                // به‌روزرسانی پیش‌نمایش متن لوگو
+                const logoTextFa = document.querySelector('input[name="logo_text_fa"]');
+                if (logoTextFa) {
+                    logoTextFa.addEventListener('input', function () {
+                        document.getElementById('logo-preview-text').textContent = this.value || 'ققنوس';
+                    });
+                }
+
+                // به‌روزرسانی پیش‌نمایش ایموجی لوگو
+                const logoIcon = document.querySelector('input[name="logo_icon"]');
+                if (logoIcon) {
+                    logoIcon.addEventListener('input', function () {
+                        const previewBox = document.getElementById('logo-preview-box');
+                        if (!document.getElementById('logo-image-url').value) {
+                            previewBox.innerHTML = this.value || '🦅';
+                        }
+                    });
+                }
+            });
+        </script>
+</body>
+
+</html>

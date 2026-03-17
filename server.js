@@ -150,6 +150,22 @@ app.use(async (req, res, next) => {
   }
 });
 
+// ============= Middleware برای ارسال تنظیمات هدر به تمام ویوها =============
+const headerController = require('./controllers/headerController');
+
+// بعد از middleware فوتر
+app.use(async (req, res, next) => {
+  try {
+    const headerSettings = await headerController.getSettings();
+    res.locals.headerSettings = headerSettings;
+    next();
+  } catch (error) {
+    console.error('❌ Error loading header settings:', error);
+    res.locals.headerSettings = null;
+    next();
+  }
+});
+
 // ============= Routes =============
 const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');

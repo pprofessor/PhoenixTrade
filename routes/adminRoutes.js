@@ -330,6 +330,43 @@ router.get('/webapp/builder/:id', isAuthenticated, async (req, res) => {
   }
 });
 
+// ============= مدیریت هدر =============
+const headerController = require('../controllers/headerController');
+
+// صفحه مدیریت هدر
+router.get('/header', isAuthenticated, headerController.index);
+
+// ذخیره تنظیمات هدر
+router.post('/header/save', isAuthenticated, headerController.save);
+
+// آپلود تصویر لوگو
+const logoStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/logo/');
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const ext = path.extname(file.originalname);
+    cb(null, 'logo-' + uniqueSuffix + ext);
+  }
+});
+
+const logoUpload = multer({
+  storage: logoStorage,
+  limits: { fileSize: 2 * 1024 * 1024 }, // 2MB
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = /jpeg|jpg|png|gif|svg/;
+    const ext = path.extname(file.originalname).toLowerCase().substring(1);
+    if (allowedTypes.test(ext)) {
+      cb(null, true);
+    } else {
+      cb(new Error('فقط تصاویر مجاز هستند'));
+    }
+  }
+});
+
+router.post('/header/upload-logo', isAuthenticated, logoUpload.single('image'), headerController.uploadLogo);
+
 // ============= مدیریت بروکرها =============
 router.get('/brokers', isAuthenticated, async (req, res) => {
   try {

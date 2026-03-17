@@ -1,0 +1,222 @@
+<!-- ===== views/header.ejs ===== -->
+<!-- این فایل فقط محتوای هدر را دارد، بدون تگ‌های html/head/body -->
+<header class="header">
+    <div class="container">
+        <div class="header-content">
+            <!-- لوگو -->
+            <a href="/" style="text-decoration: none;">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <% if (headerSettings && headerSettings.logo_image) { %>
+                            <img src="<%= headerSettings.logo_image %>" alt="logo" class="logo-image">
+                            <% } else { %>
+                                <%= headerSettings && headerSettings.logo_icon ? headerSettings.logo_icon : '🦅' %>
+                                    <% } %>
+                    </div>
+                    <span class="logo-text" data-fa="<%= headerSettings ? headerSettings.logo_text.fa : 'ققنوس' %>"
+                        data-en="<%= headerSettings ? headerSettings.logo_text.en : 'Phoenix' %>"
+                        data-ar="<%= headerSettings ? headerSettings.logo_text.ar : 'العنقاء' %>">
+                        <%= headerSettings ? headerSettings.logo_text.fa : 'ققنوس' %>
+                    </span>
+                </div>
+            </a>
+
+            <!-- منوی ناوبری -->
+            <ul class="nav-menu" id="main-menu">
+                <% if (headerSettings && headerSettings.menu_items && headerSettings.menu_items.length> 0) { %>
+                    <% let activeItems=headerSettings.menu_items.filter(item=> item.isActive === true);
+                        activeItems.sort((a, b) => (a.order || 0) - (b.order || 0));
+                        for (let i = 0; i < activeItems.length; i++) { let item=activeItems[i]; %>
+                            <li>
+                                <a href="<%= item.link %>" data-fa="<%= item.title_fa %>" data-en="<%= item.title_en %>"
+                                    data-ar="<%= item.title_ar %>">
+                                    <%= item.title_fa %>
+                                </a>
+                            </li>
+                            <% } %>
+                                <% } else { %>
+                                    <li><a href="/" data-fa="صفحه اصلی" data-en="Home" data-ar="الرئيسية">صفحه اصلی</a>
+                                    </li>
+                                    <li><a href="/brokers" data-fa="بروکرها" data-en="Brokers"
+                                            data-ar="الوسطاء">بروکرها</a></li>
+                                    <li><a href="/education" data-fa="آموزش" data-en="Education"
+                                            data-ar="التعليم">آموزش</a></li>
+                                    <li><a href="/markets" data-fa="بازارها" data-en="Markets"
+                                            data-ar="الأسواق">بازارها</a></li>
+                                    <li><a href="/contact" data-fa="ارتباط با ما" data-en="Contact"
+                                            data-ar="اتصل بنا">ارتباط با ما</a></li>
+                                    <% } %>
+            </ul>
+
+            <!-- اقدامات هدر -->
+            <div class="header-actions">
+                <!-- انتخابگر زبان -->
+                <% if (!headerSettings || (headerSettings.style && headerSettings.style.show_lang_selector !==false)) {
+                    %>
+                    <div class="lang-selector" id="language-selector">
+                        <button class="lang-btn active" data-lang="fa">FA</button>
+                        <button class="lang-btn" data-lang="en">EN</button>
+                        <button class="lang-btn" data-lang="ar">AR</button>
+                    </div>
+                    <% } %>
+
+                        <!-- لینک تلگرام -->
+                        <a href="<%= headerSettings && headerSettings.telegram ? headerSettings.telegram.link : 'https://t.me/PhoenixTradeBot' %>"
+                            class="telegram-link" id="telegram-link" target="_blank">
+                            <i class="fab fa-telegram-plane"></i>
+                            <span
+                                data-fa="<%= headerSettings && headerSettings.telegram ? headerSettings.telegram.text.fa : 'کانال تلگرام' %>"
+                                data-en="<%= headerSettings && headerSettings.telegram ? headerSettings.telegram.text.en : 'Telegram' %>"
+                                data-ar="<%= headerSettings && headerSettings.telegram ? headerSettings.telegram.text.ar : 'تيليجرام' %>">
+                                <%= headerSettings && headerSettings.telegram ? headerSettings.telegram.text.fa
+                                    : 'کانال تلگرام' %>
+                            </span>
+                        </a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<style>
+    .header {
+        position: sticky;
+        top: 20px;
+        z-index: 100;
+        background: <%=headerSettings && headerSettings.style ? headerSettings.style.background_color: 'rgba(10, 40, 25, 0.25)' %>;
+        backdrop-filter: blur(20px) saturate(180%);
+        border-radius: 60px;
+        margin: 20px auto;
+        padding: 10px 0;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
+            0 0 0 1px rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .header .container {
+        max-width: 1300px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .logo-icon {
+        width: 45px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.6rem;
+        color: #0a3825;
+        overflow: hidden;
+    }
+
+    .logo-image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    .logo-text {
+        font-size: 1.7rem;
+        font-weight: bold;
+        background: linear-gradient(135deg, #ffd700, #ffe68f);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .nav-menu {
+        display: flex;
+        gap: 25px;
+        list-style: none;
+        flex-wrap: wrap;
+    }
+
+    .nav-menu a {
+        text-decoration: none;
+        color: <%=headerSettings && headerSettings.style ? headerSettings.style.text_color: '#ffffff' %>;
+        font-weight: 500;
+        transition: all 0.3s;
+        padding: 8px 18px;
+        border-radius: 40px;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(5px);
+        font-size: 0.95rem;
+    }
+
+    .nav-menu a:hover {
+        background: rgba(255, 215, 0, 0.25);
+        color: <%=headerSettings && headerSettings.style ? headerSettings.style.hover_color: '#ffd700' %>;
+        transform: translateY(-3px);
+    }
+
+    .header-actions {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .lang-selector {
+        display: flex;
+        gap: 5px;
+        background: rgba(0, 0, 0, 0.25);
+        padding: 4px;
+        border-radius: 40px;
+    }
+
+    .lang-btn {
+        padding: 5px 12px;
+        border: none;
+        background: transparent;
+        border-radius: 40px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        transition: all 0.3s;
+        color: <%=headerSettings && headerSettings.style ? headerSettings.style.text_color: '#ffffff' %>;
+    }
+
+    .lang-btn.active {
+        background: #ffd700;
+        color: #0a3825;
+    }
+
+    .telegram-link {
+        background: linear-gradient(135deg, #27a7e7, #0f7bc0);
+        color: white;
+        padding: 8px 20px;
+        border-radius: 40px;
+        text-decoration: none;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    @media (max-width: 768px) {
+        .header-content {
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .nav-menu {
+            justify-content: center;
+        }
+
+        .header-actions {
+            justify-content: center;
+        }
+    }
+</style>
